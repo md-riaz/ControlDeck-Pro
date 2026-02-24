@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --cd-font-xs: 12px; --cd-font-sm: 13px; --cd-font-base: 14px; --cd-font-md: 16px;
+      --cd-font-lg: 18px; --cd-font-xl: 20px; --cd-font-2xl: 24px; --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-danger-light: #450A0A;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: var(--cd-font);
+      font-size: var(--cd-font-base);
+      background: var(--cd-bg);
+      color: var(--cd-text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Brand area */
+    .login-brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo {
+      width: 52px; height: 52px;
+      background: var(--cd-primary);
+      border-radius: var(--cd-radius-md);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(59,130,246,.35);
+    }
+    .login-brand h1 {
+      font-size: var(--cd-font-xl);
+      font-weight: 700;
+      color: var(--cd-text);
+      margin: 0 0 4px;
+    }
+    .login-brand p {
+      font-size: var(--cd-font-sm);
+      color: var(--cd-text-muted);
+      margin: 0;
+    }
+
+    /* Card */
+    .login-card {
+      background: var(--cd-surface);
+      border: 1px solid var(--cd-border);
+      border-radius: var(--cd-radius-lg);
+      padding: 32px;
+      box-shadow: var(--cd-shadow-md);
+    }
+
+    .login-card h2 {
+      font-size: var(--cd-font-lg);
+      font-weight: 600;
+      color: var(--cd-text);
+      margin: 0 0 6px;
+    }
+    .login-card .subtitle {
+      font-size: var(--cd-font-sm);
+      color: var(--cd-text-muted);
+      margin: 0 0 24px;
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: var(--cd-font-sm);
+      font-weight: 500;
+      color: var(--cd-text);
+      margin-bottom: 6px;
+    }
+    .form-control-cd {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--cd-surface);
+      border: 1px solid var(--cd-border);
+      border-radius: var(--cd-radius-sm);
+      font-size: var(--cd-font-base);
+      color: var(--cd-text);
+      font-family: var(--cd-font);
+      outline: none;
+      transition: border-color var(--cd-transition), box-shadow var(--cd-transition);
+    }
+    .form-control-cd::placeholder { color: var(--cd-text-subtle); }
+    .form-control-cd:focus {
+      border-color: var(--cd-primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+    }
+    .form-control-cd.is-invalid { border-color: var(--cd-danger); }
+    .form-control-cd.is-invalid:focus { box-shadow: 0 0 0 3px rgba(220,38,38,.15); }
+    .invalid-feedback-cd { font-size: var(--cd-font-xs); color: var(--cd-danger); margin-top: 5px; display: none; }
+    .was-validated .form-control-cd:invalid ~ .invalid-feedback-cd { display: block; }
+
+    .input-group-cd { position: relative; }
+    .input-group-cd .form-control-cd { padding-right: 42px; }
+    .input-group-cd .input-icon-right {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--cd-text-subtle); font-size: 15px; cursor: pointer; background: none; border: none;
+      padding: 0; transition: color var(--cd-transition);
+    }
+    .input-group-cd .input-icon-right:hover { color: var(--cd-text); }
+
+    .form-check-cd {
+      display: flex; align-items: center; gap: 8px;
+      font-size: var(--cd-font-sm); color: var(--cd-text-muted); cursor: pointer;
+    }
+    .form-check-cd input[type="checkbox"] {
+      width: 16px; height: 16px;
+      border: 1px solid var(--cd-border);
+      border-radius: 4px;
+      cursor: pointer;
+      accent-color: var(--cd-primary);
+    }
+
+    .btn-cd-primary {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      padding: 11px 20px;
+      background: var(--cd-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--cd-radius-sm);
+      font-size: var(--cd-font-base);
+      font-weight: 600;
+      font-family: var(--cd-font);
+      cursor: pointer;
+      transition: background var(--cd-transition), box-shadow var(--cd-transition);
+      box-shadow: 0 1px 2px rgba(59,130,246,.20);
+    }
+    .btn-cd-primary:hover { background: var(--cd-primary-hover); box-shadow: 0 4px 12px rgba(59,130,246,.30); }
+    .btn-cd-primary:active { background: #1D4ED8; }
+    .btn-cd-primary:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .forgot-link {
+      font-size: var(--cd-font-sm);
+      color: var(--cd-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .forgot-link:hover { color: var(--cd-primary-hover); text-decoration: underline; }
+
+    .divider-text {
+      display: flex; align-items: center; gap: 12px;
+      font-size: var(--cd-font-xs); color: var(--cd-text-subtle);
+      margin: 20px 0;
+    }
+    .divider-text::before, .divider-text::after {
+      content: ""; flex: 1; height: 1px; background: var(--cd-border);
+    }
+
+    .alert-cd {
+      display: none;
+      padding: 10px 14px;
+      border-radius: var(--cd-radius-sm);
+      font-size: var(--cd-font-sm);
+      margin-bottom: 16px;
+      align-items: center;
+      gap: 8px;
+    }
+    .alert-cd.show { display: flex; }
+    .alert-danger-cd { background: var(--cd-danger-light); color: var(--cd-danger); border: 1px solid rgba(220,38,38,.2); }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: var(--cd-font-sm);
+      color: var(--cd-text-muted);
+    }
+    .login-footer a { color: var(--cd-primary); text-decoration: none; font-weight: 500; }
+    .login-footer a:hover { text-decoration: underline; }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: fixed; top: 16px; right: 16px;
+      width: 36px; height: 36px;
+      background: var(--cd-surface);
+      border: 1px solid var(--cd-border);
+      border-radius: var(--cd-radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--cd-text-muted); font-size: 15px;
+      box-shadow: var(--cd-shadow-sm);
+      transition: all var(--cd-transition);
+    }
+    .theme-toggle:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: none;
+    }
+    .btn-cd-primary.loading .spinner { display: block; }
+    .btn-cd-primary.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+  <i class="bi bi-moon-fill" id="themeIcon"></i>
+</button>
+
+<div class="login-container">
+  <!-- Brand -->
+  <div class="login-brand">
+    <div class="login-logo"><i class="bi bi-layers-fill"></i></div>
+    <h1>ControlDeck Pro</h1>
+    <p>Admin Operating System</p>
+  </div>
+
+  <!-- Card -->
+  <div class="login-card">
+    <h2>Welcome back</h2>
+    <p class="subtitle">Sign in to your account to continue</p>
+
+    <!-- Error alert -->
+    <div class="alert-cd alert-danger-cd" id="loginError">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      <span>Invalid email or password. Please try again.</span>
+    </div>
+
+    <form id="loginForm" novalidate onsubmit="handleLogin(event)">
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input
+          type="email"
+          class="form-control-cd"
+          id="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        />
+        <div class="invalid-feedback-cd">Please enter a valid email address.</div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <label class="form-label" for="password" style="margin:0">Password</label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <div class="input-group-cd">
+          <input
+            type="password"
+            class="form-control-cd"
+            id="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+            minlength="6"
+          />
+          <button type="button" class="input-icon-right" onclick="togglePassword()" title="Show/hide password">
+            <i class="bi bi-eye" id="pwEyeIcon"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback-cd">Password must be at least 6 characters.</div>
+      </div>
+
+      <!-- Remember me -->
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-check-cd">
+          <input type="checkbox" id="rememberMe" />
+          Remember me for 30 days
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-cd-primary" id="signInBtn">
+        <div class="spinner"></div>
+        <span class="btn-text">Sign in</span>
+      </button>
+    </form>
+
+    <div class="divider-text">or continue with</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);background:var(--cd-surface);color:var(--cd-text-muted);font-size:13px;cursor:pointer;font-family:var(--cd-font);transition:background 200ms" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background='var(--cd-surface)'">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Google
+      </button>
+      <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);background:var(--cd-surface);color:var(--cd-text-muted);font-size:13px;cursor:pointer;font-family:var(--cd-font);transition:background 200ms" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background='var(--cd-surface)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </button>
+    </div>
+  </div>
+
+  <div class="login-footer">
+    Don't have an account? <a href="#">Request access</a>
+  </div>
+  <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--cd-text-subtle)">
+    By signing in, you agree to our <a href="#" style="color:var(--cd-text-subtle)">Terms of Service</a> and <a href="#" style="color:var(--cd-text-subtle)">Privacy Policy</a>
+  </div>
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeIcon').className = isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+  }
+
+  function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('pwEyeIcon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const form = document.getElementById('loginForm');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const errorAlert = document.getElementById('loginError');
+    const btn = document.getElementById('signInBtn');
+    let valid = true;
+
+    // Reset
+    errorAlert.classList.remove('show');
+    form.classList.remove('was-validated');
+    email.classList.remove('is-invalid');
+    password.classList.remove('is-invalid');
+
+    // Validate email
+    if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+      email.classList.add('is-invalid');
+      valid = false;
+    }
+
+    // Validate password
+    if (!password.value || password.value.length < 6) {
+      password.classList.add('is-invalid');
+      valid = false;
+    }
+
+    if (!valid) { form.classList.add('was-validated'); return; }
+
+    // Simulate loading
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    // NOTE: This is demo-only code. In production, authentication MUST be
+    // handled server-side. Client-side validation alone cannot secure access.
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      // Simulate failed login for demo
+      if (email.value !== 'admin@example.com') {
+        errorAlert.classList.add('show');
+      } else {
+        window.location.href = 'index.html';
+      }
+    }, 1400);
+  }
+</script>
+</body>
+</html>

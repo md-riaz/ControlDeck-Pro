@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-success-light: #F0FDF4;
+      --cd-warning: #F59E0B; --cd-warning-light: #FFFBEB;
+      --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-info: #0EA5E9; --cd-info-light: #F0F9FF;
+      --cd-sidebar-width: 260px; --cd-sidebar-collapsed-width: 64px; --cd-topbar-height: 60px;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-space-1: 4px; --cd-space-2: 8px; --cd-space-3: 12px; --cd-space-4: 16px;
+      --cd-space-5: 20px; --cd-space-6: 24px; --cd-space-8: 32px; --cd-space-10: 40px;
+      --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --cd-font-xs: 12px; --cd-font-sm: 13px; --cd-font-base: 14px; --cd-font-md: 16px;
+      --cd-font-lg: 18px; --cd-font-xl: 20px; --cd-font-2xl: 24px; --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-success-light: #14532D;
+      --cd-warning-light: #451A03; --cd-danger-light: #450A0A; --cd-info-light: #0C4A6E;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: var(--cd-font); font-size: var(--cd-font-base); background: var(--cd-bg); color: var(--cd-text); margin: 0; min-height: 100vh; }
+    [data-cd="app"] { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    [data-cd="sidebar"] {
+      width: var(--cd-sidebar-width); min-height: 100vh; background: var(--cd-surface);
+      border-right: 1px solid var(--cd-border); display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 1000;
+      transition: width var(--cd-transition), transform var(--cd-transition);
+      overflow: hidden; box-shadow: var(--cd-shadow-sm);
+    }
+    [data-cd="sidebar"].collapsed { width: var(--cd-sidebar-collapsed-width); }
+    .sidebar-brand {
+      height: var(--cd-topbar-height); display: flex; align-items: center;
+      padding: 0 var(--cd-space-4); gap: var(--cd-space-3);
+      border-bottom: 1px solid var(--cd-border); flex-shrink: 0; text-decoration: none;
+    }
+    .sidebar-brand .brand-icon {
+      width: 32px; height: 32px; background: var(--cd-primary); border-radius: var(--cd-radius-sm);
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; flex-shrink: 0;
+    }
+    .sidebar-brand .brand-name { font-weight: 700; font-size: var(--cd-font-md); color: var(--cd-text); white-space: nowrap; }
+    .sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: var(--cd-space-3) 0; }
+    .nav-section-label {
+      font-size: var(--cd-font-xs); font-weight: 600; color: var(--cd-text-subtle);
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: var(--cd-space-3) var(--cd-space-4) var(--cd-space-2); white-space: nowrap;
+    }
+    .nav-item-link {
+      display: flex; align-items: center; gap: var(--cd-space-3);
+      padding: var(--cd-space-2) var(--cd-space-4); color: var(--cd-text-muted);
+      text-decoration: none; font-size: var(--cd-font-sm); font-weight: 500;
+      transition: background var(--cd-transition), color var(--cd-transition);
+      white-space: nowrap; overflow: hidden; cursor: pointer;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item-link:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .nav-item-link.active { background: var(--cd-primary-light); color: var(--cd-primary); }
+    .nav-icon { font-size: 16px; flex-shrink: 0; width: 18px; text-align: center; }
+    .nav-label { flex: 1; }
+    .nav-badge { background: var(--cd-danger); color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 20px; font-weight: 600; }
+    .nav-chevron { font-size: 12px; transition: transform var(--cd-transition); }
+    .nav-item-link.open .nav-chevron { transform: rotate(90deg); }
+    .nav-sub { list-style: none; padding: 0; margin: 0; background: var(--cd-surface-2); max-height: 0; overflow: hidden; transition: max-height 300ms ease; }
+    .nav-sub.open { max-height: 300px; }
+    .nav-sub-link {
+      display: flex; align-items: center; gap: var(--cd-space-3);
+      padding: var(--cd-space-2) var(--cd-space-4) var(--cd-space-2) calc(var(--cd-space-4) + 26px);
+      color: var(--cd-text-muted); text-decoration: none; font-size: var(--cd-font-sm);
+      transition: background var(--cd-transition), color var(--cd-transition); white-space: nowrap;
+    }
+    .nav-sub-link:hover { background: var(--cd-border); color: var(--cd-text); }
+    .nav-sub-link.active { color: var(--cd-primary); font-weight: 500; }
+    .sidebar-footer {
+      padding: var(--cd-space-3) var(--cd-space-4); border-top: 1px solid var(--cd-border);
+      display: flex; align-items: center; gap: var(--cd-space-3); overflow: hidden;
+    }
+    .sidebar-footer .avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: var(--cd-primary);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: var(--cd-font-xs); font-weight: 600; flex-shrink: 0;
+    }
+    .sidebar-footer .user-name { font-size: var(--cd-font-sm); font-weight: 600; color: var(--cd-text); }
+    .sidebar-footer .user-role { font-size: var(--cd-font-xs); color: var(--cd-text-subtle); }
+
+    [data-cd="sidebar"].collapsed .nav-label,
+    [data-cd="sidebar"].collapsed .nav-chevron,
+    [data-cd="sidebar"].collapsed .nav-badge,
+    [data-cd="sidebar"].collapsed .brand-name,
+    [data-cd="sidebar"].collapsed .nav-section-label,
+    [data-cd="sidebar"].collapsed .sidebar-footer .user-info { display: none; }
+    [data-cd="sidebar"].collapsed .nav-item-link { justify-content: center; padding: var(--cd-space-3) 0; }
+    [data-cd="sidebar"].collapsed .nav-sub { display: none; }
+    [data-cd="sidebar"].collapsed .sidebar-footer { justify-content: center; }
+
+    /* Main */
+    .main-area { margin-left: var(--cd-sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; transition: margin-left var(--cd-transition); }
+    .main-area.expanded { margin-left: var(--cd-sidebar-collapsed-width); }
+
+    /* Topbar */
+    [data-cd="topbar"] {
+      height: var(--cd-topbar-height); background: var(--cd-surface); border-bottom: 1px solid var(--cd-border);
+      display: flex; align-items: center; padding: 0 var(--cd-space-6); gap: var(--cd-space-4);
+      position: sticky; top: 0; z-index: 900; box-shadow: var(--cd-shadow-sm);
+    }
+    [data-cd="sidebar-toggle"] {
+      background: none; border: none; color: var(--cd-text-muted); font-size: 18px;
+      padding: var(--cd-space-2); border-radius: var(--cd-radius-sm); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--cd-transition), color var(--cd-transition);
+    }
+    [data-cd="sidebar-toggle"]:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .topbar-search { flex: 1; max-width: 360px; position: relative; }
+    .topbar-search input {
+      width: 100%; padding: var(--cd-space-2) var(--cd-space-4) var(--cd-space-2) 36px;
+      background: var(--cd-surface-2); border: 1px solid var(--cd-border);
+      border-radius: var(--cd-radius-sm); font-size: var(--cd-font-sm); color: var(--cd-text);
+      outline: none; font-family: var(--cd-font);
+    }
+    .topbar-search input:focus { border-color: var(--cd-primary); }
+    .topbar-search input::placeholder { color: var(--cd-text-subtle); }
+    .topbar-search .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--cd-text-subtle); font-size: 14px; }
+    .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: var(--cd-space-2); }
+    .topbar-btn {
+      width: 36px; height: 36px; background: none; border: none; border-radius: var(--cd-radius-sm);
+      color: var(--cd-text-muted); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--cd-transition); position: relative;
+    }
+    .topbar-btn:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .badge-count {
+      position: absolute; top: 4px; right: 4px; background: var(--cd-danger); color: #fff;
+      font-size: 10px; font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; padding: 0 3px;
+      border: 2px solid var(--cd-surface);
+    }
+    .topbar-user {
+      display: flex; align-items: center; gap: var(--cd-space-2); padding: var(--cd-space-1) var(--cd-space-2);
+      border-radius: var(--cd-radius-sm); cursor: pointer; border: none; background: none;
+      color: var(--cd-text); transition: background var(--cd-transition);
+    }
+    .topbar-user:hover { background: var(--cd-surface-2); }
+    .topbar-user .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #3B82F6, #6366F1);
+      color: #fff; font-size: var(--cd-font-xs); font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .topbar-user .user-name { font-size: var(--cd-font-sm); font-weight: 500; }
+
+    /* Page */
+    .page-content { padding: var(--cd-space-6); flex: 1; }
+    .page-header { margin-bottom: var(--cd-space-6); display: flex; align-items: flex-start; justify-content: space-between; gap: var(--cd-space-4); flex-wrap: wrap; }
+    .page-title { font-size: var(--cd-font-xl); font-weight: 700; color: var(--cd-text); margin: 0 0 var(--cd-space-1); }
+    .page-subtitle { font-size: var(--cd-font-sm); color: var(--cd-text-muted); margin: 0; }
+    .cd-breadcrumb { display: flex; align-items: center; gap: var(--cd-space-2); font-size: var(--cd-font-sm); color: var(--cd-text-muted); margin-bottom: var(--cd-space-4); padding: 0; list-style: none; }
+    .cd-breadcrumb li + li::before { content: "/"; margin-right: var(--cd-space-2); color: var(--cd-text-subtle); }
+    .cd-breadcrumb a { color: var(--cd-text-muted); text-decoration: none; }
+    .cd-breadcrumb a:hover { color: var(--cd-primary); }
+    .cd-breadcrumb .active { color: var(--cd-text); font-weight: 500; }
+
+    /* Card */
+    .cd-card { background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: var(--cd-radius-md); box-shadow: var(--cd-shadow-sm); overflow: hidden; }
+    .cd-card-header { padding: var(--cd-space-4) var(--cd-space-5); border-bottom: 1px solid var(--cd-border); display: flex; align-items: center; justify-content: space-between; gap: var(--cd-space-3); }
+    .cd-card-title { font-size: var(--cd-font-md); font-weight: 600; color: var(--cd-text); margin: 0; }
+
+    /* Filters */
+    .filter-bar {
+      display: flex; align-items: center; gap: var(--cd-space-3);
+      padding: var(--cd-space-4) var(--cd-space-5);
+      border-bottom: 1px solid var(--cd-border); flex-wrap: wrap;
+    }
+    .filter-input {
+      padding: var(--cd-space-2) var(--cd-space-3); border: 1px solid var(--cd-border);
+      border-radius: var(--cd-radius-sm); font-size: var(--cd-font-sm); background: var(--cd-surface);
+      color: var(--cd-text); font-family: var(--cd-font); outline: none;
+      transition: border-color var(--cd-transition);
+    }
+    .filter-input:focus { border-color: var(--cd-primary); }
+    .filter-search { position: relative; flex: 1; min-width: 200px; max-width: 280px; }
+    .filter-search input { padding-left: 32px; width: 100%; }
+    .filter-search .si { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--cd-text-subtle); font-size: 13px; }
+
+    /* Table */
+    .cd-table-wrap { overflow-x: auto; }
+    .cd-table { width: 100%; border-collapse: collapse; font-size: var(--cd-font-sm); }
+    .cd-table th {
+      padding: var(--cd-space-3) var(--cd-space-4); text-align: left;
+      font-size: var(--cd-font-xs); font-weight: 600; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--cd-text-subtle); background: var(--cd-surface-2);
+      border-bottom: 1px solid var(--cd-border); white-space: nowrap;
+    }
+    .cd-table td { padding: var(--cd-space-3) var(--cd-space-4); border-bottom: 1px solid var(--cd-border); color: var(--cd-text); vertical-align: middle; }
+    .cd-table tbody tr:hover { background: var(--cd-surface-2); }
+    .cd-table tbody tr:last-child td { border-bottom: none; }
+    .row-selected { background: var(--cd-primary-light) !important; }
+
+    .cd-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 20px; font-size: var(--cd-font-xs); font-weight: 600; white-space: nowrap; }
+    .cd-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .cd-badge-success { background: var(--cd-success-light); color: var(--cd-success); }
+    .cd-badge-warning { background: var(--cd-warning-light); color: var(--cd-warning); }
+    .cd-badge-danger { background: var(--cd-danger-light); color: var(--cd-danger); }
+    .cd-badge-info { background: var(--cd-info-light); color: var(--cd-info); }
+    .cd-badge-neutral { background: var(--cd-surface-2); color: var(--cd-text-muted); }
+    .cd-badge-purple { background: #F3E8FF; color: #7C3AED; }
+
+    .user-cell { display: flex; align-items: center; gap: var(--cd-space-3); }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; font-size: var(--cd-font-xs); font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .user-name-cell { font-weight: 500; }
+    .user-email-cell { font-size: var(--cd-font-xs); color: var(--cd-text-muted); }
+
+    .cd-btn {
+      display: inline-flex; align-items: center; gap: var(--cd-space-2);
+      padding: var(--cd-space-2) var(--cd-space-4); border-radius: var(--cd-radius-sm);
+      font-size: var(--cd-font-sm); font-weight: 500; font-family: var(--cd-font);
+      cursor: pointer; border: 1px solid transparent; transition: all var(--cd-transition); text-decoration: none;
+    }
+    .cd-btn-primary { background: var(--cd-primary); color: #fff; border-color: var(--cd-primary); }
+    .cd-btn-primary:hover { background: var(--cd-primary-hover); border-color: var(--cd-primary-hover); color: #fff; }
+    .cd-btn-ghost { background: transparent; color: var(--cd-text-muted); border-color: var(--cd-border); }
+    .cd-btn-ghost:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .cd-btn-sm { padding: var(--cd-space-1) var(--cd-space-3); font-size: var(--cd-font-xs); }
+    .cd-btn-danger-ghost { background: transparent; color: var(--cd-danger); border-color: transparent; }
+    .cd-btn-danger-ghost:hover { background: var(--cd-danger-light); }
+
+    .bulk-actions { display: none; align-items: center; gap: var(--cd-space-2); }
+    .bulk-actions.visible { display: flex; }
+
+    .cd-pagination { display: flex; align-items: center; justify-content: space-between; padding: var(--cd-space-4) var(--cd-space-5); border-top: 1px solid var(--cd-border); font-size: var(--cd-font-sm); }
+    .cd-pagination-info { color: var(--cd-text-muted); }
+    .cd-page-btns { display: flex; gap: var(--cd-space-1); }
+    .cd-page-btn { width: 32px; height: 32px; border-radius: var(--cd-radius-sm); border: 1px solid var(--cd-border); background: var(--cd-surface); color: var(--cd-text-muted); font-size: var(--cd-font-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--cd-transition); }
+    .cd-page-btn:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .cd-page-btn.active { background: var(--cd-primary); color: #fff; border-color: var(--cd-primary); }
+    .cd-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .cd-dropdown { position: relative; }
+    .cd-dropdown-menu { position: absolute; top: calc(100% + 4px); right: 0; background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: var(--cd-radius-md); box-shadow: var(--cd-shadow-md); min-width: 180px; z-index: 2000; display: none; padding: var(--cd-space-2) 0; }
+    .cd-dropdown-menu.show { display: block; }
+    .cd-dropdown-item { display: flex; align-items: center; gap: var(--cd-space-3); padding: var(--cd-space-2) var(--cd-space-4); font-size: var(--cd-font-sm); color: var(--cd-text-muted); cursor: pointer; transition: background var(--cd-transition); text-decoration: none; border: none; background: none; width: 100%; text-align: left; font-family: var(--cd-font); }
+    .cd-dropdown-item:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .cd-dropdown-divider { height: 1px; background: var(--cd-border); margin: var(--cd-space-2) 0; }
+    .divider { height: 1px; background: var(--cd-border); margin: var(--cd-space-3) 0; }
+
+    @media (max-width: 768px) {
+      [data-cd="sidebar"] { transform: translateX(-100%); width: var(--cd-sidebar-width) !important; }
+      [data-cd="sidebar"].mobile-open { transform: translateX(0); }
+      .main-area { margin-left: 0 !important; }
+      .topbar-search { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div data-cd="app">
+
+  <aside data-cd="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-layers-fill"></i></div>
+      <span class="brand-name">ControlDeck</span>
+    </a>
+    <nav class="sidebar-nav" data-cd="nav-tree">
+      <div class="nav-section-label">Main</div>
+      <a href="index.html" class="nav-item-link" data-nav="dashboard">
+        <i class="bi bi-grid-fill nav-icon"></i><span class="nav-label">Dashboard</span>
+      </a>
+      <button class="nav-item-link open" data-nav="users" onclick="toggleSubNav(this)">
+        <i class="bi bi-people-fill nav-icon"></i><span class="nav-label">Users</span>
+        <i class="bi bi-chevron-right nav-chevron" style="transform:rotate(90deg)"></i>
+      </button>
+      <ul class="nav-sub open" id="sub-users">
+        <li><a href="users.html" class="nav-sub-link active">All Users</a></li>
+        <li><a href="#" class="nav-sub-link">Roles &amp; Permissions</a></li>
+        <li><a href="#" class="nav-sub-link">Invitations</a></li>
+      </ul>
+      <a href="#" class="nav-item-link"><i class="bi bi-bag-fill nav-icon"></i><span class="nav-label">Orders</span><span class="nav-badge">12</span></a>
+      <button class="nav-item-link" data-nav="reports" onclick="toggleSubNav(this)">
+        <i class="bi bi-bar-chart-fill nav-icon"></i><span class="nav-label">Reports</span><i class="bi bi-chevron-right nav-chevron"></i>
+      </button>
+      <ul class="nav-sub" id="sub-reports">
+        <li><a href="#" class="nav-sub-link">Analytics</a></li>
+        <li><a href="#" class="nav-sub-link">Revenue</a></li>
+        <li><a href="#" class="nav-sub-link">Export</a></li>
+      </ul>
+      <div class="divider"></div>
+      <div class="nav-section-label">System</div>
+      <a href="#" class="nav-item-link"><i class="bi bi-gear-fill nav-icon"></i><span class="nav-label">Settings</span></a>
+      <a href="#" class="nav-item-link"><i class="bi bi-shield-check nav-icon"></i><span class="nav-label">Audit Log</span></a>
+      <a href="login.html" class="nav-item-link"><i class="bi bi-box-arrow-left nav-icon"></i><span class="nav-label">Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar">JD</div>
+      <div class="user-info">
+        <div class="user-name">Jane Doe</div>
+        <div class="user-role">Administrator</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-area" id="mainArea">
+    <header data-cd="topbar">
+      <button data-cd="sidebar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="topbar-search">
+        <i class="bi bi-search search-icon"></i>
+        <input type="search" placeholder="Search anything..." />
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" onclick="toggleTheme()" title="Toggle theme"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+        <div class="cd-dropdown">
+          <button class="topbar-btn" onclick="toggleDropdown('notifMenu')"><i class="bi bi-bell-fill"></i><span class="badge-count">5</span></button>
+          <div class="cd-dropdown-menu" id="notifMenu" style="min-width:260px">
+            <div style="padding:12px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--cd-border)">Notifications</div>
+            <button class="cd-dropdown-item"><i class="bi bi-person-plus" style="color:var(--cd-primary)"></i><div><div style="font-size:13px;font-weight:500;color:var(--cd-text)">New user registered</div><div style="font-size:11px;color:var(--cd-text-subtle)">2 min ago</div></div></button>
+          </div>
+        </div>
+        <div class="cd-dropdown">
+          <button class="topbar-user" onclick="toggleDropdown('userMenu')">
+            <div class="avatar">JD</div><span class="user-name">Jane Doe</span>
+            <i class="bi bi-chevron-down" style="font-size:11px;color:var(--cd-text-subtle)"></i>
+          </button>
+          <div class="cd-dropdown-menu" id="userMenu">
+            <button class="cd-dropdown-item"><i class="bi bi-person"></i> Profile</button>
+            <button class="cd-dropdown-item"><i class="bi bi-gear"></i> Settings</button>
+            <div class="cd-dropdown-divider"></div>
+            <a href="login.html" class="cd-dropdown-item" style="color:var(--cd-danger)"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <ol class="cd-breadcrumb">
+        <li><a href="index.html">Home</a></li>
+        <li class="active">All Users</li>
+      </ol>
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Users</h1>
+          <p class="page-subtitle">Manage user accounts, roles, and permissions.</p>
+        </div>
+        <button class="cd-btn cd-btn-primary"><i class="bi bi-plus-lg"></i> Add User</button>
+      </div>
+
+      <div class="cd-card">
+        <div class="cd-card-header">
+          <h2 class="cd-card-title">All Users <span style="font-size:13px;font-weight:400;color:var(--cd-text-subtle);margin-left:8px">24,521 total</span></h2>
+          <div style="display:flex;gap:8px">
+            <button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-download"></i> Export</button>
+            <button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-columns-gap"></i> Columns</button>
+          </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar">
+          <div class="filter-search">
+            <i class="bi bi-search si"></i>
+            <input class="filter-input" type="search" placeholder="Search by name or email..." oninput="filterTable(this.value)" style="padding-left:32px;width:100%" />
+          </div>
+          <select class="filter-input" onchange="filterTable('')" id="roleFilter" style="min-width:130px">
+            <option value="">All Roles</option>
+            <option value="Admin">Admin</option>
+            <option value="Editor">Editor</option>
+            <option value="Viewer">Viewer</option>
+            <option value="Manager">Manager</option>
+          </select>
+          <select class="filter-input" id="statusFilter" onchange="filterTable('')" style="min-width:130px">
+            <option value="">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+            <option value="Suspended">Suspended</option>
+          </select>
+          <div class="bulk-actions" id="bulkActions">
+            <span id="selectedCount" style="font-size:13px;color:var(--cd-text-muted)">0 selected</span>
+            <button class="cd-btn cd-btn-sm" style="background:var(--cd-danger-light);color:var(--cd-danger);border-color:transparent"><i class="bi bi-trash"></i> Delete</button>
+          </div>
+        </div>
+
+        <div class="cd-table-wrap">
+          <table class="cd-table" id="usersTable">
+            <thead>
+              <tr>
+                <th style="width:40px"><input type="checkbox" id="selectAll" onchange="toggleAllRows(this)" style="cursor:pointer" /></th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th style="width:100px">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <!-- 15 sample users -->
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#3B82F6">AJ</div><div><div class="user-name-cell">Alice Johnson</div><div class="user-email-cell">alice@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">alice@example.com</td>
+                <td><span class="cd-badge cd-badge-info">Admin</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">2 min ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#6366F1">BM</div><div><div class="user-name-cell">Bob Martinez</div><div class="user-email-cell">bob@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">bob@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Editor</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">15 min ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#16A34A">CW</div><div><div class="user-name-cell">Carol White</div><div class="user-email-cell">carol@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">carol@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Viewer</span></td>
+                <td><span class="cd-badge cd-badge-warning">Pending</span></td>
+                <td style="color:var(--cd-text-muted)">1 hour ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#F59E0B">DK</div><div><div class="user-name-cell">David Kim</div><div class="user-email-cell">david@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">david@example.com</td>
+                <td><span class="cd-badge cd-badge-purple">Manager</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">3 hours ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#EC4899">EL</div><div><div class="user-name-cell">Eva Lopez</div><div class="user-email-cell">eva@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">eva@example.com</td>
+                <td><span class="cd-badge cd-badge-info">Admin</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">Yesterday</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#0EA5E9">FG</div><div><div class="user-name-cell">Frank Garcia</div><div class="user-email-cell">frank@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">frank@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Viewer</span></td>
+                <td><span class="cd-badge cd-badge-danger">Suspended</span></td>
+                <td style="color:var(--cd-text-muted)">3 days ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#8B5CF6">GH</div><div><div class="user-name-cell">Grace Huang</div><div class="user-email-cell">grace@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">grace@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Editor</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">1 week ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#DC2626">HN</div><div><div class="user-name-cell">Henry Nelson</div><div class="user-email-cell">henry@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">henry@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Viewer</span></td>
+                <td><span class="cd-badge cd-badge-warning">Pending</span></td>
+                <td style="color:var(--cd-text-muted)">2 weeks ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#14B8A6">IO</div><div><div class="user-name-cell">Iris Owen</div><div class="user-email-cell">iris@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">iris@example.com</td>
+                <td><span class="cd-badge cd-badge-info">Admin</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">1 month ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#F97316">JP</div><div><div class="user-name-cell">Jack Parker</div><div class="user-email-cell">jack@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">jack@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Editor</span></td>
+                <td><span class="cd-badge cd-badge-danger">Suspended</span></td>
+                <td style="color:var(--cd-text-muted)">2 months ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#7C3AED">KR</div><div><div class="user-name-cell">Karen Reed</div><div class="user-email-cell">karen@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">karen@example.com</td>
+                <td><span class="cd-badge cd-badge-purple">Manager</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">5 min ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#BE185D">LS</div><div><div class="user-name-cell">Liam Scott</div><div class="user-email-cell">liam@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">liam@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Viewer</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">30 min ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#0369A1">MT</div><div><div class="user-name-cell">Mia Torres</div><div class="user-email-cell">mia@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">mia@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Editor</span></td>
+                <td><span class="cd-badge cd-badge-warning">Pending</span></td>
+                <td style="color:var(--cd-text-muted)">2 hours ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#15803D">NA</div><div><div class="user-name-cell">Noah Adams</div><div class="user-email-cell">noah@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">noah@example.com</td>
+                <td><span class="cd-badge cd-badge-info">Admin</span></td>
+                <td><span class="cd-badge cd-badge-success">Active</span></td>
+                <td style="color:var(--cd-text-muted)">4 hours ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateSelection()" /></td>
+                <td><div class="user-cell"><div class="user-avatar" style="background:#C2410C">OB</div><div><div class="user-name-cell">Olivia Brown</div><div class="user-email-cell">olivia@example.com</div></div></div></td>
+                <td style="color:var(--cd-text-muted)">olivia@example.com</td>
+                <td><span class="cd-badge cd-badge-neutral">Viewer</span></td>
+                <td><span class="cd-badge cd-badge-danger">Suspended</span></td>
+                <td style="color:var(--cd-text-muted)">6 days ago</td>
+                <td><button class="cd-btn cd-btn-ghost cd-btn-sm"><i class="bi bi-pencil"></i></button> <button class="cd-btn cd-btn-danger-ghost cd-btn-sm"><i class="bi bi-trash"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cd-pagination">
+          <span class="cd-pagination-info">Showing 1–15 of 24,521 users</span>
+          <div class="cd-page-btns">
+            <button class="cd-page-btn" disabled><i class="bi bi-chevron-left"></i></button>
+            <button class="cd-page-btn active">1</button>
+            <button class="cd-page-btn">2</button>
+            <button class="cd-page-btn">3</button>
+            <span style="align-self:center;color:var(--cd-text-subtle);font-size:13px">…</span>
+            <button class="cd-page-btn">1635</button>
+            <button class="cd-page-btn"><i class="bi bi-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999" onclick="closeSidebarMobile()"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const mainArea = document.getElementById('mainArea');
+  const backdrop = document.getElementById('backdrop');
+  let isMobile = () => window.innerWidth <= 768;
+
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    if (isMobile()) {
+      sidebar.classList.toggle('mobile-open');
+      backdrop.style.display = sidebar.classList.contains('mobile-open') ? 'block' : 'none';
+    } else {
+      sidebar.classList.toggle('collapsed');
+      mainArea.classList.toggle('expanded');
+    }
+  });
+  function closeSidebarMobile() { sidebar.classList.remove('mobile-open'); backdrop.style.display = 'none'; }
+
+  function toggleSubNav(btn) {
+    const subId = 'sub-' + btn.dataset.nav;
+    const sub = document.getElementById(subId);
+    if (!sub) return;
+    const isOpen = sub.classList.contains('open');
+    document.querySelectorAll('.nav-sub.open').forEach(s => s.classList.remove('open'));
+    document.querySelectorAll('.nav-item-link.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) { sub.classList.add('open'); btn.classList.add('open'); }
+  }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeIcon').className = isDark ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+  }
+
+  function toggleDropdown(id) {
+    const menu = document.getElementById(id);
+    const isShown = menu.classList.contains('show');
+    closeAllDropdowns();
+    if (!isShown) menu.classList.add('show');
+  }
+  function closeAllDropdowns() { document.querySelectorAll('.cd-dropdown-menu.show').forEach(m => m.classList.remove('show')); }
+  document.addEventListener('click', e => { if (!e.target.closest('.cd-dropdown')) closeAllDropdowns(); });
+
+  function filterTable(query) {
+    const q = query.toLowerCase();
+    const role = document.getElementById('roleFilter').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value.toLowerCase();
+    document.querySelectorAll('#tableBody tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const matchQ = !q || text.includes(q);
+      const matchR = !role || text.includes(role);
+      const matchS = !status || text.includes(status);
+      row.style.display = (matchQ && matchR && matchS) ? '' : 'none';
+    });
+  }
+
+  function updateSelection() {
+    const checks = document.querySelectorAll('.row-check:checked');
+    const total = document.querySelectorAll('.row-check').length;
+    const count = checks.length;
+    document.getElementById('selectedCount').textContent = count + ' selected';
+    document.getElementById('bulkActions').classList.toggle('visible', count > 0);
+    document.getElementById('selectAll').indeterminate = count > 0 && count < total;
+    document.getElementById('selectAll').checked = count === total;
+    document.querySelectorAll('#tableBody tr').forEach(row => {
+      row.classList.toggle('row-selected', row.querySelector('.row-check')?.checked);
+    });
+  }
+  function toggleAllRows(master) { document.querySelectorAll('.row-check').forEach(c => c.checked = master.checked); updateSelection(); }
+
+  document.querySelectorAll('.cd-page-btn:not([disabled])').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.cd-page-btn.active').forEach(b => b.classList.remove('active'));
+      if (!this.querySelector('i')) this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

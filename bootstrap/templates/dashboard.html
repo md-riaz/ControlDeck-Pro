@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" data-cd="app">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/controldeck.css">
+  <title>Dashboard v1</title>
+</head>
+<body>
+  <div class="cd-app">
+    <aside class="cd-sidebar" data-cd="sidebar">
+      <div class="cd-brand">ControlDeck Pro</div>
+      <ul class="cd-nav" data-cd="nav-tree">
+        <li class="cd-nav-item"><a class="cd-nav-link active" href="#">Dashboard</a></li>
+        <li class="cd-nav-item"><a class="cd-nav-link" href="#">Reports</a></li>
+      </ul>
+    </aside>
+    <main class="cd-main">
+      <header class="cd-topbar">
+        <div data-cd="search">
+          <input class="form-control" type="search" placeholder="Search">
+        </div>
+        <div data-cd="topbar-actions">
+          <button class="btn btn-light" data-cd="sidebar-toggle">Toggle</button>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">User</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <section class="cd-page-header">
+        <div>
+          <h1 class="h4" data-cd="page-title">Dashboard v1</h1>
+          <ol class="breadcrumb mb-0" data-cd="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </div>
+        <div data-cd="page-actions">
+          <button class="btn btn-primary">New Report</button>
+        </div>
+      </section>
+
+      <div class="cd-dashboard-grid">
+        <div class="cd-card" data-cd="stat" data-value="150">
+          <div class="cd-card-body">
+            <div class="text-muted">New Orders</div>
+            <div class="h3 mb-0" data-cd="stat-value">--</div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="stat" data-value="$13,000">
+          <div class="cd-card-body">
+            <div class="text-muted">Revenue</div>
+            <div class="h3 mb-0" data-cd="stat-value">--</div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="stat" data-value="320">
+          <div class="cd-card-body">
+            <div class="text-muted">Users</div>
+            <div class="h3 mb-0" data-cd="stat-value">--</div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="stat" data-value="12%">
+          <div class="cd-card-body">
+            <div class="text-muted">Conversion</div>
+            <div class="h3 mb-0" data-cd="stat-value">--</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cd-dashboard-columns">
+        <div class="cd-card" data-cd="card">
+          <div class="cd-card-header">
+            <div>Sales Trend</div>
+            <div class="cd-card-tools">
+              <button class="btn btn-sm btn-light" data-cd="card-collapse">Collapse</button>
+            </div>
+          </div>
+          <div class="cd-card-body">
+            <div data-cd="chart" data-chart-type="line" style="height:260px;background:var(--cd-surface-2);border-radius:var(--cd-radius-sm);"></div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="card">
+          <div class="cd-card-header">Recent Activity</div>
+          <div class="cd-card-body">
+            <ul class="list-unstyled mb-0" data-cd="activity-feed">
+              <li class="mb-2">10:00 - User registered</li>
+              <li class="mb-2">12:00 - Payment received</li>
+              <li class="mb-2">14:20 - Server deploy</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="cd-card" data-cd="card">
+        <div class="cd-card-header">
+          <div>Orders</div>
+          <div class="cd-card-tools">
+            <input class="form-control form-control-sm" data-cd="table-search" type="search" placeholder="Search orders">
+          </div>
+        </div>
+        <div class="cd-card-body" data-cd="table-container">
+          <div class="cd-table-toolbar">
+            <button class="btn btn-sm btn-outline-secondary">Export CSV</button>
+            <button class="btn btn-sm btn-outline-secondary">Columns</button>
+          </div>
+          <table class="cd-table" data-cd="table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#1024</td>
+                <td><span class="badge bg-success">Paid</span></td>
+                <td>$420</td>
+              </tr>
+              <tr>
+                <td>#1025</td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>$180</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div data-cd="toast-host" class="position-fixed top-0 end-0 p-3"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/core/cd.core.js"></script>
+  <script src="../assets/js/core/cd.layout.js"></script>
+  <script src="../assets/js/core/cd.store.js"></script>
+  <script src="../assets/js/plugins/cd.modal.js"></script>
+  <script src="../assets/js/plugins/cd.toast.js"></script>
+  <script src="../assets/js/plugins/cd.table.js"></script>
+  <script src="../assets/js/pages/dashboard.js"></script>
+</body>
+</html>

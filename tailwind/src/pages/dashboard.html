@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" x-data="cdApp()" :data-theme="theme">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/app.css">
+  <title>Dashboard v1</title>
+</head>
+<body class="font-cd text-cd-text bg-cd-bg">
+  <div class="cd-app" :class="{'cd-sidebar-collapsed': sidebarCollapsed}">
+    <aside class="cd-sidebar" data-cd="sidebar" x-data="cdSidebar()" :class="{'hidden md:block': sidebarCollapsed}">
+      <div class="font-semibold mb-4">ControlDeck Pro</div>
+      <nav>
+        <ul class="space-y-2" data-cd="nav-tree">
+          <li data-cd="nav-item"><a class="cd-nav-link" data-active="true" href="#">Dashboard</a></li>
+          <li data-cd="nav-item"><a class="cd-nav-link" href="#">Users</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="cd-main space-y-6">
+      <header class="cd-topbar">
+        <div class="flex items-center gap-2" data-cd="search">
+          <input class="border border-cd-border rounded-cds px-3 py-2 w-64" type="search" placeholder="Search">
+        </div>
+        <div class="flex items-center gap-3" data-cd="topbar-actions">
+          <button class="px-3 py-2 border border-cd-border rounded-cds" @click="toggleSidebar()" data-cd="sidebar-toggle">Toggle</button>
+          <button class="px-3 py-2 border border-cd-border rounded-cds" @click="toggleTheme()">Theme</button>
+        </div>
+      </header>
+
+      <section class="cd-page-header">
+        <div>
+          <h1 class="text-lg font-semibold" data-cd="page-title">Dashboard v1</h1>
+          <div class="text-sm text-cd-text-muted" data-cd="breadcrumb">Home / Dashboard</div>
+        </div>
+        <div data-cd="page-actions">
+          <button class="px-3 py-2 bg-cd-primary text-white rounded-cds">New Report</button>
+        </div>
+      </section>
+
+      <div class="cd-dashboard-grid">
+        <div class="cd-card" data-cd="stat">
+          <div class="cd-card-body">
+            <div class="text-cd-text-muted text-sm">New Orders</div>
+            <div class="text-2xl font-semibold" data-cd="stat-value">150</div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="stat">
+          <div class="cd-card-body">
+            <div class="text-cd-text-muted text-sm">Revenue</div>
+            <div class="text-2xl font-semibold" data-cd="stat-value">$13,000</div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="stat">
+          <div class="cd-card-body">
+            <div class="text-cd-text-muted text-sm">Users</div>
+            <div class="text-2xl font-semibold" data-cd="stat-value">320</div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="stat">
+          <div class="cd-card-body">
+            <div class="text-cd-text-muted text-sm">Conversion</div>
+            <div class="text-2xl font-semibold" data-cd="stat-value">12%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cd-dashboard-columns">
+        <div class="cd-card" data-cd="card">
+          <div class="cd-card-header">
+            <div>Sales Trend</div>
+            <div class="flex gap-2 cd-card-tools">
+              <button class="px-2 py-1 border border-cd-border rounded-cds" data-cd="card-collapse">Collapse</button>
+            </div>
+          </div>
+          <div class="cd-card-body">
+            <div data-cd="chart" data-chart-type="line" class="h-64 rounded-cds" style="background:var(--cd-surface-2);"></div>
+          </div>
+        </div>
+        <div class="cd-card" data-cd="card">
+          <div class="cd-card-header">Recent Activity</div>
+          <div class="cd-card-body">
+            <ul class="space-y-2" data-cd="activity-feed">
+              <li>10:00 - User registered</li>
+              <li>12:00 - Payment received</li>
+              <li>14:20 - Server deploy</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="cd-card" data-cd="card">
+        <div class="cd-card-header">
+          <div>Orders</div>
+          <div class="cd-card-tools">
+            <input class="border border-cd-border rounded-cds px-2 py-1 text-sm" type="search" placeholder="Search" data-cd="table-search">
+          </div>
+        </div>
+        <div class="cd-card-body" data-cd="table-container">
+          <div class="flex items-center gap-2 mb-3 cd-table-toolbar">
+            <button class="px-2 py-1 border border-cd-border rounded-cds text-sm">Export CSV</button>
+            <button class="px-2 py-1 border border-cd-border rounded-cds text-sm">Columns</button>
+          </div>
+          <table class="cd-table" data-cd="table">
+            <thead>
+              <tr>
+                <th class="text-left">Order</th>
+                <th class="text-left">Status</th>
+                <th class="text-left">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#1024</td>
+                <td><span class="px-2 py-1 text-xs rounded-cds bg-cd-success/10 text-cd-success">Paid</span></td>
+                <td>$420</td>
+              </tr>
+              <tr>
+                <td>#1025</td>
+                <td><span class="px-2 py-1 text-xs rounded-cds bg-cd-warning/10 text-cd-warning">Pending</span></td>
+                <td>$180</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div data-cd="toast-host" class="fixed top-0 right-0 p-3 space-y-2"></div>
+
+  <script type="module" src="../js/app.js"></script>
+</body>
+</html>

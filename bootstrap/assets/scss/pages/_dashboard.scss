@@ -1,0 +1,22 @@
+.cd-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: map-get($cd-space, 4);
+  margin-bottom: map-get($cd-space, 6);
+}
+
+.cd-dashboard-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: map-get($cd-space, 6);
+}
+
+@media (max-width: 960px) {
+  .cd-app {
+    grid-template-columns: 1fr;
+  }
+
+  .cd-dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}

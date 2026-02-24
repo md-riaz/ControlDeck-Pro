@@ -1,0 +1,24 @@
+.cd-card {
+  background: map-get($cd-colors, "surface");
+  border: 1px solid map-get($cd-colors, "border");
+  border-radius: map-get($cd-radius, "md");
+  box-shadow: map-get($cd-shadow, "sm");
+  margin-bottom: map-get($cd-space, 6);
+}
+
+.cd-card-header {
+  padding: calc(map-get($cd-space, 4) * var(--cd-density));
+  border-bottom: 1px solid map-get($cd-colors, "border");
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cd-card-body {
+  padding: calc(map-get($cd-space, 5) * var(--cd-density));
+}
+
+.cd-card-tools {
+  display: inline-flex;
+  gap: map-get($cd-space, 3);
+}

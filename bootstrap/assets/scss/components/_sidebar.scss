@@ -1,0 +1,32 @@
+.cd-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cd-nav-item {
+  margin-bottom: map-get($cd-space, 2);
+}
+
+.cd-nav-link {
+  display: flex;
+  align-items: center;
+  gap: map-get($cd-space, 3);
+  padding: calc(map-get($cd-space, 3) * var(--cd-density)) calc(map-get($cd-space, 4) * var(--cd-density));
+  border-radius: map-get($cd-radius, "sm");
+  color: map-get($cd-colors, "text");
+  text-decoration: none;
+}
+
+.cd-nav-link:hover,
+.cd-nav-link.active {
+  background: map-get($cd-colors, "surface-2");
+}
+
+.cd-nav-badge {
+  margin-left: auto;
+  background: map-get($cd-colors, "surface-2");
+  padding: 2px map-get($cd-space, 2);
+  border-radius: map-get($cd-radius, "sm");
+  font-size: 12px;
+}

@@ -1,0 +1,60 @@
+@import "tokens";
+
+:root {
+  font-family: $cd-font;
+  font-size: $cd-font-size;
+  background: map-get($cd-colors, "bg");
+  color: map-get($cd-colors, "text");
+}
+
+body {
+  background: map-get($cd-colors, "bg");
+  color: map-get($cd-colors, "text");
+  min-height: 100vh;
+}
+
+.cd-app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: map-get($cd-colors, "bg");
+}
+
+.cd-sidebar {
+  background: map-get($cd-colors, "surface");
+  border-right: 1px solid map-get($cd-colors, "border");
+  padding: map-get($cd-space, 4);
+}
+
+.cd-topbar {
+  background: map-get($cd-colors, "surface");
+  border-bottom: 1px solid map-get($cd-colors, "border");
+  padding: map-get($cd-space, 4);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.cd-main {
+  background: map-get($cd-colors, "bg");
+  padding: map-get($cd-space, 6);
+}
+
+.cd-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: map-get($cd-space, 6);
+}
+
+.cd-density {
+  --cd-density: 1;
+}
+
+.cd-density-compact {
+  --cd-density: 0.88;
+}
+
+.cd-density-spacious {
+  --cd-density: 1.12;
+}

@@ -6,42 +6,189 @@ ControlDeck Pro is a production-quality admin panel design system with two compl
 
 ---
 
-## Preview Tour
+## Preview
 
-Open **[`preview.html`](preview.html)** in a browser for a live interactive tour of all 27 page blueprints across both stacks — no screenshots, no downloads required.
+Screenshots of all 28 pages in both stacks (1440 × 900). Each row shows Bootstrap 5 on the left and Tailwind + Alpine on the right.
 
-Features of the preview tour:
-- 📋 Sidebar with all pages grouped by category (Dashboards, Forms, Tables, Charts, Mailbox, Auth, Errors…)
-- 🔀 **Stack switcher** — flip between Bootstrap 5 and Tailwind instantly
-- 🖼️ **Live iframe preview** — every page renders in-window at full fidelity
-- ⬅️ ➡️ **Prev / Next** navigation with a `1 / 27` counter
-- 🔍 Search filter to jump to any page by name
-- 📐 Component Specs panel — all 31 `data-cd` hooks with one-click copy
-- 🌓 Light / dark mode toggle
-- ↗️ Open-in-new-tab for any page
+---
 
-```bash
-npx serve .
-# then visit http://localhost:3000/preview.html
-```
+### Dashboards
 
-All pages open directly in a browser with **no build step required**.
+#### Dashboard v1
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Dashboard v1 – Bootstrap](docs/screenshots/bootstrap/dashboard-v1.png) | ![Dashboard v1 – Tailwind](docs/screenshots/tailwind/dashboard-v1.png) |
 
-### Bootstrap Stack (`bootstrap/`)
+#### Dashboard v2
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Dashboard v2 – Bootstrap](docs/screenshots/bootstrap/dashboard-v2.png) | ![Dashboard v2 – Tailwind](docs/screenshots/tailwind/dashboard-v2.png) |
 
-| Page | Description |
-|------|-------------|
-| `index.html` | **Dashboard** — Collapsible sidebar, sticky topbar with search/notifications/user-menu, breadcrumb, 4 KPI stat cards (Users, Revenue, Orders, Sessions), filterable data table with bulk-select, pagination, density & dark-mode switchers |
-| `users.html` | **Users Management** — Same shell, filter bar (search + role + status dropdowns), 15-row data table with avatar + name, role/status badges, edit/delete action buttons, pagination |
-| `login.html` | **Sign In** — Centered card, logo/brand area, email + password with show/hide toggle, remember-me checkbox, form validation with error state, loading spinner, Google/GitHub SSO placeholders, dark mode toggle |
+#### Widgets
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Widgets – Bootstrap](docs/screenshots/bootstrap/widgets.png) | ![Widgets – Tailwind](docs/screenshots/tailwind/widgets.png) |
 
-### Tailwind Stack (`tailwind/`)
+---
 
-| Page | Description |
-|------|-------------|
-| `index.html` | **Dashboard** — Alpine.js-powered app shell with reactive sidebar, dark mode, density switcher, animated sub-menu dropdowns, same KPI cards and data table with Alpine.js reactive filtering and row selection |
-| `users.html` | **Users Management** — Alpine.js reactive table with live search, role/status filters, bulk selection counter, 15 sample users |
-| `login.html` | **Sign In** — Alpine.js form with reactive validation, password visibility toggle, error transition animation, SSO buttons |
+### Users
+
+#### Users Management
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Users – Bootstrap](docs/screenshots/bootstrap/users.png) | ![Users – Tailwind](docs/screenshots/tailwind/users.png) |
+
+---
+
+### UI Elements
+
+#### UI General
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![UI General – Bootstrap](docs/screenshots/bootstrap/ui-general.png) | ![UI General – Tailwind](docs/screenshots/tailwind/ui-general.png) |
+
+#### UI Icons
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![UI Icons – Bootstrap](docs/screenshots/bootstrap/ui-icons.png) | ![UI Icons – Tailwind](docs/screenshots/tailwind/ui-icons.png) |
+
+#### UI Modals
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![UI Modals – Bootstrap](docs/screenshots/bootstrap/ui-modals.png) | ![UI Modals – Tailwind](docs/screenshots/tailwind/ui-modals.png) |
+
+#### UI Timeline
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![UI Timeline – Bootstrap](docs/screenshots/bootstrap/ui-timeline.png) | ![UI Timeline – Tailwind](docs/screenshots/tailwind/ui-timeline.png) |
+
+---
+
+### Forms
+
+#### Forms General
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Forms General – Bootstrap](docs/screenshots/bootstrap/form-general.png) | ![Forms General – Tailwind](docs/screenshots/tailwind/form-general.png) |
+
+#### Forms Advanced
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Forms Advanced – Bootstrap](docs/screenshots/bootstrap/form-advanced.png) | ![Forms Advanced – Tailwind](docs/screenshots/tailwind/form-advanced.png) |
+
+#### Form Editors
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Form Editors – Bootstrap](docs/screenshots/bootstrap/form-editors.png) | ![Form Editors – Tailwind](docs/screenshots/tailwind/form-editors.png) |
+
+---
+
+### Tables
+
+#### Table Simple
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Table Simple – Bootstrap](docs/screenshots/bootstrap/table-simple.png) | ![Table Simple – Tailwind](docs/screenshots/tailwind/table-simple.png) |
+
+#### DataTables
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![DataTables – Bootstrap](docs/screenshots/bootstrap/table-datatables.png) | ![DataTables – Tailwind](docs/screenshots/tailwind/table-datatables.png) |
+
+---
+
+### Charts
+
+#### Chart — Line
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Chart Line – Bootstrap](docs/screenshots/bootstrap/chart-line.png) | ![Chart Line – Tailwind](docs/screenshots/tailwind/chart-line.png) |
+
+#### Chart — Bar
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Chart Bar – Bootstrap](docs/screenshots/bootstrap/chart-bar.png) | ![Chart Bar – Tailwind](docs/screenshots/tailwind/chart-bar.png) |
+
+#### Chart — Pie
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Chart Pie – Bootstrap](docs/screenshots/bootstrap/chart-pie.png) | ![Chart Pie – Tailwind](docs/screenshots/tailwind/chart-pie.png) |
+
+---
+
+### Mailbox
+
+#### Mailbox Inbox
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Mailbox Inbox – Bootstrap](docs/screenshots/bootstrap/mailbox-inbox.png) | ![Mailbox Inbox – Tailwind](docs/screenshots/tailwind/mailbox-inbox.png) |
+
+#### Mailbox Compose
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Mailbox Compose – Bootstrap](docs/screenshots/bootstrap/mailbox-compose.png) | ![Mailbox Compose – Tailwind](docs/screenshots/tailwind/mailbox-compose.png) |
+
+#### Mailbox Read
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Mailbox Read – Bootstrap](docs/screenshots/bootstrap/mailbox-read.png) | ![Mailbox Read – Tailwind](docs/screenshots/tailwind/mailbox-read.png) |
+
+---
+
+### Pages
+
+#### Calendar
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Calendar – Bootstrap](docs/screenshots/bootstrap/calendar.png) | ![Calendar – Tailwind](docs/screenshots/tailwind/calendar.png) |
+
+#### Invoice
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Invoice – Bootstrap](docs/screenshots/bootstrap/invoice.png) | ![Invoice – Tailwind](docs/screenshots/tailwind/invoice.png) |
+
+#### Profile
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Profile – Bootstrap](docs/screenshots/bootstrap/profile.png) | ![Profile – Tailwind](docs/screenshots/tailwind/profile.png) |
+
+#### Blank
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Blank – Bootstrap](docs/screenshots/bootstrap/blank.png) | ![Blank – Tailwind](docs/screenshots/tailwind/blank.png) |
+
+---
+
+### Auth
+
+#### Login
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Login – Bootstrap](docs/screenshots/bootstrap/login.png) | ![Login – Tailwind](docs/screenshots/tailwind/login.png) |
+
+#### Register
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Register – Bootstrap](docs/screenshots/bootstrap/register.png) | ![Register – Tailwind](docs/screenshots/tailwind/register.png) |
+
+#### Lockscreen
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Lockscreen – Bootstrap](docs/screenshots/bootstrap/lockscreen.png) | ![Lockscreen – Tailwind](docs/screenshots/tailwind/lockscreen.png) |
+
+---
+
+### Errors
+
+#### 404
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![404 – Bootstrap](docs/screenshots/bootstrap/404.png) | ![404 – Tailwind](docs/screenshots/tailwind/404.png) |
+
+#### 500
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![500 – Bootstrap](docs/screenshots/bootstrap/500.png) | ![500 – Tailwind](docs/screenshots/tailwind/500.png) |
 
 ---
 
@@ -70,14 +217,40 @@ ControlDeck-Pro/
 ├── shared/
 │   └── css/
 │       └── variables.css        # CSS custom properties contract
-├── bootstrap/
-│   ├── index.html               # Dashboard (Bootstrap 5 + jQuery)
-│   ├── users.html               # Users management page
-│   └── login.html               # Login / sign-in page
-├── tailwind/
-│   ├── index.html               # Dashboard (Tailwind CSS + Alpine.js)
-│   ├── users.html               # Users management page
-│   └── login.html               # Login / sign-in page
+├── bootstrap/                   # Bootstrap 5 + jQuery stack (28 pages)
+│   ├── index.html               # Dashboard v1
+│   ├── dashboard2.html          # Dashboard v2
+│   ├── users.html               # Users management
+│   ├── widgets.html             # Widgets
+│   ├── ui-general.html          # UI General
+│   ├── ui-icons.html            # UI Icons
+│   ├── ui-modals.html           # UI Modals
+│   ├── ui-timeline.html         # UI Timeline
+│   ├── form-general.html        # Forms General
+│   ├── form-advanced.html       # Forms Advanced
+│   ├── form-editors.html        # Form Editors
+│   ├── table-simple.html        # Table Simple
+│   ├── table-datatables.html    # DataTables
+│   ├── chart-line.html          # Chart Line
+│   ├── chart-bar.html           # Chart Bar
+│   ├── chart-pie.html           # Chart Pie
+│   ├── mailbox-inbox.html       # Mailbox Inbox
+│   ├── mailbox-compose.html     # Mailbox Compose
+│   ├── mailbox-read.html        # Mailbox Read
+│   ├── calendar.html            # Calendar
+│   ├── invoice.html             # Invoice
+│   ├── profile.html             # Profile
+│   ├── login.html               # Login
+│   ├── register.html            # Register
+│   ├── lockscreen.html          # Lockscreen
+│   ├── 404.html                 # Error 404
+│   ├── 500.html                 # Error 500
+│   └── blank.html               # Blank page
+├── tailwind/                    # Tailwind CSS + Alpine.js stack (28 pages, same set)
+├── docs/
+│   └── screenshots/             # Page screenshots (Bootstrap + Tailwind)
+│       ├── bootstrap/
+│       └── tailwind/
 └── README.md
 ```
 

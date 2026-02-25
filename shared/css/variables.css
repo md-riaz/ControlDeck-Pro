@@ -1,0 +1,90 @@
+:root {
+  /* Surfaces */
+  --cd-bg: #F8FAFC;
+  --cd-surface: #FFFFFF;
+  --cd-surface-2: #F1F5F9;
+  --cd-border: #E2E8F0;
+
+  /* Text */
+  --cd-text: #0F172A;
+  --cd-text-muted: #475569;
+  --cd-text-subtle: #94A3B8;
+
+  /* Brand */
+  --cd-primary: #3B82F6;
+  --cd-primary-hover: #2563EB;
+  --cd-primary-light: #EFF6FF;
+
+  /* Semantic */
+  --cd-success: #16A34A;
+  --cd-success-light: #F0FDF4;
+  --cd-warning: #F59E0B;
+  --cd-warning-light: #FFFBEB;
+  --cd-danger: #DC2626;
+  --cd-danger-light: #FEF2F2;
+  --cd-info: #0EA5E9;
+  --cd-info-light: #F0F9FF;
+
+  /* Layout */
+  --cd-sidebar-width: 260px;
+  --cd-sidebar-collapsed-width: 64px;
+  --cd-topbar-height: 60px;
+
+  /* Radius */
+  --cd-radius-sm: 8px;
+  --cd-radius-md: 12px;
+  --cd-radius-lg: 16px;
+
+  /* Shadows */
+  --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06);
+  --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+
+  /* Spacing base */
+  --cd-space-1: 4px;
+  --cd-space-2: 8px;
+  --cd-space-3: 12px;
+  --cd-space-4: 16px;
+  --cd-space-5: 20px;
+  --cd-space-6: 24px;
+  --cd-space-8: 32px;
+  --cd-space-10: 40px;
+
+  /* Typography */
+  --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --cd-font-xs: 12px;
+  --cd-font-sm: 13px;
+  --cd-font-base: 14px;
+  --cd-font-md: 16px;
+  --cd-font-lg: 18px;
+  --cd-font-xl: 20px;
+  --cd-font-2xl: 24px;
+
+  /* Transitions */
+  --cd-transition: 200ms ease;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --cd-bg: #0F172A;
+  --cd-surface: #1E293B;
+  --cd-surface-2: #334155;
+  --cd-border: #334155;
+  --cd-text: #F1F5F9;
+  --cd-text-muted: #94A3B8;
+  --cd-text-subtle: #64748B;
+  --cd-primary-light: #1E3A5F;
+  --cd-success-light: #14532D;
+  --cd-warning-light: #451A03;
+  --cd-danger-light: #450A0A;
+  --cd-info-light: #0C4A6E;
+}
+
+/* Density */
+[data-density="compact"] {
+  --cd-density: 0.88;
+  font-size: calc(var(--cd-font-base) * 0.88);
+}
+[data-density="spacious"] {
+  --cd-density: 1.12;
+  font-size: calc(var(--cd-font-base) * 1.12);
+}

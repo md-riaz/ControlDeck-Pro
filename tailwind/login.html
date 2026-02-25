@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ theme: 'light', pwVisible: false, loading: false, error: false, email: '', password: '' }" :data-theme="theme">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'], theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] } } } }</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <style>
+    :root {
+      --cd-bg:#F8FAFC;--cd-surface:#FFFFFF;--cd-surface-2:#F1F5F9;--cd-border:#E2E8F0;
+      --cd-text:#0F172A;--cd-text-muted:#475569;--cd-text-subtle:#94A3B8;
+      --cd-primary:#3B82F6;--cd-primary-hover:#2563EB;--cd-primary-light:#EFF6FF;
+      --cd-success:#16A34A;--cd-danger:#DC2626;--cd-danger-light:#FEF2F2;
+      --cd-shadow-md:0 8px 24px rgba(2,6,23,.10);
+      --cd-font:Inter,system-ui,-apple-system,sans-serif;
+    }
+    [data-theme="dark"] {
+      --cd-bg:#0F172A;--cd-surface:#1E293B;--cd-surface-2:#334155;--cd-border:#334155;
+      --cd-text:#F1F5F9;--cd-text-muted:#94A3B8;--cd-text-subtle:#64748B;
+      --cd-primary-light:#1E3A5F;--cd-danger-light:#450A0A;
+    }
+    body { font-family: var(--cd-font); background: var(--cd-bg); color: var(--cd-text); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin .6s linear infinite; }
+    .input-cd {
+      display: block; width: 100%;
+      padding: 10px 14px;
+      background: var(--cd-surface);
+      border: 1px solid var(--cd-border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--cd-text);
+      font-family: var(--cd-font);
+      outline: none;
+      transition: border-color 200ms, box-shadow 200ms;
+    }
+    .input-cd::placeholder { color: var(--cd-text-subtle); }
+    .input-cd:focus { border-color: var(--cd-primary); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+    .input-cd.invalid { border-color: var(--cd-danger); }
+    .input-cd.invalid:focus { box-shadow: 0 0 0 3px rgba(220,38,38,.15); }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6" style="background:var(--cd-bg)">
+
+<!-- Theme toggle -->
+<button
+  @click="theme = theme === 'dark' ? 'light' : 'dark'"
+  class="fixed top-4 right-4 w-9 h-9 flex items-center justify-center rounded-lg border cursor-pointer bg-transparent transition-colors"
+  style="background:var(--cd-surface);border-color:var(--cd-border);color:var(--cd-text-muted);box-shadow:var(--cd-shadow-md)"
+  @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background='var(--cd-surface)'"
+>
+  <svg x-show="theme !== 'dark'" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/></svg>
+  <svg x-show="theme === 'dark'" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8"/></svg>
+</button>
+
+<div class="w-full max-w-sm">
+  <!-- Brand -->
+  <div class="text-center mb-8">
+    <div class="inline-flex w-14 h-14 items-center justify-center rounded-2xl text-white text-2xl mb-4" style="background:var(--cd-primary);box-shadow:0 4px 14px rgba(59,130,246,.35)">
+      <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M1 1h6v6H1zm8 0h6v6H9zm-8 8h6v6H1zm8 0h6v6H9z"/></svg>
+    </div>
+    <h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">ControlDeck Pro</h1>
+    <p class="text-sm m-0" style="color:var(--cd-text-muted)">Admin Operating System</p>
+  </div>
+
+  <!-- Card -->
+  <div class="rounded-2xl border p-8" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+    <h2 class="text-lg font-semibold m-0 mb-1" style="color:var(--cd-text)">Welcome back</h2>
+    <p class="text-sm m-0 mb-6" style="color:var(--cd-text-muted)">Sign in to your account to continue</p>
+
+    <!-- Error alert -->
+    <div
+      x-show="error"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 -translate-y-1"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      class="flex items-center gap-2 p-3 rounded-lg mb-4 text-sm"
+      style="background:var(--cd-danger-light);color:var(--cd-danger);border:1px solid rgba(220,38,38,.2)"
+    >
+      <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="flex-shrink-0"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
+      Invalid email or password. Please try again.
+    </div>
+
+    <form @submit.prevent="handleLogin()" class="space-y-4">
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)" for="email">Email address</label>
+        <input
+          id="email"
+          type="email"
+          x-model="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          class="input-cd"
+          :class="emailError ? 'invalid' : ''"
+          @input="emailError = false"
+        />
+        <p x-show="emailError" class="text-xs mt-1" style="color:var(--cd-danger)">Please enter a valid email address.</p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="text-sm font-medium" style="color:var(--cd-text)" for="password">Password</label>
+          <a href="#" class="text-sm font-medium no-underline" style="color:var(--cd-primary)" @mouseover="$el.style.textDecoration='underline'" @mouseout="$el.style.textDecoration='none'">Forgot password?</a>
+        </div>
+        <div class="relative">
+          <input
+            id="password"
+            :type="pwVisible ? 'text' : 'password'"
+            x-model="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            class="input-cd"
+            :class="passwordError ? 'invalid' : ''"
+            style="padding-right: 44px"
+            @input="passwordError = false"
+          />
+          <button
+            type="button"
+            @click="pwVisible = !pwVisible"
+            class="absolute right-3 top-1/2 -translate-y-1/2 border-0 bg-transparent cursor-pointer p-0"
+            style="color:var(--cd-text-subtle)"
+            @mouseover="$el.style.color='var(--cd-text)'" @mouseout="$el.style.color='var(--cd-text-subtle)'"
+          >
+            <svg x-show="!pwVisible" width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/></svg>
+            <svg x-show="pwVisible" width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474zM5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/></svg>
+          </button>
+        </div>
+        <p x-show="passwordError" class="text-xs mt-1" style="color:var(--cd-danger)">Password must be at least 6 characters.</p>
+      </div>
+
+      <!-- Remember me -->
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded cursor-pointer" style="accent-color:var(--cd-primary)" />
+        <label for="rememberMe" class="text-sm cursor-pointer" style="color:var(--cd-text-muted)">Remember me for 30 days</label>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        :disabled="loading"
+        class="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-semibold text-white border-0 cursor-pointer transition-colors text-sm"
+        :style="loading ? 'background:#93C5FD;cursor:not-allowed' : 'background:var(--cd-primary)'"
+        @mouseover="if(!loading) $el.style.background='var(--cd-primary-hover)'" @mouseout="if(!loading) $el.style.background='var(--cd-primary)'"
+      >
+        <svg x-show="loading" class="spinner" width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span x-text="loading ? 'Signing in...' : 'Sign in'"></span>
+      </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="flex items-center gap-3 my-5">
+      <div class="flex-1 h-px" style="background:var(--cd-border)"></div>
+      <span class="text-xs" style="color:var(--cd-text-subtle)">or continue with</span>
+      <div class="flex-1 h-px" style="background:var(--cd-border)"></div>
+    </div>
+
+    <!-- Social buttons -->
+    <div class="grid grid-cols-2 gap-2.5">
+      <button type="button" class="flex items-center justify-center gap-2 py-2.5 rounded-lg border cursor-pointer bg-transparent text-sm transition-colors" style="border-color:var(--cd-border);color:var(--cd-text-muted);font-family:var(--cd-font)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Google
+      </button>
+      <button type="button" class="flex items-center justify-center gap-2 py-2.5 rounded-lg border cursor-pointer bg-transparent text-sm transition-colors" style="border-color:var(--cd-border);color:var(--cd-text-muted);font-family:var(--cd-font)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </button>
+    </div>
+  </div>
+
+  <div class="text-center mt-5 text-sm" style="color:var(--cd-text-muted)">
+    Don't have an account? <a href="#" class="font-medium no-underline" style="color:var(--cd-primary)" @mouseover="$el.style.textDecoration='underline'" @mouseout="$el.style.textDecoration='none'">Request access</a>
+  </div>
+  <div class="text-center mt-3" style="font-size:11px;color:var(--cd-text-subtle)">
+    By signing in, you agree to our
+    <a href="#" class="no-underline" style="color:var(--cd-text-subtle)" @mouseover="$el.style.textDecoration='underline'" @mouseout="$el.style.textDecoration='none'">Terms</a>
+    and
+    <a href="#" class="no-underline" style="color:var(--cd-text-subtle)" @mouseover="$el.style.textDecoration='underline'" @mouseout="$el.style.textDecoration='none'">Privacy Policy</a>
+  </div>
+</div>
+
+<script>
+  function handleLogin() {
+    const el = document.querySelector('[x-data]').__x.$data;
+
+    // Reset
+    el.error = false;
+    el.emailError = false;
+    el.passwordError = false;
+
+    let valid = true;
+    if (!el.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.email)) {
+      el.emailError = true; valid = false;
+    }
+    if (!el.password || el.password.length < 6) {
+      el.passwordError = true; valid = false;
+    }
+    if (!valid) return;
+
+    // NOTE: Demo-only. Production authentication must be handled server-side.
+    el.loading = true;
+    setTimeout(() => {
+      el.loading = false;
+      if (el.email === 'admin@example.com') {
+        window.location.href = 'index.html';
+      } else {
+        el.error = true;
+      }
+    }, 1400);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" x-data="authCtrl()" :data-theme="theme">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — ControlDeck Pro</title>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:['selector','[data-theme="dark"]'],theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <style>
+    :root{--cd-bg:#F8FAFC;--cd-surface:#FFFFFF;--cd-surface-2:#F1F5F9;--cd-border:#E2E8F0;--cd-text:#0F172A;--cd-text-muted:#475569;--cd-text-subtle:#94A3B8;--cd-primary:#3B82F6;--cd-primary-hover:#2563EB;--cd-primary-light:#EFF6FF;--cd-success:#16A34A;--cd-success-light:#F0FDF4;--cd-warning:#F59E0B;--cd-warning-light:#FFFBEB;--cd-danger:#DC2626;--cd-danger-light:#FEF2F2;--cd-info:#0EA5E9;--cd-info-light:#F0F9FF;--cd-shadow-sm:0 1px 2px rgba(2,6,23,.06);--cd-shadow-md:0 8px 24px rgba(2,6,23,.10);--cd-font:Inter,system-ui,-apple-system,sans-serif;--cd-transition:200ms ease}
+    [data-theme="dark"]{--cd-bg:#0F172A;--cd-surface:#1E293B;--cd-surface-2:#334155;--cd-border:#334155;--cd-text:#F1F5F9;--cd-text-muted:#94A3B8;--cd-text-subtle:#64748B;--cd-primary-light:#1E3A5F;--cd-success-light:#14532D;--cd-warning-light:#451A03;--cd-danger-light:#450A0A;--cd-info-light:#0C4A6E}
+    [data-density="compact"]{font-size:calc(14px * 0.88)}[data-density="spacious"]{font-size:calc(14px * 1.12)}
+    body{font-family:var(--cd-font);background:var(--cd-bg);color:var(--cd-text)}
+    .ss::-webkit-scrollbar{width:4px}.ss::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    .cd-table{width:100%;border-collapse:collapse;font-size:13px}
+    .cd-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--cd-text-subtle);background:var(--cd-surface-2);border-bottom:1px solid var(--cd-border)}
+    .cd-table td{padding:11px 14px;border-bottom:1px solid var(--cd-border);color:var(--cd-text);vertical-align:middle}
+    .cd-table tbody tr:hover{background:var(--cd-surface-2)}
+    .cd-table tbody tr:last-child td{border-bottom:none}
+    .input-f{width:100%;padding:9px 12px;border:1px solid var(--cd-border);border-radius:8px;font-size:13px;font-family:var(--cd-font);background:var(--cd-surface);color:var(--cd-text);outline:none}
+    .input-f:focus{border-color:var(--cd-primary);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4 py-8" style="background:var(--cd-bg)">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl text-white text-lg font-bold mb-3" style="background:var(--cd-primary)">CD</div>
+      <h1 class="text-2xl font-bold mb-1" style="color:var(--cd-text)">Create account</h1>
+      <p class="text-sm" style="color:var(--cd-text-muted)">Start your 14-day free trial</p>
+    </div>
+    <div class="rounded-2xl border p-8" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div><label class="block text-xs font-semibold mb-1.5" style="color:var(--cd-text-muted)">First Name</label><input type="text" x-model="fname" placeholder="Jane" class="input-f" /></div>
+        <div><label class="block text-xs font-semibold mb-1.5" style="color:var(--cd-text-muted)">Last Name</label><input type="text" x-model="lname" placeholder="Doe" class="input-f" /></div>
+      </div>
+      <div class="mb-4"><label class="block text-xs font-semibold mb-1.5" style="color:var(--cd-text-muted)">Work Email</label><input type="email" x-model="email" placeholder="jane@company.com" class="input-f" /></div>
+      <div class="mb-4"><label class="block text-xs font-semibold mb-1.5" style="color:var(--cd-text-muted)">Password</label><input type="password" x-model="password" placeholder="8+ characters" class="input-f" /></div>
+      <div class="mb-5"><label class="flex items-start gap-3 cursor-pointer text-sm" style="color:var(--cd-text-muted)"><input type="checkbox" x-model="agreed" style="accent-color:var(--cd-primary);margin-top:2px;flex-shrink:0" /><span>I agree to the <a href="#" style="color:var(--cd-primary)">Terms of Service</a> and <a href="#" style="color:var(--cd-primary)">Privacy Policy</a>.</span></label></div>
+      <button :disabled="!agreed" class="w-full py-3 rounded-xl text-sm font-semibold text-white border-none cursor-pointer transition-opacity" :style="agreed?'background:var(--cd-primary);opacity:1':'background:var(--cd-primary);opacity:.5;cursor:not-allowed'">Create Account</button>
+    </div>
+    <p class="text-center text-sm mt-6" style="color:var(--cd-text-muted)">Already have an account? <a href="login.html" style="color:var(--cd-primary)">Sign in</a></p>
+  </div>
+  <script>function authCtrl(){return{theme:localStorage.getItem('cd:theme')||'light',fname:'',lname:'',email:'',password:'',agreed:false}}</script>
+</body>
+</html>

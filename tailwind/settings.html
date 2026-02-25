@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" x-data="app('invoice')" :data-theme="theme" :data-density="density">
+<html lang="en" x-data="app('settings')" :data-theme="theme" :data-density="density">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invoice — ControlDeck Pro</title>
+  <title>Settings — ControlDeck Pro</title>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -168,35 +168,98 @@
     </div>
   </header>
     <main class="p-6 flex-1">
-      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Invoice</span></nav>
-      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Invoice #INV-2025-0042</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">Printable invoice template.</p></div>
-
-      <div class="rounded-xl border p-8 max-w-3xl" style="background:var(--cd-surface);border-color:var(--cd-border)">
-        <div class="flex items-start justify-between mb-8">
-          <div><div class="text-xl font-bold mb-1" style="color:var(--cd-text)">ControlDeck Pro</div><div class="text-sm" style="color:var(--cd-text-muted)">123 Main Street, Suite 400<br/>San Francisco, CA 94105<br/>billing@controldeck.io</div></div>
-          <div class="text-right"><div class="text-3xl font-black uppercase tracking-widest mb-2" style="color:var(--cd-primary)">Invoice</div><div class="text-sm" style="color:var(--cd-text-muted)"># INV-2025-0042</div><div class="text-xs mt-1" style="color:var(--cd-text-subtle)">Issued: Feb 25, 2025<br/>Due: Mar 25, 2025</div></div>
-        </div>
-        <div class="grid grid-cols-2 gap-6 mb-8">
-          <div class="p-4 rounded-xl" style="background:var(--cd-surface-2)"><div class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:var(--cd-text-subtle)">Bill To</div><div class="font-semibold" style="color:var(--cd-text)">Acme Corporation</div><div class="text-sm mt-1" style="color:var(--cd-text-muted)">456 Business Ave<br/>New York, NY 10001<br/>accounts@acme.com</div></div>
-          <div class="p-4 rounded-xl" style="background:var(--cd-surface-2)"><div class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:var(--cd-text-subtle)">Payment Details</div><div class="text-sm space-y-1" style="color:var(--cd-text-muted)"><div>Bank: First National Bank</div><div>Account: ****4821</div><div>Routing: 021000021</div></div></div>
-        </div>
-        <table class="cd-table mb-4"><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th class="text-right">Amount</th></tr></thead><tbody>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">ControlDeck Pro — Enterprise License</div><div class="text-xs" style="color:var(--cd-text-subtle)">Annual subscription, 50 seats</div></td><td>1</td><td>$2,400.00</td><td class="text-right">$2,400.00</td></tr>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">Priority Support</div><div class="text-xs" style="color:var(--cd-text-subtle)">24/7 dedicated support</div></td><td>12</td><td>$100.00</td><td class="text-right">$1,200.00</td></tr>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">Onboarding &amp; Training</div></td><td>1</td><td>$400.00</td><td class="text-right">$400.00</td></tr>
-        </tbody></table>
-        <div class="flex justify-end mb-8">
-          <div class="w-64 space-y-2">
-            <div class="flex justify-between text-sm" style="color:var(--cd-text-muted)"><span>Subtotal</span><span>$4,000.00</span></div>
-            <div class="flex justify-between text-sm" style="color:var(--cd-text-muted)"><span>Tax (8%)</span><span>$320.00</span></div>
-            <div class="flex justify-between font-bold text-base pt-2 border-t" style="color:var(--cd-text);border-color:var(--cd-border)"><span>Total Due</span><span style="color:var(--cd-primary)">$4,320.00</span></div>
+      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Settings</span></nav>
+      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Settings</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">Manage your account settings and preferences.</p></div>
+      <div x-data="settingsCtrl()" class="flex flex-col lg:flex-row gap-6">
+        <!-- Settings sidebar nav -->
+        <div class="lg:w-56 flex-shrink-0">
+          <div class="rounded-xl border overflow-hidden" style="background:var(--cd-surface);border-color:var(--cd-border)">
+            <nav>
+              <button @click="tab='general'" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-left border-0 cursor-pointer transition-colors duration-150" :style="tab==='general'?'background:var(--cd-primary-light);color:var(--cd-primary);font-weight:600':'background:transparent;color:var(--cd-text-muted)'" @mouseover="tab!=='general'&&($el.style.background='var(--cd-surface-2)')" @mouseout="tab!=='general'&&($el.style.background='')"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52z"/></svg>General</button>
+              <button @click="tab='profile'" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-left border-0 cursor-pointer transition-colors duration-150" :style="tab==='profile'?'background:var(--cd-primary-light);color:var(--cd-primary);font-weight:600':'background:transparent;color:var(--cd-text-muted)'" @mouseover="tab!=='profile'&&($el.style.background='var(--cd-surface-2)')" @mouseout="tab!=='profile'&&($el.style.background='')"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4z"/></svg>Profile</button>
+              <button @click="tab='security'" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-left border-0 cursor-pointer transition-colors duration-150" :style="tab==='security'?'background:var(--cd-primary-light);color:var(--cd-primary);font-weight:600':'background:transparent;color:var(--cd-text-muted)'" @mouseover="tab!=='security'&&($el.style.background='var(--cd-surface-2)')" @mouseout="tab!=='security'&&($el.style.background='')"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>Security</button>
+              <button @click="tab='notifications'" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-left border-0 cursor-pointer transition-colors duration-150" :style="tab==='notifications'?'background:var(--cd-primary-light);color:var(--cd-primary);font-weight:600':'background:transparent;color:var(--cd-text-muted)'" @mouseover="tab!=='notifications'&&($el.style.background='var(--cd-surface-2)')" @mouseout="tab!=='notifications'&&($el.style.background='')"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg>Notifications</button>
+              <button @click="tab='api'" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-left border-0 cursor-pointer transition-colors duration-150" :style="tab==='api'?'background:var(--cd-primary-light);color:var(--cd-primary);font-weight:600':'background:transparent;color:var(--cd-text-muted)'" @mouseover="tab!=='api'&&($el.style.background='var(--cd-surface-2)')" @mouseout="tab!=='api'&&($el.style.background='')"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5zm-.5 1.5A.5.5 0 0 1 5 4h1.5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm.5 2h6v1H5V6.5zm0 2h4v1H5V8.5zm0 2h2v1H5v-1z"/></svg>API Keys</button>
+            </nav>
           </div>
         </div>
-        <div class="flex gap-3 border-t pt-6" style="border-color:var(--cd-border)">
-          <button onclick="window.print()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-none cursor-pointer" style="background:var(--cd-primary)">🖨 Print Invoice</button>
-          <button class="px-5 py-2.5 rounded-xl text-sm font-semibold border cursor-pointer" style="background:transparent;border-color:var(--cd-border);color:var(--cd-text-muted)">⬇ Download PDF</button>
+        <!-- Settings panels -->
+        <div class="flex-1 min-w-0">
+          <!-- General -->
+          <div x-show="tab==='general'" class="rounded-xl border" style="background:var(--cd-surface);border-color:var(--cd-border)">
+            <div class="px-6 py-4 border-b" style="border-color:var(--cd-border)"><h2 class="text-base font-semibold m-0" style="color:var(--cd-text)">General Settings</h2><p class="text-sm m-0 mt-1" style="color:var(--cd-text-muted)">Manage your application preferences and appearance.</p></div>
+            <div class="p-6 flex flex-col gap-5">
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Application Name</label><input class="input-f" type="text" value="ControlDeck Pro" /></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Site URL</label><input class="input-f" type="url" value="https://controldeck.app" /></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Default Language</label><select class="input-f"><option>English (US)</option><option>French</option><option>German</option><option>Spanish</option></select></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Timezone</label><select class="input-f"><option>UTC (Coordinated Universal Time)</option><option>America/New_York (EST)</option><option>America/Los_Angeles (PST)</option><option>Europe/London (GMT)</option></select></div>
+              <div class="flex items-center justify-between py-3 border-t" style="border-color:var(--cd-border)"><div><div class="text-sm font-medium" style="color:var(--cd-text)">Dark Mode</div><div class="text-xs mt-0.5" style="color:var(--cd-text-muted)">Enable dark theme for the interface</div></div><button @click="$root.__x.$data.setTheme($root.__x.$data.theme==='dark'?'light':'dark')" class="relative w-10 h-6 rounded-full transition-colors duration-200 border-0 cursor-pointer flex-shrink-0" :style="$root.__x.$data.theme==='dark'?'background:var(--cd-primary)':'background:var(--cd-border)'"><span class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200" :style="$root.__x.$data.theme==='dark'?'transform:translateX(16px)':''"></span></button></div>
+              <div class="pt-2"><button class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-0 cursor-pointer" style="background:var(--cd-primary)">Save Changes</button></div>
+            </div>
+          </div>
+          <!-- Profile -->
+          <div x-show="tab==='profile'" class="rounded-xl border" style="background:var(--cd-surface);border-color:var(--cd-border)">
+            <div class="px-6 py-4 border-b" style="border-color:var(--cd-border)"><h2 class="text-base font-semibold m-0" style="color:var(--cd-text)">Profile Settings</h2><p class="text-sm m-0 mt-1" style="color:var(--cd-text-muted)">Update your personal information and avatar.</p></div>
+            <div class="p-6 flex flex-col gap-5">
+              <div class="flex items-center gap-4"><div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold flex-shrink-0" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</div><div><button class="px-4 py-2 text-sm font-medium rounded-lg border cursor-pointer" style="color:var(--cd-primary);border-color:var(--cd-primary);background:var(--cd-primary-light)">Change Avatar</button><div class="text-xs mt-1" style="color:var(--cd-text-subtle)">JPG, PNG or GIF. Max size 2MB.</div></div></div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">First Name</label><input class="input-f" type="text" value="Jane" /></div><div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Last Name</label><input class="input-f" type="text" value="Doe" /></div></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Email Address</label><input class="input-f" type="email" value="jane.doe@example.com" /></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Job Title</label><input class="input-f" type="text" value="Administrator" /></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Bio</label><textarea class="input-f" rows="3" style="resize:vertical">Admin and product enthusiast.</textarea></div>
+              <div class="pt-2"><button class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-0 cursor-pointer" style="background:var(--cd-primary)">Update Profile</button></div>
+            </div>
+          </div>
+          <!-- Security -->
+          <div x-show="tab==='security'" class="rounded-xl border" style="background:var(--cd-surface);border-color:var(--cd-border)">
+            <div class="px-6 py-4 border-b" style="border-color:var(--cd-border)"><h2 class="text-base font-semibold m-0" style="color:var(--cd-text)">Security</h2><p class="text-sm m-0 mt-1" style="color:var(--cd-text-muted)">Manage your password and two-factor authentication.</p></div>
+            <div class="p-6 flex flex-col gap-5">
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Current Password</label><input class="input-f" type="password" placeholder="••••••••" /></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">New Password</label><input class="input-f" type="password" placeholder="••••••••" /></div>
+              <div><label class="block text-sm font-medium mb-1.5" style="color:var(--cd-text)">Confirm New Password</label><input class="input-f" type="password" placeholder="••••••••" /></div>
+              <div class="flex items-center justify-between py-3 border-t border-b" style="border-color:var(--cd-border)"><div><div class="text-sm font-medium" style="color:var(--cd-text)">Two-Factor Authentication</div><div class="text-xs mt-0.5" style="color:var(--cd-text-muted)">Add an extra layer of security to your account</div></div><button x-data="{on:false}" @click="on=!on" class="relative w-10 h-6 rounded-full transition-colors duration-200 border-0 cursor-pointer flex-shrink-0" :style="on?'background:var(--cd-primary)':'background:var(--cd-border)'"><span class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200" :style="on?'transform:translateX(16px)':''"></span></button></div>
+              <div class="pt-2"><button class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-0 cursor-pointer" style="background:var(--cd-primary)">Update Password</button></div>
+            </div>
+          </div>
+          <!-- Notifications -->
+          <div x-show="tab==='notifications'" class="rounded-xl border" style="background:var(--cd-surface);border-color:var(--cd-border)">
+            <div class="px-6 py-4 border-b" style="border-color:var(--cd-border)"><h2 class="text-base font-semibold m-0" style="color:var(--cd-text)">Notification Preferences</h2><p class="text-sm m-0 mt-1" style="color:var(--cd-text-muted)">Choose which notifications you want to receive.</p></div>
+            <div class="divide-y" style="border-color:var(--cd-border)">
+              <template x-for="item in notifItems" :key="item.label">
+                <div class="flex items-center justify-between px-6 py-4"><div><div class="text-sm font-medium" style="color:var(--cd-text)" x-text="item.label"></div><div class="text-xs mt-0.5" style="color:var(--cd-text-muted)" x-text="item.desc"></div></div><button @click="item.on=!item.on" class="relative w-10 h-6 rounded-full transition-colors duration-200 border-0 cursor-pointer flex-shrink-0" :style="item.on?'background:var(--cd-primary)':'background:var(--cd-border)'"><span class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200" :style="item.on?'transform:translateX(16px)':''"></span></button></div>
+              </template>
+            </div>
+            <div class="px-6 py-4"><button class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-0 cursor-pointer" style="background:var(--cd-primary)">Save Preferences</button></div>
+          </div>
+          <!-- API Keys -->
+          <div x-show="tab==='api'" class="rounded-xl border" style="background:var(--cd-surface);border-color:var(--cd-border)">
+            <div class="px-6 py-4 border-b flex items-center justify-between" style="border-color:var(--cd-border)"><div><h2 class="text-base font-semibold m-0" style="color:var(--cd-text)">API Keys</h2><p class="text-sm m-0 mt-1" style="color:var(--cd-text-muted)">Manage API keys for programmatic access.</p></div><button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white border-0 cursor-pointer" style="background:var(--cd-primary)"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>New Key</button></div>
+            <div class="divide-y" style="border-color:var(--cd-border)">
+              <template x-for="key in apiKeys" :key="key.id">
+                <div class="flex items-center justify-between px-6 py-4"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-medium" style="color:var(--cd-text)" x-text="key.name"></span><span class="text-xs px-2 py-0.5 rounded-full font-medium" :style="key.active?'background:var(--cd-success-light);color:var(--cd-success)':'background:var(--cd-surface-2);color:var(--cd-text-subtle)'" x-text="key.active?'Active':'Inactive'"></span></div><code class="text-xs font-mono" style="color:var(--cd-text-subtle)" x-text="key.key"></code></div><div class="flex gap-2 ml-4"><button class="w-8 h-8 flex items-center justify-center rounded-lg border cursor-pointer bg-transparent" style="color:var(--cd-text-muted);border-color:var(--cd-border)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg></button><button class="w-8 h-8 flex items-center justify-center rounded-lg border cursor-pointer bg-transparent" style="color:var(--cd-danger);border-color:transparent" @mouseover="$el.style.background='var(--cd-danger-light)'" @mouseout="$el.style.background=''"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg></button></div></div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
+      <script>
+        function settingsCtrl() {
+          return {
+            tab: 'general',
+            notifItems: [
+              {label:'New User Registration', desc:'Get notified when a new user signs up', on:true},
+              {label:'Security Alerts', desc:'Receive alerts for suspicious account activity', on:true},
+              {label:'Order Updates', desc:'Notifications about new and updated orders', on:false},
+              {label:'System Updates', desc:'Maintenance windows and version updates', on:true},
+              {label:'Marketing Emails', desc:'Product news and feature announcements', on:false},
+            ],
+            apiKeys: [
+              {id:1, name:'Production Key', key:'sk-prod-••••••••••••••••xxQR', active:true},
+              {id:2, name:'Development Key', key:'sk-dev-••••••••••••••••mNPT', active:true},
+              {id:3, name:'Legacy Key', key:'sk-leg-••••••••••••••••jKLW', active:false},
+            ]
+          }
+        }
+      </script>
     </main>
   </div>
 </div>

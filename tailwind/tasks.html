@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" x-data="app('invoice')" :data-theme="theme" :data-density="density">
+<html lang="en" x-data="app('tasks')" :data-theme="theme" :data-density="density">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invoice — ControlDeck Pro</title>
+  <title>Tasks — ControlDeck Pro</title>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -168,35 +168,106 @@
     </div>
   </header>
     <main class="p-6 flex-1">
-      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Invoice</span></nav>
-      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Invoice #INV-2025-0042</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">Printable invoice template.</p></div>
-
-      <div class="rounded-xl border p-8 max-w-3xl" style="background:var(--cd-surface);border-color:var(--cd-border)">
-        <div class="flex items-start justify-between mb-8">
-          <div><div class="text-xl font-bold mb-1" style="color:var(--cd-text)">ControlDeck Pro</div><div class="text-sm" style="color:var(--cd-text-muted)">123 Main Street, Suite 400<br/>San Francisco, CA 94105<br/>billing@controldeck.io</div></div>
-          <div class="text-right"><div class="text-3xl font-black uppercase tracking-widest mb-2" style="color:var(--cd-primary)">Invoice</div><div class="text-sm" style="color:var(--cd-text-muted)"># INV-2025-0042</div><div class="text-xs mt-1" style="color:var(--cd-text-subtle)">Issued: Feb 25, 2025<br/>Due: Mar 25, 2025</div></div>
-        </div>
-        <div class="grid grid-cols-2 gap-6 mb-8">
-          <div class="p-4 rounded-xl" style="background:var(--cd-surface-2)"><div class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:var(--cd-text-subtle)">Bill To</div><div class="font-semibold" style="color:var(--cd-text)">Acme Corporation</div><div class="text-sm mt-1" style="color:var(--cd-text-muted)">456 Business Ave<br/>New York, NY 10001<br/>accounts@acme.com</div></div>
-          <div class="p-4 rounded-xl" style="background:var(--cd-surface-2)"><div class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:var(--cd-text-subtle)">Payment Details</div><div class="text-sm space-y-1" style="color:var(--cd-text-muted)"><div>Bank: First National Bank</div><div>Account: ****4821</div><div>Routing: 021000021</div></div></div>
-        </div>
-        <table class="cd-table mb-4"><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th class="text-right">Amount</th></tr></thead><tbody>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">ControlDeck Pro — Enterprise License</div><div class="text-xs" style="color:var(--cd-text-subtle)">Annual subscription, 50 seats</div></td><td>1</td><td>$2,400.00</td><td class="text-right">$2,400.00</td></tr>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">Priority Support</div><div class="text-xs" style="color:var(--cd-text-subtle)">24/7 dedicated support</div></td><td>12</td><td>$100.00</td><td class="text-right">$1,200.00</td></tr>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">Onboarding &amp; Training</div></td><td>1</td><td>$400.00</td><td class="text-right">$400.00</td></tr>
-        </tbody></table>
-        <div class="flex justify-end mb-8">
-          <div class="w-64 space-y-2">
-            <div class="flex justify-between text-sm" style="color:var(--cd-text-muted)"><span>Subtotal</span><span>$4,000.00</span></div>
-            <div class="flex justify-between text-sm" style="color:var(--cd-text-muted)"><span>Tax (8%)</span><span>$320.00</span></div>
-            <div class="flex justify-between font-bold text-base pt-2 border-t" style="color:var(--cd-text);border-color:var(--cd-border)"><span>Total Due</span><span style="color:var(--cd-primary)">$4,320.00</span></div>
+      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Tasks</span></nav>
+      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Tasks</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">Manage and track your team's work with a Kanban board.</p></div>
+      <div x-data="tasksCtrl()" class="flex flex-col h-full">
+        <!-- Toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <div class="flex gap-2">
+            <button @click="view='kanban'" class="px-4 py-2 rounded-lg text-sm font-medium border-0 cursor-pointer" :style="view='kanban'?'background:var(--cd-primary);color:#fff':'background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)'"><svg class="inline w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/></svg>Board</button>
+            <button @click="view='list'" class="px-4 py-2 rounded-lg text-sm font-medium border-0 cursor-pointer" :style="view==='list'?'background:var(--cd-primary);color:#fff':'background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)'"><svg class="inline w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 16 16"><path d="M2 4a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1zm0 3.5a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1zm0 3.5a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1z"/></svg>List</button>
           </div>
+          <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white border-0 cursor-pointer" style="background:var(--cd-primary)"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>Add Task</button>
         </div>
-        <div class="flex gap-3 border-t pt-6" style="border-color:var(--cd-border)">
-          <button onclick="window.print()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-none cursor-pointer" style="background:var(--cd-primary)">🖨 Print Invoice</button>
-          <button class="px-5 py-2.5 rounded-xl text-sm font-semibold border cursor-pointer" style="background:transparent;border-color:var(--cd-border);color:var(--cd-text-muted)">⬇ Download PDF</button>
+        <!-- Kanban view -->
+        <div x-show="view==='kanban'" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <template x-for="col in columns" :key="col.id">
+            <div class="rounded-xl border" style="background:var(--cd-surface-2);border-color:var(--cd-border)">
+              <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full" :style="`background:${col.color}`"></span><span class="text-sm font-semibold" style="color:var(--cd-text)" x-text="col.title"></span><span class="text-xs px-1.5 py-0.5 rounded-full" style="background:var(--cd-border);color:var(--cd-text-subtle)" x-text="col.tasks.length"></span></div>
+                <button class="w-7 h-7 rounded-lg flex items-center justify-center border-0 cursor-pointer bg-transparent" style="color:var(--cd-text-subtle)" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></button>
+              </div>
+              <div class="px-3 pb-3 flex flex-col gap-2">
+                <template x-for="task in col.tasks" :key="task.id">
+                  <div class="rounded-lg p-3 cursor-pointer transition-shadow" style="background:var(--cd-surface);border:1px solid var(--cd-border)" @mouseover="$el.style.boxShadow='var(--cd-shadow-md)'" @mouseout="$el.style.boxShadow=''">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                      <p class="text-sm font-medium m-0 leading-snug" style="color:var(--cd-text)" x-text="task.title"></p>
+                      <span class="text-xs px-1.5 py-0.5 rounded-full flex-shrink-0 font-medium" :style="task.prioStyle" x-text="task.priority"></span>
+                    </div>
+                    <p x-show="task.desc" class="text-xs m-0 mb-2 leading-relaxed" style="color:var(--cd-text-muted)" x-text="task.desc"></p>
+                    <div class="flex items-center justify-between">
+                      <div class="flex -space-x-1">
+                        <template x-for="a in task.assignees" :key="a">
+                          <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-white text-xs font-bold" :style="`background:${a};border-color:var(--cd-surface)`"></div>
+                        </template>
+                      </div>
+                      <span class="text-xs" style="color:var(--cd-text-subtle)" x-text="task.due"></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+        <!-- List view -->
+        <div x-show="view==='list'" class="rounded-xl border overflow-hidden" style="background:var(--cd-surface);border-color:var(--cd-border)">
+          <table class="cd-table">
+            <thead><tr><th>Task</th><th>Status</th><th>Priority</th><th>Assignee</th><th>Due Date</th></tr></thead>
+            <tbody>
+              <template x-for="task in allTasks" :key="task.id">
+                <tr class="cursor-pointer">
+                  <td><span class="font-medium" style="color:var(--cd-text)" x-text="task.title"></span></td>
+                  <td><span class="text-xs px-2 py-0.5 rounded-full font-medium" :style="task.statusStyle" x-text="task.status"></span></td>
+                  <td><span class="text-xs px-2 py-0.5 rounded-full font-medium" :style="task.prioStyle" x-text="task.priority"></span></td>
+                  <td><div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold" :style="`background:${task.assignees[0]||'#94A3B8'}`">?</div></td>
+                  <td style="color:var(--cd-text-muted)" x-text="task.due"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
+      <script>
+        function tasksCtrl() {
+          const p = {
+            High: 'background:var(--cd-danger-light);color:var(--cd-danger)',
+            Medium: 'background:var(--cd-warning-light);color:var(--cd-warning)',
+            Low: 'background:var(--cd-success-light);color:var(--cd-success)'
+          };
+          const s = {
+            'To Do': 'background:var(--cd-surface-2);color:var(--cd-text-muted)',
+            'In Progress': 'background:var(--cd-info-light);color:var(--cd-info)',
+            'Review': 'background:var(--cd-warning-light);color:var(--cd-warning)',
+            'Done': 'background:var(--cd-success-light);color:var(--cd-success)'
+          };
+          const columns = [
+            {id:'todo', title:'To Do', color:'#94A3B8', tasks:[
+              {id:1, title:'Design new onboarding flow', desc:'Create wireframes and prototypes', priority:'High', prioStyle:p.High, due:'Mar 1', assignees:['#3B82F6','#6366F1'], status:'To Do', statusStyle:s['To Do']},
+              {id:2, title:'Update API documentation', desc:'', priority:'Medium', prioStyle:p.Medium, due:'Mar 5', assignees:['#16A34A'], status:'To Do', statusStyle:s['To Do']},
+              {id:3, title:'Fix CSV export bug', desc:'Special characters cause encoding issues', priority:'High', prioStyle:p.High, due:'Feb 28', assignees:['#DC2626'], status:'To Do', statusStyle:s['To Do']},
+            ]},
+            {id:'progress', title:'In Progress', color:'#3B82F6', tasks:[
+              {id:4, title:'Implement dark mode', desc:'Full CSS variable system', priority:'High', prioStyle:p.High, due:'Mar 3', assignees:['#3B82F6'], status:'In Progress', statusStyle:s['In Progress']},
+              {id:5, title:'Mobile sidebar', desc:'Responsive overlay navigation', priority:'High', prioStyle:p.High, due:'Mar 2', assignees:['#6366F1','#F59E0B'], status:'In Progress', statusStyle:s['In Progress']},
+              {id:6, title:'Add 2FA support', desc:'', priority:'Medium', prioStyle:p.Medium, due:'Mar 10', assignees:['#0EA5E9'], status:'In Progress', statusStyle:s['In Progress']},
+            ]},
+            {id:'review', title:'Review', color:'#F59E0B', tasks:[
+              {id:7, title:'Billing module v2', desc:'Stripe integration update', priority:'High', prioStyle:p.High, due:'Feb 27', assignees:['#8B5CF6','#3B82F6'], status:'Review', statusStyle:s['Review']},
+              {id:8, title:'User roles refactor', desc:'', priority:'Low', prioStyle:p.Low, due:'Mar 8', assignees:['#16A34A'], status:'Review', statusStyle:s['Review']},
+            ]},
+            {id:'done', title:'Done', color:'#16A34A', tasks:[
+              {id:9, title:'Dashboard redesign', desc:'', priority:'High', prioStyle:p.High, due:'Feb 20', assignees:['#3B82F6'], status:'Done', statusStyle:s['Done']},
+              {id:10, title:'Notification system', desc:'', priority:'Medium', prioStyle:p.Medium, due:'Feb 22', assignees:['#EC4899'], status:'Done', statusStyle:s['Done']},
+              {id:11, title:'CI/CD pipeline setup', desc:'', priority:'Low', prioStyle:p.Low, due:'Feb 18', assignees:['#0EA5E9'], status:'Done', statusStyle:s['Done']},
+            ]},
+          ];
+          return {
+            view: 'kanban',
+            columns,
+            get allTasks() { return this.columns.flatMap(c => c.tasks); }
+          }
+        }
+      </script>
     </main>
   </div>
 </div>

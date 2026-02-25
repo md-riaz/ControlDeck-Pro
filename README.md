@@ -6,7 +6,24 @@ ControlDeck Pro is a production-quality admin panel design system with two compl
 
 ---
 
-## Preview
+## Preview Tour
+
+Open **[`preview.html`](preview.html)** in a browser for a live interactive tour of all 27 page blueprints across both stacks — no screenshots, no downloads required.
+
+Features of the preview tour:
+- 📋 Sidebar with all pages grouped by category (Dashboards, Forms, Tables, Charts, Mailbox, Auth, Errors…)
+- 🔀 **Stack switcher** — flip between Bootstrap 5 and Tailwind instantly
+- 🖼️ **Live iframe preview** — every page renders in-window at full fidelity
+- ⬅️ ➡️ **Prev / Next** navigation with a `1 / 27` counter
+- 🔍 Search filter to jump to any page by name
+- 📐 Component Specs panel — all 31 `data-cd` hooks with one-click copy
+- 🌓 Light / dark mode toggle
+- ↗️ Open-in-new-tab for any page
+
+```bash
+npx serve .
+# then visit http://localhost:3000/preview.html
+```
 
 All pages open directly in a browser with **no build step required**.
 

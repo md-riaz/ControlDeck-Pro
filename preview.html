@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ControlDeck Pro — Preview Tour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Tokens ──────────────────────────────────────────────── */
+    :root {
+      --bg: #F8FAFC; --surface: #FFFFFF; --surface-2: #F1F5F9; --border: #E2E8F0;
+      --text: #0F172A; --muted: #475569; --subtle: #94A3B8;
+      --primary: #3B82F6; --primary-h: #2563EB; --primary-lt: #EFF6FF;
+      --success: #16A34A; --warning: #F59E0B; --danger: #DC2626; --info: #0EA5E9;
+      --radius: 10px; --radius-sm: 6px;
+      --shadow: 0 4px 16px rgba(2,6,23,.09);
+      --sidebar-w: 280px; --topbar-h: 56px;
+      --font: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      --tr: 180ms ease;
+    }
+    [data-theme="dark"] {
+      --bg: #0F172A; --surface: #1E293B; --surface-2: #334155; --border: #334155;
+      --text: #F1F5F9; --muted: #94A3B8; --subtle: #64748B;
+      --primary-lt: #1E3A5F;
+    }
+
+    /* ── Reset ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font); font-size: 14px;
+      background: var(--bg); color: var(--text);
+      height: 100vh; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Topbar ──────────────────────────────────────────────── */
+    #topbar {
+      height: var(--topbar-h); background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 20px; flex-shrink: 0; z-index: 200;
+      box-shadow: 0 1px 4px rgba(2,6,23,.06);
+    }
+    #topbar .brand {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: 16px; color: var(--primary);
+      text-decoration: none; white-space: nowrap;
+    }
+    #topbar .brand svg { flex-shrink: 0; }
+    .topbar-sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+    #topbar .breadcrumb {
+      font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px;
+      overflow: hidden; flex: 1; min-width: 0;
+    }
+    #topbar .breadcrumb span { white-space: nowrap; }
+    #topbar .breadcrumb .sep { color: var(--subtle); }
+    #topbar .breadcrumb .current { font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+    .topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .btn-icon {
+      width: 34px; height: 34px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface-2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background var(--tr), border-color var(--tr);
+      color: var(--muted);
+    }
+    .btn-icon:hover { background: var(--primary-lt); border-color: var(--primary); color: var(--primary); }
+    .btn-icon svg { width: 16px; height: 16px; }
+
+    /* Stack toggle */
+    #stack-toggle {
+      display: flex; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); overflow: hidden;
+    }
+    #stack-toggle button {
+      padding: 5px 14px; border: none; background: transparent;
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: background var(--tr), color var(--tr);
+      font-family: var(--font);
+    }
+    #stack-toggle button.active { background: var(--primary); color: #fff; }
+
+    /* ── Layout body ─────────────────────────────────────────── */
+    #layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: width var(--tr);
+    }
+    #sidebar.collapsed { width: 0; }
+    #sidebar-inner { flex: 1; overflow-y: auto; padding: 12px 0 20px; }
+    #sidebar-inner::-webkit-scrollbar { width: 4px; }
+    #sidebar-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* Sidebar search */
+    .sidebar-search { padding: 8px 16px 4px; }
+    .sidebar-search input {
+      width: 100%; padding: 6px 10px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--surface-2); color: var(--text); font-size: 12px;
+      font-family: var(--font); outline: none; transition: border-color var(--tr);
+    }
+    .sidebar-search input:focus { border-color: var(--primary); }
+    .sidebar-search input::placeholder { color: var(--subtle); }
+
+    /* Group heading */
+    .nav-group { margin-top: 8px; }
+    .nav-group-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--subtle);
+      padding: 10px 16px 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 16px 7px 20px;
+      font-size: 13px; color: var(--muted);
+      cursor: pointer; transition: background var(--tr), color var(--tr);
+      border-radius: 0; position: relative;
+      user-select: none;
+    }
+    .nav-item:hover { background: var(--surface-2); color: var(--text); }
+    .nav-item.active {
+      background: var(--primary-lt); color: var(--primary); font-weight: 600;
+    }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 4px; bottom: 4px;
+      width: 3px; background: var(--primary); border-radius: 0 3px 3px 0;
+    }
+    .nav-item .stack-badge {
+      margin-left: auto; font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 100px;
+      background: var(--surface-2); color: var(--subtle);
+    }
+    .nav-item.active .stack-badge { background: var(--primary-lt); color: var(--primary); }
+
+    /* Component spec items */
+    .nav-item.spec { padding-left: 28px; }
+
+    /* ── Main area ───────────────────────────────────────────── */
+    #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Toolbar below topbar inside main */
+    #page-toolbar {
+      height: 40px; background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px; padding: 0 16px;
+      flex-shrink: 0;
+    }
+    #page-toolbar .page-title { font-weight: 600; font-size: 13px; flex: 1; }
+    #page-toolbar .tag {
+      font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px;
+      background: var(--primary-lt); color: var(--primary);
+    }
+    #prev-btn, #next-btn {
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface-2);
+      font-size: 12px; font-weight: 500; cursor: pointer; color: var(--muted);
+      font-family: var(--font); transition: all var(--tr);
+    }
+    #prev-btn:hover, #next-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lt); }
+    #prev-btn:disabled, #next-btn:disabled { opacity: .35; pointer-events: none; }
+    #page-counter { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+    /* iframe container */
+    #frame-wrap {
+      flex: 1; position: relative; overflow: hidden;
+      background: var(--surface-2);
+    }
+    #preview-frame {
+      width: 100%; height: 100%; border: none;
+      display: block;
+    }
+    #frame-loading {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: var(--surface-2); z-index: 10; transition: opacity var(--tr);
+    }
+    #frame-loading.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid var(--border);
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Component spec panel ────────────────────────────────── */
+    #spec-panel {
+      width: 360px; flex-shrink: 0; background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: width var(--tr);
+    }
+    #spec-panel.hidden { width: 0; }
+    #spec-panel-inner { flex: 1; overflow-y: auto; padding: 16px; }
+    #spec-panel-inner::-webkit-scrollbar { width: 4px; }
+    #spec-panel-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .spec-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .spec-header h2 { font-size: 14px; font-weight: 700; }
+    .spec-card {
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px; margin-bottom: 12px; background: var(--surface);
+    }
+    .spec-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .spec-card .hook-list { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .hook-chip {
+      font-size: 11px; font-family: monospace; padding: 2px 7px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 4px; color: var(--primary); cursor: pointer;
+      transition: background var(--tr);
+    }
+    .hook-chip:hover { background: var(--primary-lt); }
+    .spec-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Welcome screen ──────────────────────────────────────── */
+    #welcome {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 24px; padding: 40px; text-align: center;
+    }
+    #welcome h1 { font-size: 28px; font-weight: 800; }
+    #welcome h1 span { color: var(--primary); }
+    #welcome p { color: var(--muted); max-width: 480px; line-height: 1.6; }
+    .welcome-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px; width: 100%; max-width: 720px;
+    }
+    .welcome-card {
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 18px 16px; background: var(--surface);
+      display: flex; flex-direction: column; gap: 6px; cursor: pointer;
+      transition: box-shadow var(--tr), border-color var(--tr), transform var(--tr);
+      text-align: left;
+    }
+    .welcome-card:hover {
+      border-color: var(--primary); box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+    .welcome-card .wc-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: var(--primary-lt); display: flex; align-items: center; justify-content: center;
+      color: var(--primary); margin-bottom: 4px;
+    }
+    .welcome-card .wc-icon svg { width: 20px; height: 20px; }
+    .welcome-card h3 { font-size: 13px; font-weight: 700; }
+    .welcome-card p { font-size: 12px; color: var(--muted); }
+    .welcome-card .wc-count { font-size: 11px; font-weight: 600; color: var(--primary); }
+    .welcome-btn {
+      padding: 10px 24px; background: var(--primary); color: #fff;
+      border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: var(--font);
+      transition: background var(--tr), box-shadow var(--tr);
+    }
+    .welcome-btn:hover { background: var(--primary-h); box-shadow: 0 4px 12px rgba(59,130,246,.4); }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      #sidebar { position: fixed; left: 0; top: var(--topbar-h); bottom: 0; z-index: 150; }
+      #sidebar.collapsed { transform: translateX(-100%); width: var(--sidebar-w); }
+      #spec-panel { display: none; }
+    }
+
+    /* Highlight on hover nav */
+    .nav-item svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    /* Tooltip for collapsed */
+    .nav-item[title]:hover::after {
+      content: attr(title); position: absolute; left: calc(100% + 8px);
+      top: 50%; transform: translateY(-50%);
+      background: var(--text); color: var(--surface); font-size: 12px;
+      padding: 4px 10px; border-radius: var(--radius-sm); white-space: nowrap;
+      pointer-events: none; z-index: 300;
+    }
+
+    /* Hidden nav item */
+    .nav-item.hidden-item { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── Topbar ─────────────────────────────────────────────────── -->
+<header id="topbar">
+  <a class="brand" href="#">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+      <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+      <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+      <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+    </svg>
+    ControlDeck Pro
+  </a>
+  <div class="topbar-sep"></div>
+  <nav class="breadcrumb" id="breadcrumb">
+    <span>Preview Tour</span>
+  </nav>
+  <div class="topbar-right">
+    <div id="stack-toggle">
+      <button id="btn-bs" class="active" onclick="setStack('bootstrap')">Bootstrap</button>
+      <button id="btn-tw" onclick="setStack('tailwind')">Tailwind</button>
+    </div>
+    <div class="btn-icon" id="spec-toggle-btn" onclick="toggleSpecPanel()" title="Component Specs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/>
+      </svg>
+    </div>
+    <div class="btn-icon" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </div>
+    <div class="btn-icon" onclick="toggleTheme()" title="Toggle theme" id="theme-btn">
+      <svg id="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/>
+        <line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/>
+        <line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg id="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </div>
+    <div class="btn-icon" onclick="openInNew()" title="Open in new tab" id="open-btn" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ── Body ───────────────────────────────────────────────────── -->
+<div id="layout">
+
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <div id="sidebar-inner">
+      <div class="sidebar-search">
+        <input type="search" id="nav-search" placeholder="Search pages…" oninput="filterNav(this.value)" />
+      </div>
+      <div id="nav-tree"></div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main id="main">
+    <div id="page-toolbar" style="display:none">
+      <button id="prev-btn" onclick="navigate(-1)" disabled>← Prev</button>
+      <span class="page-title" id="toolbar-title">—</span>
+      <span class="tag" id="toolbar-tag">—</span>
+      <span id="page-counter"></span>
+      <button id="next-btn" onclick="navigate(1)">Next →</button>
+    </div>
+
+    <!-- Welcome -->
+    <div id="welcome">
+      <div>
+        <h1>ControlDeck Pro — <span>Preview Tour</span></h1>
+        <p>Browse all 27 page blueprints in both Bootstrap 5 + jQuery and Tailwind + Alpine stacks — live inside this window, no download required.</p>
+      </div>
+      <div class="welcome-grid" id="welcome-grid"></div>
+      <button class="welcome-btn" onclick="startTour()">▶ Start Tour</button>
+    </div>
+
+    <!-- Frame -->
+    <div id="frame-wrap" style="display:none">
+      <div id="frame-loading">
+        <div class="spinner"></div>
+      </div>
+      <iframe id="preview-frame" title="Page preview" onload="typeof frameLoaded==='function'&&frameLoaded()"></iframe>
+    </div>
+  </main>
+
+  <!-- Component Spec Panel -->
+  <aside id="spec-panel" class="hidden">
+    <div id="spec-panel-inner">
+      <div class="spec-header">
+        <h2>Component Specs</h2>
+        <div class="btn-icon" onclick="toggleSpecPanel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </div>
+      </div>
+      <div id="spec-list"></div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+/* ── Data ──────────────────────────────────────────────────────── */
+const PAGES = [
+  { id:'page-dashboard-v1',    label:'Dashboard v1',    cat:'Dashboards',  bs:'bootstrap/index.html',           tw:'tailwind/index.html',           icon:'grid' },
+  { id:'page-dashboard-v2',    label:'Dashboard v2',    cat:'Dashboards',  bs:'bootstrap/dashboard2.html',      tw:'tailwind/dashboard2.html',      icon:'grid' },
+  { id:'page-widgets',         label:'Widgets',         cat:'Dashboards',  bs:'bootstrap/widgets.html',         tw:'tailwind/widgets.html',         icon:'box' },
+  { id:'page-ui-general',      label:'UI General',      cat:'UI Elements', bs:'bootstrap/ui-general.html',      tw:'tailwind/ui-general.html',      icon:'layers' },
+  { id:'page-ui-icons',        label:'UI Icons',        cat:'UI Elements', bs:'bootstrap/ui-icons.html',        tw:'tailwind/ui-icons.html',        icon:'star' },
+  { id:'page-ui-modals',       label:'UI Modals',       cat:'UI Elements', bs:'bootstrap/ui-modals.html',       tw:'tailwind/ui-modals.html',       icon:'square' },
+  { id:'page-ui-timeline',     label:'UI Timeline',     cat:'UI Elements', bs:'bootstrap/ui-timeline.html',     tw:'tailwind/ui-timeline.html',     icon:'list' },
+  { id:'page-form-general',    label:'Forms General',   cat:'Forms',       bs:'bootstrap/form-general.html',    tw:'tailwind/form-general.html',    icon:'edit' },
+  { id:'page-form-advanced',   label:'Forms Advanced',  cat:'Forms',       bs:'bootstrap/form-advanced.html',   tw:'tailwind/form-advanced.html',   icon:'edit' },
+  { id:'page-form-editors',    label:'Form Editors',    cat:'Forms',       bs:'bootstrap/form-editors.html',    tw:'tailwind/form-editors.html',    icon:'edit' },
+  { id:'page-table-simple',    label:'Table Simple',    cat:'Tables',      bs:'bootstrap/table-simple.html',    tw:'tailwind/table-simple.html',    icon:'table' },
+  { id:'page-table-datatables',label:'DataTables',      cat:'Tables',      bs:'bootstrap/table-datatables.html',tw:'tailwind/table-datatables.html',icon:'table' },
+  { id:'page-chart-line',      label:'Chart Line',      cat:'Charts',      bs:'bootstrap/chart-line.html',      tw:'tailwind/chart-line.html',      icon:'trending' },
+  { id:'page-chart-bar',       label:'Chart Bar',       cat:'Charts',      bs:'bootstrap/chart-bar.html',       tw:'tailwind/chart-bar.html',       icon:'bar-chart' },
+  { id:'page-chart-pie',       label:'Chart Pie',       cat:'Charts',      bs:'bootstrap/chart-pie.html',       tw:'tailwind/chart-pie.html',       icon:'pie-chart' },
+  { id:'page-mailbox-inbox',   label:'Mailbox Inbox',   cat:'Mailbox',     bs:'bootstrap/mailbox-inbox.html',   tw:'tailwind/mailbox-inbox.html',   icon:'mail' },
+  { id:'page-mailbox-compose', label:'Mailbox Compose', cat:'Mailbox',     bs:'bootstrap/mailbox-compose.html', tw:'tailwind/mailbox-compose.html', icon:'mail' },
+  { id:'page-mailbox-read',    label:'Mailbox Read',    cat:'Mailbox',     bs:'bootstrap/mailbox-read.html',    tw:'tailwind/mailbox-read.html',    icon:'mail' },
+  { id:'page-calendar',        label:'Calendar',        cat:'Pages',       bs:'bootstrap/calendar.html',        tw:'tailwind/calendar.html',        icon:'calendar' },
+  { id:'page-invoice',         label:'Invoice',         cat:'Pages',       bs:'bootstrap/invoice.html',         tw:'tailwind/invoice.html',         icon:'file' },
+  { id:'page-profile',         label:'Profile',         cat:'Pages',       bs:'bootstrap/profile.html',         tw:'tailwind/profile.html',         icon:'user' },
+  { id:'page-auth-login',      label:'Login',           cat:'Auth',        bs:'bootstrap/login.html',           tw:'tailwind/login.html',           icon:'lock' },
+  { id:'page-auth-register',   label:'Register',        cat:'Auth',        bs:'bootstrap/register.html',        tw:'tailwind/register.html',        icon:'lock' },
+  { id:'page-auth-lockscreen', label:'Lockscreen',      cat:'Auth',        bs:'bootstrap/lockscreen.html',      tw:'tailwind/lockscreen.html',      icon:'lock' },
+  { id:'page-error-404',       label:'Error 404',       cat:'Errors',      bs:'bootstrap/404.html',             tw:'tailwind/404.html',             icon:'alert' },
+  { id:'page-error-500',       label:'Error 500',       cat:'Errors',      bs:'bootstrap/500.html',             tw:'tailwind/500.html',             icon:'alert' },
+  { id:'page-blank',           label:'Blank Page',      cat:'Pages',       bs:'bootstrap/blank.html',           tw:'tailwind/blank.html',           icon:'file' },
+];
+
+const COMPONENTS = [
+  { name:'CD-AppShell',      hook:'data-cd="app"',           desc:'Root layout wrapper (topbar + sidebar + main).' },
+  { name:'CD-Sidebar',       hook:'data-cd="nav-tree"',       desc:'Navigation tree with three-level nesting and badges.' },
+  { name:'CD-Topbar',        hook:'data-cd="search"',         desc:'Global search, actions, and sidebar toggle.' },
+  { name:'CD-PageHeader',    hook:'data-cd="page-title"',     desc:'Page title, breadcrumb and action buttons.' },
+  { name:'CD-Card',          hook:'data-cd="card"',           desc:'Content container with collapse/expand.' },
+  { name:'CD-StatTile',      hook:'data-cd="stat"',           desc:'Dashboard KPI tile.' },
+  { name:'CD-DataTable',     hook:'data-cd="table"',          desc:'Table with search, pagination, bulk actions.' },
+  { name:'CD-FormSection',   hook:'data-cd="form-section"',   desc:'Grouped inputs with labels and validation.' },
+  { name:'CD-Modal',         hook:'data-cd="modal"',          desc:'Dialog overlay.' },
+  { name:'CD-Drawer',        hook:'data-cd="drawer"',         desc:'Slide-in side panel.' },
+  { name:'CD-Tabs',          hook:'data-cd="tabs"',           desc:'Tab navigation.' },
+  { name:'CD-Alert',         hook:'data-cd="alert"',          desc:'Feedback messages.' },
+  { name:'CD-ToastHost',     hook:'data-cd="toast-host"',     desc:'Notification host element.' },
+  { name:'CD-Progress',      hook:'data-cd="progress"',       desc:'Progress bar.' },
+  { name:'CD-Badge',         hook:'data-cd="badge"',          desc:'Status label.' },
+  { name:'CD-Avatar',        hook:'data-cd="avatar"',         desc:'User image.' },
+  { name:'CD-FilterBar',     hook:'data-cd="filter-bar"',     desc:'Table filter chips and actions.' },
+  { name:'CD-Timeline',      hook:'data-cd="timeline"',       desc:'Vertical timeline.' },
+  { name:'CD-ActivityFeed',  hook:'data-cd="activity-feed"',  desc:'Activity list.' },
+  { name:'CD-MailList',      hook:'data-cd="mail-list"',      desc:'Mail inbox list.' },
+  { name:'CD-MailViewer',    hook:'data-cd="mail-viewer"',    desc:'Mail message viewer.' },
+  { name:'CD-Calendar',      hook:'data-cd="calendar"',       desc:'Calendar grid.' },
+  { name:'CD-Invoice',       hook:'data-cd="invoice"',        desc:'Invoice layout with line items and totals.' },
+  { name:'CD-ProfileCard',   hook:'data-cd="profile"',        desc:'User profile card.' },
+  { name:'CD-ErrorState',    hook:'data-cd="error-state"',    desc:'404/500 centered state.' },
+  { name:'CD-LoginForm',     hook:'data-cd="auth-login"',     desc:'Login form.' },
+  { name:'CD-RegisterForm',  hook:'data-cd="auth-register"',  desc:'Register form.' },
+  { name:'CD-Lockscreen',    hook:'data-cd="auth-lock"',      desc:'Lock screen.' },
+  { name:'CD-Chart',         hook:'data-cd="chart"',          desc:'Chart wrapper, works with any chart lib.' },
+  { name:'CD-Kanban',        hook:'data-cd="kanban"',         desc:'Kanban board with columns.' },
+  { name:'CD-WidgetContainer',hook:'data-cd="widget"',        desc:'Draggable widget container.' },
+];
+
+const CATEGORY_ICONS = {
+  Dashboards: icons.grid, 'UI Elements': icons.layers, Forms: icons.edit,
+  Tables: icons.table, Charts: icons.trending, Mailbox: icons.mail,
+  Pages: icons.file, Auth: icons.lock, Errors: icons.alert,
+};
+
+/* ── State ─────────────────────────────────────────────────────── */
+let stack = 'bootstrap';
+let currentIdx = -1; // -1 = welcome
+let sidebarOpen = true;
+let specPanelOpen = false;
+let flatList = []; // filtered page list
+
+/* ── SVG icons ─────────────────────────────────────────────────── */
+function icons(name) {
+  const map = {
+    grid:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    box:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
+    layers:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+    star:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    square:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+    list:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+    edit:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    table:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>',
+    trending:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    'bar-chart':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>',
+    'pie-chart':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>',
+    mail:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    file:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>',
+    user:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    lock:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    alert:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    component:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+  };
+  return map[name] || map.file;
+}
+
+/* ── Build nav ─────────────────────────────────────────────────── */
+function buildNav(filter = '') {
+  const tree = document.getElementById('nav-tree');
+  tree.innerHTML = '';
+  flatList = [];
+
+  const cats = [...new Set(PAGES.map(p => p.cat))];
+  cats.forEach(cat => {
+    const pages = PAGES.filter(p => p.cat === cat && (
+      !filter || p.label.toLowerCase().includes(filter) || p.cat.toLowerCase().includes(filter)
+    ));
+    if (!pages.length) return;
+
+    const grp = document.createElement('div');
+    grp.className = 'nav-group';
+    grp.innerHTML = `<div class="nav-group-label">${cat}</div>`;
+
+    pages.forEach(page => {
+      const idx = flatList.length;
+      flatList.push(page);
+      const item = document.createElement('div');
+      item.className = 'nav-item' + (currentIdx === PAGES.indexOf(page) ? ' active' : '');
+      item.dataset.pageId = page.id;
+      item.innerHTML = `${icons(page.icon)}<span>${page.label}</span><span class="stack-badge">${stack === 'bootstrap' ? 'BS5' : 'TW'}</span>`;
+      item.onclick = () => loadPage(PAGES.indexOf(page));
+      grp.appendChild(item);
+    });
+    tree.appendChild(grp);
+  });
+}
+
+/* ── Build welcome ─────────────────────────────────────────────── */
+function buildWelcome() {
+  const grid = document.getElementById('welcome-grid');
+  const cats = [...new Set(PAGES.map(p => p.cat))];
+  grid.innerHTML = cats.map(cat => {
+    const count = PAGES.filter(p => p.cat === cat).length;
+    const icon = icons(Object.keys(CATEGORY_ICONS).includes(cat) ? {
+      Dashboards: 'grid', 'UI Elements': 'layers', Forms: 'edit',
+      Tables: 'table', Charts: 'trending', Mailbox: 'mail',
+      Pages: 'file', Auth: 'lock', Errors: 'alert',
+    }[cat] : 'file');
+    return `<div class="welcome-card" onclick="loadPageByCategory('${cat}')">
+      <div class="wc-icon">${icon}</div>
+      <h3>${cat}</h3>
+      <p>${count} page${count>1?'s':''}</p>
+      <span class="wc-count">View →</span>
+    </div>`;
+  }).join('');
+}
+
+function loadPageByCategory(cat) {
+  const idx = PAGES.findIndex(p => p.cat === cat);
+  if (idx >= 0) loadPage(idx);
+}
+
+/* ── Load page ─────────────────────────────────────────────────── */
+function loadPage(idx) {
+  currentIdx = idx;
+  const page = PAGES[idx];
+
+  // Show frame, hide welcome
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('frame-wrap').style.display = 'block';
+  document.getElementById('page-toolbar').style.display = 'flex';
+  document.getElementById('open-btn').style.display = 'flex';
+
+  // Show loading
+  document.getElementById('frame-loading').classList.remove('hidden');
+
+  // Set iframe src
+  const src = stack === 'bootstrap' ? page.bs : page.tw;
+  document.getElementById('preview-frame').src = src;
+
+  // Update toolbar
+  document.getElementById('toolbar-title').textContent = page.label;
+  document.getElementById('toolbar-tag').textContent = page.id;
+  document.getElementById('page-counter').textContent = `${idx + 1} / ${PAGES.length}`;
+
+  // Prev/next buttons
+  document.getElementById('prev-btn').disabled = idx <= 0;
+  document.getElementById('next-btn').disabled = idx >= PAGES.length - 1;
+
+  // Update breadcrumb
+  document.getElementById('breadcrumb').innerHTML = `
+    <span>Preview Tour</span>
+    <span class="sep">/</span>
+    <span>${page.cat}</span>
+    <span class="sep">/</span>
+    <span class="current">${page.label}</span>`;
+
+  // Update nav active
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.pageId === page.id);
+  });
+
+  // Scroll active item into view
+  const activeEl = document.querySelector('.nav-item.active');
+  if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+}
+
+function frameLoaded() {
+  document.getElementById('frame-loading').classList.add('hidden');
+}
+
+function navigate(delta) {
+  const next = currentIdx + delta;
+  if (next >= 0 && next < PAGES.length) loadPage(next);
+}
+
+/* ── Tour ──────────────────────────────────────────────────────── */
+function startTour() {
+  loadPage(0);
+}
+
+/* ── Stack ─────────────────────────────────────────────────────── */
+function setStack(s) {
+  stack = s;
+  document.getElementById('btn-bs').classList.toggle('active', s === 'bootstrap');
+  document.getElementById('btn-tw').classList.toggle('active', s === 'tailwind');
+  buildNav();
+  // Reload current page in new stack
+  if (currentIdx >= 0) {
+    const page = PAGES[currentIdx];
+    document.getElementById('frame-loading').classList.remove('hidden');
+    document.getElementById('preview-frame').src = s === 'bootstrap' ? page.bs : page.tw;
+  }
+  // Update stack badges
+  document.querySelectorAll('.stack-badge').forEach(b => {
+    b.textContent = s === 'bootstrap' ? 'BS5' : 'TW';
+  });
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────── */
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+}
+
+/* ── Spec panel ────────────────────────────────────────────────── */
+function toggleSpecPanel() {
+  specPanelOpen = !specPanelOpen;
+  document.getElementById('spec-panel').classList.toggle('hidden', !specPanelOpen);
+}
+
+function buildSpecPanel() {
+  const list = document.getElementById('spec-list');
+  list.innerHTML = COMPONENTS.map(c => `
+    <div class="spec-card">
+      <h3>${c.name}</h3>
+      <div class="hook-list">
+        <span class="hook-chip" title="Copy hook" onclick="copyHook('${c.hook}')">${c.hook}</span>
+      </div>
+      <p>${c.desc}</p>
+    </div>
+  `).join('');
+}
+
+function copyHook(hook) {
+  navigator.clipboard.writeText(hook).catch(() => {});
+}
+
+/* ── Theme ─────────────────────────────────────────────────────── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') !== 'dark';
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.getElementById('icon-light').style.display = dark ? 'none' : '';
+  document.getElementById('icon-dark').style.display = dark ? '' : 'none';
+}
+
+/* ── Open in new tab ───────────────────────────────────────────── */
+function openInNew() {
+  if (currentIdx < 0) return;
+  const page = PAGES[currentIdx];
+  const src = stack === 'bootstrap' ? page.bs : page.tw;
+  window.open(src, '_blank');
+}
+
+/* ── Filter nav ────────────────────────────────────────────────── */
+function filterNav(val) {
+  buildNav(val.toLowerCase());
+}
+
+/* ── Init ──────────────────────────────────────────────────────── */
+buildNav();
+buildWelcome();
+buildSpecPanel();
+</script>
+</body>
+</html>

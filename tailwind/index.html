@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" x-data="app()" :data-theme="theme" :data-density="density" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { DEFAULT: '#3B82F6', hover: '#2563EB', light: '#EFF6FF' },
+          }
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <style>
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-success-light: #F0FDF4;
+      --cd-warning: #F59E0B; --cd-warning-light: #FFFBEB;
+      --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-info: #0EA5E9; --cd-info-light: #F0F9FF;
+      --cd-sidebar-width: 260px; --cd-sidebar-collapsed-width: 64px; --cd-topbar-height: 60px;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-font: Inter, system-ui, -apple-system, sans-serif;
+      --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-success-light: #14532D;
+      --cd-warning-light: #451A03; --cd-danger-light: #450A0A; --cd-info-light: #0C4A6E;
+    }
+    [data-density="compact"] { font-size: calc(14px * 0.88); }
+    [data-density="spacious"] { font-size: calc(14px * 1.12); }
+
+    body { font-family: var(--cd-font); background: var(--cd-bg); color: var(--cd-text); }
+
+    /* Sidebar transition */
+    .sidebar-enter { transition: width 200ms ease; }
+
+    /* Custom scrollbar */
+    .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--cd-border); border-radius: 2px; }
+
+    /* Nav sub-menu slide */
+    .nav-sub-slide { overflow: hidden; transition: max-height 300ms ease; }
+
+    /* Row hover */
+    .table-row:hover { background: var(--cd-surface-2); }
+    .table-row.selected { background: var(--cd-primary-light) !important; }
+  </style>
+</head>
+<body class="min-h-screen" style="background:var(--cd-bg);color:var(--cd-text)">
+
+<div data-cd="app" class="flex min-h-screen">
+
+  <!-- ── Sidebar ──────────────────────────────────────────── -->
+  <aside
+    data-cd="sidebar"
+    :style="sidebarOpen ? 'width:260px' : 'width:64px'"
+    class="fixed inset-y-0 left-0 z-50 flex flex-col border-r transition-all duration-200"
+    style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)"
+  >
+    <!-- Brand -->
+    <a href="index.html" class="flex items-center gap-3 px-4 flex-shrink-0 no-underline" style="height:60px;border-bottom:1px solid var(--cd-border)">
+      <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white text-base" style="background:var(--cd-primary)">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 1h6v6H1zm8 0h6v6H9zm-8 8h6v6H1zm8 0h6v6H9z"/></svg>
+      </div>
+      <span x-show="sidebarOpen" x-transition:enter="transition-opacity duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="font-bold text-base whitespace-nowrap" style="color:var(--cd-text)">ControlDeck</span>
+    </a>
+
+    <!-- Nav -->
+    <nav class="flex-1 overflow-y-auto overflow-x-hidden sidebar-scroll py-3" data-cd="nav-tree">
+
+      <div x-show="sidebarOpen" class="px-4 pb-2 pt-1 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">Main</div>
+
+      <!-- Dashboard -->
+      <a href="index.html" @click="activeNav='dashboard'" :class="activeNav==='dashboard' ? 'active-nav' : ''" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150 cursor-pointer" :style="activeNav==='dashboard' ? 'background:var(--cd-primary-light);color:var(--cd-primary)' : 'color:var(--cd-text-muted)'" @mouseover="$el.style.background=(activeNav==='dashboard'?'var(--cd-primary-light)':'var(--cd-surface-2)')" @mouseout="$el.style.background=(activeNav==='dashboard'?'var(--cd-primary-light)':'')">
+        <svg class="flex-shrink-0" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 1 0 .553l-.921.921a.35.35 0 0 1-.445-.553l.92-.92a.39.39 0 0 1 .446 0M5.44 6.44a.35.35 0 0 1-.553.445L3.967 5.965a.35.35 0 0 1 .446-.553zm.222 6.86a4 4 0 1 1 4.667 0H5.663z"/></svg>
+        <span x-show="sidebarOpen" class="flex-1">Dashboard</span>
+      </a>
+
+      <!-- Users with sub-menu -->
+      <div>
+        <button @click="toggleNav('users')" class="flex items-center gap-3 px-4 py-2 w-full text-sm font-medium text-left transition-colors duration-150 border-0 bg-transparent cursor-pointer" :style="activeNav==='users'||activeNav==='all-users'||activeNav==='roles'||activeNav==='invitations' ? 'color:var(--cd-primary)' : 'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <svg class="flex-shrink-0" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.276ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>
+          <span x-show="sidebarOpen" class="flex-1">Users</span>
+          <svg x-show="sidebarOpen" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" :class="openNavs.includes('users') ? 'rotate-90' : ''" class="transition-transform duration-200"><path d="m4.646 1.646.707-.707L12 7.586 5.353 14.939l-.707-.707L10.586 8z"/></svg>
+        </button>
+        <div x-show="openNavs.includes('users') && sidebarOpen" x-transition:enter="transition-all duration-200" x-transition:enter-start="opacity-0 max-h-0" x-transition:enter-end="opacity-100 max-h-40" style="background:var(--cd-surface-2)">
+          <a href="users.html" @click="activeNav='all-users'" class="flex items-center text-sm no-underline py-2 pl-12 pr-4 transition-colors duration-150" :style="activeNav==='all-users' ? 'color:var(--cd-primary);font-weight:500' : 'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''">All Users</a>
+          <a href="#" @click="activeNav='roles'" class="flex items-center text-sm no-underline py-2 pl-12 pr-4 transition-colors duration-150" :style="activeNav==='roles' ? 'color:var(--cd-primary);font-weight:500' : 'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''">Roles &amp; Permissions</a>
+          <a href="#" @click="activeNav='invitations'" class="flex items-center text-sm no-underline py-2 pl-12 pr-4 transition-colors duration-150" :style="activeNav==='invitations' ? 'color:var(--cd-primary);font-weight:500' : 'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''">Invitations</a>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <a href="#" @click="activeNav='orders'" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150 cursor-pointer" :style="activeNav==='orders' ? 'background:var(--cd-primary-light);color:var(--cd-primary)' : 'color:var(--cd-text-muted)'" @mouseover="$el.style.background=(activeNav==='orders'?'var(--cd-primary-light)':'var(--cd-surface-2)')" @mouseout="$el.style.background=(activeNav==='orders'?'var(--cd-primary-light)':'')">
+        <svg class="flex-shrink-0" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/></svg>
+        <span x-show="sidebarOpen" class="flex-1">Orders</span>
+        <span x-show="sidebarOpen" class="text-xs font-bold px-1.5 py-0.5 rounded-full text-white" style="background:var(--cd-danger);font-size:10px">12</span>
+      </a>
+
+      <!-- Reports -->
+      <div>
+        <button @click="toggleNav('reports')" class="flex items-center gap-3 px-4 py-2 w-full text-sm font-medium text-left transition-colors duration-150 border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <svg class="flex-shrink-0" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 11H2v3h2zm5-4H7v7h2zm5-5h-2v12h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1z"/></svg>
+          <span x-show="sidebarOpen" class="flex-1">Reports</span>
+          <svg x-show="sidebarOpen" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" :class="openNavs.includes('reports') ? 'rotate-90' : ''" class="transition-transform duration-200"><path d="m4.646 1.646.707-.707L12 7.586 5.353 14.939l-.707-.707L10.586 8z"/></svg>
+        </button>
+        <div x-show="openNavs.includes('reports') && sidebarOpen" style="background:var(--cd-surface-2)">
+          <a href="#" class="flex items-center text-sm no-underline py-2 pl-12 pr-4 transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''">Analytics</a>
+          <a href="#" class="flex items-center text-sm no-underline py-2 pl-12 pr-4 transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''">Revenue</a>
+          <a href="#" class="flex items-center text-sm no-underline py-2 pl-12 pr-4 transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''">Export</a>
+        </div>
+      </div>
+
+      <!-- Divider + System -->
+      <div style="height:1px;background:var(--cd-border);margin:8px 0"></div>
+      <div x-show="sidebarOpen" class="px-4 pb-2 pt-1 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">System</div>
+
+      <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg class="flex-shrink-0" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/></svg>
+        <span x-show="sidebarOpen">Settings</span>
+      </a>
+      <a href="login.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg class="flex-shrink-0" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/><path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/></svg>
+        <span x-show="sidebarOpen">Sign Out</span>
+      </a>
+    </nav>
+
+    <!-- Footer -->
+    <div class="flex items-center gap-3 p-4 flex-shrink-0" style="border-top:1px solid var(--cd-border)">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:var(--cd-primary)">JD</div>
+      <div x-show="sidebarOpen" class="overflow-hidden">
+        <div class="text-sm font-semibold whitespace-nowrap" style="color:var(--cd-text)">Jane Doe</div>
+        <div class="text-xs whitespace-nowrap" style="color:var(--cd-text-subtle)">Administrator</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Area ─────────────────────────────────────────── -->
+  <div class="flex flex-col flex-1 min-h-screen transition-all duration-200" :style="sidebarOpen ? 'margin-left:260px' : 'margin-left:64px'">
+
+    <!-- Topbar -->
+    <header data-cd="topbar" class="flex items-center gap-4 px-6 sticky top-0 z-40" style="height:60px;background:var(--cd-surface);border-bottom:1px solid var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+      <button data-cd="sidebar-toggle" @click="sidebarOpen = !sidebarOpen" class="w-9 h-9 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></svg>
+      </button>
+
+      <!-- Search -->
+      <div class="relative flex-1 max-w-sm">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2" width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11"/></svg>
+        <input type="search" placeholder="Search anything..." class="w-full pl-9 pr-4 py-2 text-sm rounded-lg border outline-none transition-all duration-150" style="background:var(--cd-surface-2);border-color:var(--cd-border);color:var(--cd-text);font-family:var(--cd-font)" onfocus="this.style.borderColor='var(--cd-primary)';this.style.boxShadow='0 0 0 3px rgba(59,130,246,.15)'" onblur="this.style.borderColor='var(--cd-border)';this.style.boxShadow=''" />
+      </div>
+
+      <div class="ml-auto flex items-center gap-2">
+        <!-- Density -->
+        <div class="relative" x-data="{ open: false }">
+          <button @click="open=!open" class="w-9 h-9 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5z"/></svg>
+          </button>
+          <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 py-2 rounded-xl border shadow-lg z-50" style="min-width:160px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+            <button @click="density='compact';open=false" class="flex items-center gap-3 px-4 py-2 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Compact</button>
+            <button @click="density='comfortable';open=false" class="flex items-center gap-3 px-4 py-2 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Comfortable</button>
+            <button @click="density='spacious';open=false" class="flex items-center gap-3 px-4 py-2 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Spacious</button>
+          </div>
+        </div>
+
+        <!-- Theme toggle -->
+        <button @click="theme = theme === 'dark' ? 'light' : 'dark'" class="w-9 h-9 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <svg x-show="theme !== 'dark'" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/></svg>
+          <svg x-show="theme === 'dark'" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/></svg>
+        </button>
+
+        <!-- Notifications -->
+        <div class="relative" x-data="{ open: false }">
+          <button @click="open=!open" class="relative w-9 h-9 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg>
+            <span class="absolute top-1 right-1 flex items-center justify-center text-white rounded-full border-2" style="width:16px;height:16px;font-size:9px;font-weight:700;background:var(--cd-danger);border-color:var(--cd-surface)">5</span>
+          </button>
+          <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 rounded-xl border shadow-lg z-50 overflow-hidden" style="width:280px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+            <div class="px-4 py-3 text-sm font-semibold border-b" style="color:var(--cd-text);border-color:var(--cd-border)">Notifications</div>
+            <div class="py-1">
+              <button class="flex items-start gap-3 px-4 py-3 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+                <svg class="flex-shrink-0 mt-0.5" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-primary)"><path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/><path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/></svg>
+                <div>
+                  <div class="font-medium" style="color:var(--cd-text);font-size:13px">New user registered</div>
+                  <div style="font-size:11px;color:var(--cd-text-subtle)">2 minutes ago</div>
+                </div>
+              </button>
+              <button class="flex items-start gap-3 px-4 py-3 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+                <svg class="flex-shrink-0 mt-0.5" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-success)"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
+                <div>
+                  <div class="font-medium" style="color:var(--cd-text);font-size:13px">Order #4821 placed</div>
+                  <div style="font-size:11px;color:var(--cd-text-subtle)">18 minutes ago</div>
+                </div>
+              </button>
+            </div>
+            <div class="border-t text-center py-2" style="border-color:var(--cd-border)">
+              <button class="text-sm font-medium border-0 bg-transparent cursor-pointer" style="color:var(--cd-primary)">View all</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- User menu -->
+        <div class="relative" x-data="{ open: false }">
+          <button @click="open=!open" class="flex items-center gap-2 px-2 py-1 rounded-lg border-0 bg-transparent cursor-pointer transition-colors duration-150" style="color:var(--cd-text)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</div>
+            <span class="text-sm font-medium">Jane Doe</span>
+            <svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+          </button>
+          <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 py-2 rounded-xl border shadow-lg z-50" style="min-width:180px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+            <button class="flex items-center gap-3 px-4 py-2 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Profile</button>
+            <button class="flex items-center gap-3 px-4 py-2 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Settings</button>
+            <div style="height:1px;background:var(--cd-border);margin:4px 0"></div>
+            <a href="login.html" class="flex items-center gap-3 px-4 py-2 text-sm no-underline" style="color:var(--cd-danger)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="p-6 flex-1">
+
+      <!-- Breadcrumb -->
+      <ol class="flex items-center gap-2 text-sm mb-4 list-none p-0" style="color:var(--cd-text-muted)">
+        <li><a href="#" class="no-underline" style="color:var(--cd-text-muted)" @mouseover="$el.style.color='var(--cd-primary)'" @mouseout="$el.style.color='var(--cd-text-muted)'">Home</a></li>
+        <li class="text-xs" style="color:var(--cd-text-subtle)">/</li>
+        <li class="font-medium" style="color:var(--cd-text)">Dashboard</li>
+      </ol>
+
+      <!-- Page header -->
+      <div class="mb-6">
+        <h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Dashboard</h1>
+        <p class="text-sm m-0" style="color:var(--cd-text-muted)">Welcome back, Jane. Here's what's happening today.</p>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <!-- Users -->
+        <div class="rounded-xl border p-5 transition-shadow duration-200 cursor-default" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)" @mouseover="$el.style.boxShadow='var(--cd-shadow-md)'" @mouseout="$el.style.boxShadow='var(--cd-shadow-sm)'">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="text-2xl font-bold" style="color:var(--cd-text)">24,521</div>
+              <div class="text-sm mt-1" style="color:var(--cd-text-muted)">Total Users</div>
+            </div>
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-xl" style="background:var(--cd-primary-light);color:var(--cd-primary)">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.276ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full" style="background:var(--cd-success-light);color:var(--cd-success)">↑ 12.4% vs last month</span>
+        </div>
+        <!-- Revenue -->
+        <div class="rounded-xl border p-5 transition-shadow duration-200 cursor-default" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)" @mouseover="$el.style.boxShadow='var(--cd-shadow-md)'" @mouseout="$el.style.boxShadow='var(--cd-shadow-sm)'">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="text-2xl font-bold" style="color:var(--cd-text)">$128,430</div>
+              <div class="text-sm mt-1" style="color:var(--cd-text-muted)">Revenue</div>
+            </div>
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-xl" style="background:var(--cd-success-light);color:var(--cd-success)">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.051zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/></svg>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full" style="background:var(--cd-success-light);color:var(--cd-success)">↑ 8.1% vs last month</span>
+        </div>
+        <!-- Orders -->
+        <div class="rounded-xl border p-5 transition-shadow duration-200 cursor-default" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)" @mouseover="$el.style.boxShadow='var(--cd-shadow-md)'" @mouseout="$el.style.boxShadow='var(--cd-shadow-sm)'">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="text-2xl font-bold" style="color:var(--cd-text)">3,842</div>
+              <div class="text-sm mt-1" style="color:var(--cd-text-muted)">Orders</div>
+            </div>
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-xl" style="background:var(--cd-warning-light);color:var(--cd-warning)">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full" style="background:var(--cd-danger-light);color:var(--cd-danger)">↓ 2.3% vs last month</span>
+        </div>
+        <!-- Sessions -->
+        <div class="rounded-xl border p-5 transition-shadow duration-200 cursor-default" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)" @mouseover="$el.style.boxShadow='var(--cd-shadow-md)'" @mouseout="$el.style.boxShadow='var(--cd-shadow-sm)'">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="text-2xl font-bold" style="color:var(--cd-text)">1,209</div>
+              <div class="text-sm mt-1" style="color:var(--cd-text-muted)">Active Sessions</div>
+            </div>
+            <div class="w-11 h-11 rounded-lg flex items-center justify-center text-xl" style="background:var(--cd-info-light);color:var(--cd-info)">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"/></svg>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full" style="background:var(--cd-success-light);color:var(--cd-success)">↑ 5.7% vs last hour</span>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="rounded-xl border overflow-hidden" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+        <!-- Card header -->
+        <div class="flex items-center justify-between gap-4 px-5 py-4 border-b" style="border-color:var(--cd-border)">
+          <h2 class="text-base font-semibold m-0" style="color:var(--cd-text)">Recent Users</h2>
+          <a href="users.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-white no-underline transition-colors duration-150" style="background:var(--cd-primary)" @mouseover="$el.style.background='var(--cd-primary-hover)'" @mouseout="$el.style.background='var(--cd-primary)'">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>
+            Add User
+          </a>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="flex items-center gap-3 px-5 py-4 border-b flex-wrap" style="border-color:var(--cd-border)" x-data="tableCtrl()">
+          <div class="relative flex-1 max-w-xs">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11"/></svg>
+            <input type="search" placeholder="Search users..." @input="filterTable($event.target.value)" class="w-full pl-8 pr-4 py-2 text-sm rounded-lg border outline-none" style="background:var(--cd-surface);border-color:var(--cd-border);color:var(--cd-text);font-family:var(--cd-font)" onfocus="this.style.borderColor='var(--cd-primary)'" onblur="this.style.borderColor='var(--cd-border)'" />
+          </div>
+          <div class="ml-auto flex gap-2">
+            <button class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border cursor-pointer bg-transparent transition-colors duration-150" style="color:var(--cd-text-muted);border-color:var(--cd-border)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/></svg>
+              Filter
+            </button>
+            <button class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border cursor-pointer bg-transparent transition-colors duration-150" style="color:var(--cd-text-muted);border-color:var(--cd-border)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+              Export
+            </button>
+          </div>
+
+          <!-- Table -->
+          <div class="w-full overflow-x-auto -mx-0">
+            <table class="w-full border-collapse text-sm" id="dashTable">
+              <thead>
+                <tr style="background:var(--cd-surface-2);border-bottom:1px solid var(--cd-border)">
+                  <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider" style="font-size:11px;color:var(--cd-text-subtle);width:40px">
+                    <input type="checkbox" @change="toggleAll($event.target.checked)" class="cursor-pointer" style="accent-color:var(--cd-primary)" />
+                  </th>
+                  <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider" style="font-size:11px;color:var(--cd-text-subtle)">User</th>
+                  <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider" style="font-size:11px;color:var(--cd-text-subtle)">Role</th>
+                  <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider" style="font-size:11px;color:var(--cd-text-subtle)">Status</th>
+                  <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider" style="font-size:11px;color:var(--cd-text-subtle)">Last Login</th>
+                  <th class="px-4 py-3 text-left font-semibold uppercase tracking-wider" style="font-size:11px;color:var(--cd-text-subtle)">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="(user, index) in filteredUsers" :key="user.id">
+                  <tr class="table-row border-b cursor-pointer" :class="user.selected ? 'selected' : ''" style="border-color:var(--cd-border)" @click.self="">
+                    <td class="px-4 py-3"><input type="checkbox" x-model="user.selected" @change="updateBulk()" class="cursor-pointer" style="accent-color:var(--cd-primary)" /></td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" :style="`background:${user.color}`" x-text="user.initials"></div>
+                        <div>
+                          <div class="font-medium text-sm" style="color:var(--cd-text)" x-text="user.name"></div>
+                          <div class="text-xs" style="color:var(--cd-text-muted)" x-text="user.email"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold" :style="roleStyle(user.role)" x-text="user.role"></span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold" :style="statusStyle(user.status)" x-text="user.status"></span>
+                    </td>
+                    <td class="px-4 py-3 text-sm" style="color:var(--cd-text-muted)" x-text="user.lastLogin"></td>
+                    <td class="px-4 py-3">
+                      <div class="flex gap-1">
+                        <button class="w-7 h-7 flex items-center justify-center rounded-md border cursor-pointer bg-transparent transition-colors" style="color:var(--cd-text-muted);border-color:var(--cd-border)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+                          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
+                        </button>
+                        <button class="w-7 h-7 flex items-center justify-center rounded-md border cursor-pointer bg-transparent transition-colors" style="color:var(--cd-danger);border-color:transparent" @mouseover="$el.style.background='var(--cd-danger-light)'" @mouseout="$el.style.background=''">
+                          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="w-full flex items-center justify-between pt-4 border-t" style="border-color:var(--cd-border)">
+            <span class="text-sm" style="color:var(--cd-text-muted)">Showing 1–10 of 24,521 users</span>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg border text-sm cursor-pointer" style="color:var(--cd-text-muted);border-color:var(--cd-border);background:var(--cd-surface);opacity:0.4" disabled>‹</button>
+              <template x-for="p in [1,2,3]">
+                <button :class="p===1 ? 'text-white' : ''" :style="p===1 ? 'background:var(--cd-primary);border-color:var(--cd-primary)' : 'background:var(--cd-surface);border-color:var(--cd-border);color:var(--cd-text-muted)'" class="w-8 h-8 flex items-center justify-center rounded-lg border text-sm cursor-pointer" x-text="p"></button>
+              </template>
+              <span class="self-center text-xs px-1" style="color:var(--cd-text-subtle)">…</span>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg border text-sm cursor-pointer" style="color:var(--cd-text-muted);border-color:var(--cd-border);background:var(--cd-surface)">246</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg border text-sm cursor-pointer" style="color:var(--cd-text-muted);border-color:var(--cd-border);background:var(--cd-surface)">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Mobile backdrop -->
+<div x-show="!sidebarOpen && false" class="fixed inset-0 bg-black bg-opacity-40 z-40" @click="sidebarOpen=false"></div>
+
+<script>
+  function app() {
+    return {
+      sidebarOpen: true,
+      theme: 'light',
+      density: 'comfortable',
+      activeNav: 'dashboard',
+      openNavs: [],
+      toggleNav(name) {
+        const i = this.openNavs.indexOf(name);
+        if (i >= 0) this.openNavs.splice(i, 1);
+        else this.openNavs.push(name);
+      }
+    }
+  }
+
+  function tableCtrl() {
+    return {
+      query: '',
+      users: [
+        { id:1, name:'Alice Johnson', email:'alice@example.com', initials:'AJ', color:'#3B82F6', role:'Admin', status:'Active', lastLogin:'2 min ago', selected:false },
+        { id:2, name:'Bob Martinez', email:'bob@example.com', initials:'BM', color:'#6366F1', role:'Editor', status:'Active', lastLogin:'15 min ago', selected:false },
+        { id:3, name:'Carol White', email:'carol@example.com', initials:'CW', color:'#16A34A', role:'Viewer', status:'Pending', lastLogin:'1 hour ago', selected:false },
+        { id:4, name:'David Kim', email:'david@example.com', initials:'DK', color:'#F59E0B', role:'Editor', status:'Active', lastLogin:'3 hours ago', selected:false },
+        { id:5, name:'Eva Lopez', email:'eva@example.com', initials:'EL', color:'#EC4899', role:'Admin', status:'Active', lastLogin:'Yesterday', selected:false },
+        { id:6, name:'Frank Garcia', email:'frank@example.com', initials:'FG', color:'#0EA5E9', role:'Viewer', status:'Suspended', lastLogin:'3 days ago', selected:false },
+        { id:7, name:'Grace Huang', email:'grace@example.com', initials:'GH', color:'#8B5CF6', role:'Editor', status:'Active', lastLogin:'1 week ago', selected:false },
+        { id:8, name:'Henry Nelson', email:'henry@example.com', initials:'HN', color:'#DC2626', role:'Viewer', status:'Pending', lastLogin:'2 weeks ago', selected:false },
+        { id:9, name:'Iris Owen', email:'iris@example.com', initials:'IO', color:'#14B8A6', role:'Admin', status:'Active', lastLogin:'1 month ago', selected:false },
+        { id:10, name:'Jack Parker', email:'jack@example.com', initials:'JP', color:'#F97316', role:'Editor', status:'Suspended', lastLogin:'2 months ago', selected:false },
+      ],
+      get filteredUsers() {
+        if (!this.query) return this.users;
+        const q = this.query.toLowerCase();
+        return this.users.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+      },
+      filterTable(q) { this.query = q; },
+      toggleAll(checked) { this.users.forEach(u => u.selected = checked); },
+      updateBulk() {},
+      roleStyle(role) {
+        const m = { Admin: 'background:var(--cd-info-light);color:var(--cd-info)', Editor: 'background:var(--cd-surface-2);color:var(--cd-text-muted)', Viewer: 'background:var(--cd-surface-2);color:var(--cd-text-muted)', Manager: 'background:#F3E8FF;color:#7C3AED' };
+        return m[role] || m.Viewer;
+      },
+      statusStyle(s) {
+        const m = { Active: 'background:var(--cd-success-light);color:var(--cd-success)', Pending: 'background:var(--cd-warning-light);color:var(--cd-warning)', Suspended: 'background:var(--cd-danger-light);color:var(--cd-danger)' };
+        return m[s] || '';
+      }
+    }
+  }
+</script>
+</body>
+</html>

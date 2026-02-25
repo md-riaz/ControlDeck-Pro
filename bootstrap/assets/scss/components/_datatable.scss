@@ -1,0 +1,25 @@
+.cd-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cd-table th,
+.cd-table td {
+  padding: calc(map-get($cd-space, 3) * var(--cd-density));
+  border-bottom: 1px solid map-get($cd-colors, "border");
+  font-size: calc(13px * var(--cd-density));
+}
+
+.cd-table thead th {
+  background: map-get($cd-colors, "surface-2");
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.cd-table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: map-get($cd-space, 3);
+  margin-bottom: map-get($cd-space, 4);
+}

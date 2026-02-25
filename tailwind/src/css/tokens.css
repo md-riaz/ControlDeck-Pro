@@ -1,0 +1,6 @@
+@import "../../../tokens.css";
+
+:root {
+  font-family: var(--cd-font);
+  font-size: var(--cd-font-base);
+}

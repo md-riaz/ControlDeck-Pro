@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-cd="app">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/controldeck.css">
+  <title>ControlDeck Pro</title>
+</head>
+<body>
+  <div class="cd-app">
+    <aside class="cd-sidebar" data-cd="sidebar">
+      <div class="cd-brand">ControlDeck Pro</div>
+      <nav>
+        <ul class="cd-nav" data-cd="nav-tree">
+          <li class="cd-nav-item" data-cd="nav-item">
+            <a class="cd-nav-link active" href="#" data-cd="sidebar-link">Dashboard</a>
+          </li>
+          <li class="cd-nav-item" data-cd="nav-item">
+            <a class="cd-nav-link" href="#">Users <span class="cd-nav-badge">12</span></a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="cd-main">
+      <header class="cd-topbar">
+        <div data-cd="search">
+          <input class="form-control" type="search" placeholder="Search">
+        </div>
+        <div data-cd="topbar-actions">
+          <button class="btn btn-light" data-cd="sidebar-toggle">Toggle</button>
+        </div>
+      </header>
+      <section class="cd-page-header">
+        <div>
+          <h1 class="h4" data-cd="page-title">Page Title</h1>
+          <nav aria-label="breadcrumb" data-cd="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Current</li>
+            </ol>
+          </nav>
+        </div>
+        <div data-cd="page-actions">
+          <button class="btn btn-primary">Primary Action</button>
+        </div>
+      </section>
+
+      <div class="cd-content">
+        <!-- Page content goes here -->
+      </div>
+    </main>
+  </div>
+
+  <div data-cd="toast-host" class="position-fixed top-0 end-0 p-3"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/core/cd.core.js"></script>
+  <script src="../assets/js/core/cd.layout.js"></script>
+  <script src="../assets/js/core/cd.store.js"></script>
+  <script src="../assets/js/plugins/cd.modal.js"></script>
+  <script src="../assets/js/plugins/cd.toast.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+$cd-colors: (
+  "bg": var(--cd-bg),
+  "surface": var(--cd-surface),
+  "surface-2": var(--cd-surface-2),
+  "border": var(--cd-border),
+  "text": var(--cd-text),
+  "text-muted": var(--cd-text-muted),
+  "primary": var(--cd-primary),
+  "success": var(--cd-success),
+  "warning": var(--cd-warning),
+  "danger": var(--cd-danger),
+  "info": var(--cd-info)
+);
+
+$cd-radius: (
+  "sm": var(--cd-radius-sm),
+  "md": var(--cd-radius-md),
+  "lg": var(--cd-radius-lg)
+);
+
+$cd-shadow: (
+  "sm": var(--cd-shadow-sm),
+  "md": var(--cd-shadow-md)
+);
+
+$cd-space: (
+  1: var(--cd-space-1),
+  2: var(--cd-space-2),
+  3: var(--cd-space-3),
+  4: var(--cd-space-4),
+  5: var(--cd-space-5),
+  6: var(--cd-space-6),
+  8: var(--cd-space-8),
+  10: var(--cd-space-10)
+);
+
+$cd-font: var(--cd-font);
+$cd-font-size: var(--cd-font-base);

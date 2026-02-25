@@ -1,0 +1,86 @@
+@import "./tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+.cd-app {
+  @apply grid min-h-screen bg-cd-bg;
+  grid-template-columns: 260px 1fr;
+}
+
+.cd-sidebar {
+  @apply bg-cd-surface border-r border-cd-border p-4;
+}
+
+.cd-topbar {
+  @apply bg-cd-surface border-b border-cd-border p-4 sticky top-0 z-10 flex justify-between items-center;
+}
+
+.cd-main {
+  @apply p-6 bg-cd-bg;
+}
+
+.cd-page-header {
+  @apply flex items-center justify-between mb-6;
+}
+
+.cd-card {
+  @apply bg-cd-surface border border-cd-border rounded-cdm shadow-cds mb-6;
+}
+
+.cd-card-header {
+  padding: calc(var(--cd-space-4) * var(--cd-density));
+  @apply border-b border-cd-border flex items-center justify-between;
+}
+
+.cd-card-body {
+  padding: calc(var(--cd-space-5) * var(--cd-density));
+}
+
+.cd-nav-link {
+  padding: calc(var(--cd-space-3) * var(--cd-density)) calc(var(--cd-space-4) * var(--cd-density));
+  @apply flex items-center gap-3 rounded-cds text-cd-text no-underline;
+}
+
+.cd-nav-link:hover,
+.cd-nav-link[data-active="true"] {
+  @apply bg-cd-surface-2;
+}
+
+.cd-table th,
+.cd-table td {
+  padding: calc(var(--cd-space-3) * var(--cd-density));
+}
+
+.cd-table {
+  @apply w-full border-collapse;
+}
+
+.cd-table th {
+  @apply bg-cd-surface-2 sticky top-0;
+}
+
+.cd-dashboard-grid {
+  @apply grid gap-4 mb-6;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.cd-dashboard-columns {
+  @apply grid gap-6;
+  grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 960px) {
+  .cd-app {
+    grid-template-columns: 1fr;
+  }
+
+  .cd-dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}

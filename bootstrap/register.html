@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root{--cd-bg:#F8FAFC;--cd-surface:#FFFFFF;--cd-surface-2:#F1F5F9;--cd-border:#E2E8F0;--cd-text:#0F172A;--cd-text-muted:#475569;--cd-text-subtle:#94A3B8;--cd-primary:#3B82F6;--cd-primary-hover:#2563EB;--cd-primary-light:#EFF6FF;--cd-danger:#DC2626;--cd-success:#16A34A;--cd-radius-sm:8px;--cd-radius-md:12px;--cd-radius-lg:16px;--cd-shadow-md:0 8px 24px rgba(2,6,23,.10);--cd-font:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;--cd-font-sm:13px;--cd-font-base:14px;--cd-transition:200ms ease}
+    [data-theme="dark"]{--cd-bg:#0F172A;--cd-surface:#1E293B;--cd-surface-2:#334155;--cd-border:#334155;--cd-text:#F1F5F9;--cd-text-muted:#94A3B8;--cd-primary-light:#1E3A5F}
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:var(--cd-font);font-size:var(--cd-font-base);background:var(--cd-bg);color:var(--cd-text);margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .auth-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-lg);box-shadow:var(--cd-shadow-md);width:100%;max-width:400px;padding:40px}
+    .auth-logo{width:44px;height:44px;background:var(--cd-primary);border-radius:var(--cd-radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+    label{display:block;font-size:var(--cd-font-sm);font-weight:500;color:var(--cd-text);margin-bottom:5px}
+    .form-input{width:100%;padding:10px 14px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:var(--cd-font-sm);font-family:var(--cd-font);color:var(--cd-text);background:var(--cd-surface);outline:none;transition:border-color var(--cd-transition),box-shadow var(--cd-transition)}
+    .form-input:focus{border-color:var(--cd-primary);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+    .cd-btn-block{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 20px;border-radius:var(--cd-radius-sm);font-size:var(--cd-font-base);font-weight:600;font-family:var(--cd-font);cursor:pointer;border:none;transition:all var(--cd-transition);text-decoration:none}
+    .cd-btn-primary-block{background:var(--cd-primary);color:#fff}
+    .cd-btn-primary-block:hover{background:var(--cd-primary-hover);color:#fff}
+    .auth-link{color:var(--cd-primary);text-decoration:none;font-size:var(--cd-font-sm)}
+    .auth-link:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<div class="auth-card">
+  <div class="auth-logo"><i class="bi bi-layers-fill" style="color:#fff;font-size:20px"></i></div>
+  <h1 style="font-size:22px;font-weight:700;text-align:center;margin:0 0 4px">Create Account</h1>
+  <p style="font-size:13px;color:var(--cd-text-muted);text-align:center;margin:0 0 28px">Join ControlDeck Pro today</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div><label>First Name</label><input type="text" class="form-input" placeholder="Jane" /></div>
+    <div><label>Last Name</label><input type="text" class="form-input" placeholder="Doe" /></div>
+  </div>
+  <div style="margin-bottom:16px"><label>Email Address</label><input type="email" class="form-input" placeholder="jane@example.com" /></div>
+  <div style="margin-bottom:16px"><label>Password</label><input type="password" class="form-input" placeholder="Create a strong password" /></div>
+  <div style="margin-bottom:20px"><label>Confirm Password</label><input type="password" class="form-input" placeholder="Repeat your password" /></div>
+  <div style="margin-bottom:20px;display:flex;align-items:flex-start;gap:8px">
+    <input type="checkbox" id="terms" style="width:16px;height:16px;margin-top:2px;accent-color:var(--cd-primary)" />
+    <label for="terms" style="font-size:13px;color:var(--cd-text-muted);font-weight:400">I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a></label>
+  </div>
+  <a href="index.html" class="cd-btn-block cd-btn-primary-block" style="margin-bottom:16px"><i class="bi bi-person-plus-fill"></i> Create Account</a>
+  <p style="text-align:center;font-size:13px;color:var(--cd-text-muted);margin:0">Already have an account? <a href="login.html" class="auth-link">Sign in</a></p>
+</div>
+</body>
+</html>

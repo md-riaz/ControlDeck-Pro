@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mailbox Inbox — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-success-light: #F0FDF4;
+      --cd-warning: #F59E0B; --cd-warning-light: #FFFBEB;
+      --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-info: #0EA5E9; --cd-info-light: #F0F9FF;
+      --cd-sidebar-width: 260px; --cd-sidebar-collapsed-width: 64px; --cd-topbar-height: 60px;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --cd-font-xs: 12px; --cd-font-sm: 13px; --cd-font-base: 14px; --cd-font-md: 16px;
+      --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-success-light: #14532D;
+      --cd-warning-light: #451A03; --cd-danger-light: #450A0A; --cd-info-light: #0C4A6E;
+    }
+    [data-density="compact"] { font-size: calc(14px * 0.88); }
+    [data-density="spacious"] { font-size: calc(14px * 1.12); }
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:var(--cd-font);font-size:var(--cd-font-base);background:var(--cd-bg);color:var(--cd-text);margin:0;min-height:100vh}
+    [data-cd="app"]{display:flex;min-height:100vh}
+    [data-cd="sidebar"]{width:var(--cd-sidebar-width);min-height:100vh;background:var(--cd-surface);border-right:1px solid var(--cd-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:1000;transition:width var(--cd-transition);overflow:hidden;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar"].collapsed{width:var(--cd-sidebar-collapsed-width)}
+    .sidebar-brand{height:var(--cd-topbar-height);display:flex;align-items:center;padding:0 16px;gap:12px;border-bottom:1px solid var(--cd-border);flex-shrink:0;text-decoration:none}
+    .sidebar-brand .brand-icon{width:32px;height:32px;background:var(--cd-primary);border-radius:var(--cd-radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+    .sidebar-brand .brand-name{font-weight:700;font-size:16px;color:var(--cd-text);white-space:nowrap;overflow:hidden}
+    .sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 0}
+    .sidebar-nav::-webkit-scrollbar{width:4px}
+    .sidebar-nav::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    .nav-section-label{font-size:11px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px 8px;white-space:nowrap;overflow:hidden}
+    .nav-item-link{display:flex;align-items:center;gap:12px;padding:8px 16px;color:var(--cd-text-muted);text-decoration:none;font-size:13px;font-weight:500;transition:background var(--cd-transition),color var(--cd-transition);white-space:nowrap;overflow:hidden;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+    .nav-item-link:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .nav-item-link.active{background:var(--cd-primary-light);color:var(--cd-primary)}
+    .nav-item-link .nav-icon{font-size:16px;flex-shrink:0;width:18px;text-align:center}
+    .nav-item-link .nav-label{flex:1}
+    .nav-item-link .nav-badge{background:var(--cd-danger);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600}
+    .sidebar-footer{padding:12px 16px;border-top:1px solid var(--cd-border);display:flex;align-items:center;gap:12px;overflow:hidden}
+    .sidebar-footer .avatar{width:32px;height:32px;border-radius:50%;background:var(--cd-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+    .sidebar-footer .user-name{font-size:13px;font-weight:600;color:var(--cd-text);white-space:nowrap}
+    .sidebar-footer .user-role{font-size:11px;color:var(--cd-text-subtle);white-space:nowrap}
+    .main-area{margin-left:var(--cd-sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left var(--cd-transition)}
+    .main-area.expanded{margin-left:var(--cd-sidebar-collapsed-width)}
+    [data-cd="topbar"]{height:60px;background:var(--cd-surface);border-bottom:1px solid var(--cd-border);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:900;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar-toggle"]{background:none;border:none;color:var(--cd-text-muted);font-size:18px;padding:8px;border-radius:var(--cd-radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center}
+    [data-cd="sidebar-toggle"]:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-search{flex:1;max-width:360px;position:relative}
+    .topbar-search input{width:100%;padding:8px 16px 8px 36px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;color:var(--cd-text);outline:none;font-family:var(--cd-font)}
+    .topbar-search .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--cd-text-subtle);font-size:14px}
+    .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .topbar-btn{width:36px;height:36px;background:none;border:none;border-radius:var(--cd-radius-sm);color:var(--cd-text-muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+    .topbar-btn:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-btn .badge-count{position:absolute;top:4px;right:4px;background:var(--cd-danger);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--cd-surface)}
+    .topbar-user{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:var(--cd-radius-sm);cursor:pointer;border:none;background:none;color:var(--cd-text)}
+    .topbar-user:hover{background:var(--cd-surface-2)}
+    .topbar-user .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .topbar-user .user-name{font-size:13px;font-weight:500}
+    .page-content{padding:24px;flex:1}
+    .page-title{font-size:20px;font-weight:700;color:var(--cd-text);margin:0 0 4px}
+    .page-subtitle{font-size:13px;color:var(--cd-text-muted);margin:0}
+    .cd-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--cd-text-muted);margin-bottom:16px;padding:0;list-style:none}
+    .cd-breadcrumb li+li::before{content:"/";margin-right:8px;color:var(--cd-text-subtle)}
+    .cd-breadcrumb a{color:var(--cd-text-muted);text-decoration:none}
+    .cd-breadcrumb a:hover{color:var(--cd-primary)}
+    .cd-breadcrumb .active{color:var(--cd-text);font-weight:500}
+    .cd-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-sm);overflow:hidden}
+    .cd-card-header{padding:16px 20px;border-bottom:1px solid var(--cd-border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .cd-card-title{font-size:16px;font-weight:600;color:var(--cd-text);margin:0}
+    .cd-card-body{padding:20px}
+    .cd-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+    .cd-badge-success{background:var(--cd-success-light);color:var(--cd-success)}
+    .cd-badge-warning{background:var(--cd-warning-light);color:var(--cd-warning)}
+    .cd-badge-danger{background:var(--cd-danger-light);color:var(--cd-danger)}
+    .cd-badge-info{background:var(--cd-info-light);color:var(--cd-info)}
+    .cd-badge-neutral{background:var(--cd-surface-2);color:var(--cd-text-muted)}
+    .cd-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+    .cd-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--cd-radius-sm);font-size:13px;font-weight:500;font-family:var(--cd-font);cursor:pointer;border:1px solid transparent;transition:all var(--cd-transition);text-decoration:none}
+    .cd-btn-primary{background:var(--cd-primary);color:#fff;border-color:var(--cd-primary)}
+    .cd-btn-primary:hover{background:var(--cd-primary-hover);border-color:var(--cd-primary-hover);color:#fff}
+    .cd-btn-ghost{background:transparent;color:var(--cd-text-muted);border-color:var(--cd-border)}
+    .cd-btn-ghost:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-btn-sm{padding:4px 12px;font-size:11px}
+    .cd-btn-danger{background:var(--cd-danger);color:#fff;border-color:var(--cd-danger)}
+    .cd-btn-success{background:var(--cd-success);color:#fff;border-color:var(--cd-success)}
+    .cd-dropdown{position:relative}
+    .cd-dropdown-menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-md);min-width:180px;z-index:2000;display:none;padding:8px 0}
+    .cd-dropdown-menu.show{display:block}
+    .cd-dropdown-item{display:flex;align-items:center;gap:12px;padding:8px 16px;font-size:13px;color:var(--cd-text-muted);cursor:pointer;transition:background var(--cd-transition);text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:var(--cd-font)}
+    .cd-dropdown-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-dropdown-divider{height:1px;background:var(--cd-border);margin:8px 0}
+    [data-cd="sidebar"].collapsed .nav-label,[data-cd="sidebar"].collapsed .brand-name,[data-cd="sidebar"].collapsed .nav-section-label,[data-cd="sidebar"].collapsed .sidebar-footer .user-name,[data-cd="sidebar"].collapsed .sidebar-footer .user-role,[data-cd="sidebar"].collapsed .nav-badge{display:none}
+    [data-cd="sidebar"].collapsed .nav-item-link{justify-content:center;padding:12px 0}
+    [data-cd="sidebar"].collapsed .sidebar-footer{justify-content:center}
+    .divider{height:1px;background:var(--cd-border);margin:8px 0}
+    .cd-table-wrap{overflow-x:auto}
+    .cd-table{width:100%;border-collapse:collapse;font-size:13px}
+    .cd-table th{padding:12px 16px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--cd-text-subtle);background:var(--cd-surface-2);border-bottom:1px solid var(--cd-border);white-space:nowrap}
+    .cd-table td{padding:12px 16px;border-bottom:1px solid var(--cd-border);color:var(--cd-text);vertical-align:middle}
+    .cd-table tbody tr:hover{background:var(--cd-surface-2)}
+    .cd-table tbody tr:last-child td{border-bottom:none}
+    @media(max-width:768px){[data-cd="sidebar"]{transform:translateX(-100%);width:var(--cd-sidebar-width)!important}[data-cd="sidebar"].mobile-open{transform:translateX(0)}.main-area{margin-left:0!important}.topbar-search{display:none}}
+  </style>
+</head>
+<body>
+<div data-cd="app">
+  <aside data-cd="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-layers-fill"></i></div>
+      <span class="brand-name">ControlDeck</span>
+    </a>
+    <nav class="sidebar-nav" data-cd="nav-tree">
+      <div class="nav-section-label">Main</div>
+      <a href="index.html" class="nav-item-link " data-nav="dashboard"><i class="bi bi-grid-fill nav-icon"></i><span class="nav-label">Dashboard</span></a>
+      <a href="users.html" class="nav-item-link " data-nav="users"><i class="bi bi-people-fill nav-icon"></i><span class="nav-label">Users</span></a>
+      <a href="#" class="nav-item-link"><i class="bi bi-bag-fill nav-icon"></i><span class="nav-label">Orders</span><span class="nav-badge">12</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">UI Elements</div>
+      <a href="ui-general.html" class="nav-item-link "><i class="bi bi-palette nav-icon"></i><span class="nav-label">UI General</span></a>
+      <a href="ui-icons.html" class="nav-item-link "><i class="bi bi-emoji-smile nav-icon"></i><span class="nav-label">Icons</span></a>
+      <a href="ui-modals.html" class="nav-item-link "><i class="bi bi-window nav-icon"></i><span class="nav-label">Modals</span></a>
+      <a href="ui-timeline.html" class="nav-item-link "><i class="bi bi-clock-history nav-icon"></i><span class="nav-label">Timeline</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Forms</div>
+      <a href="form-general.html" class="nav-item-link "><i class="bi bi-ui-checks nav-icon"></i><span class="nav-label">General</span></a>
+      <a href="form-advanced.html" class="nav-item-link "><i class="bi bi-sliders nav-icon"></i><span class="nav-label">Advanced</span></a>
+      <a href="form-editors.html" class="nav-item-link "><i class="bi bi-pencil-square nav-icon"></i><span class="nav-label">Editors</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Tables</div>
+      <a href="table-simple.html" class="nav-item-link "><i class="bi bi-table nav-icon"></i><span class="nav-label">Simple Table</span></a>
+      <a href="table-datatables.html" class="nav-item-link "><i class="bi bi-grid-3x3 nav-icon"></i><span class="nav-label">Data Tables</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Charts</div>
+      <a href="chart-line.html" class="nav-item-link "><i class="bi bi-graph-up nav-icon"></i><span class="nav-label">Line Chart</span></a>
+      <a href="chart-bar.html" class="nav-item-link "><i class="bi bi-bar-chart-fill nav-icon"></i><span class="nav-label">Bar Chart</span></a>
+      <a href="chart-pie.html" class="nav-item-link "><i class="bi bi-pie-chart-fill nav-icon"></i><span class="nav-label">Pie Chart</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Pages</div>
+      <a href="mailbox-inbox.html" class="nav-item-link active"><i class="bi bi-envelope-fill nav-icon"></i><span class="nav-label">Mailbox</span><span class="nav-badge">3</span></a>
+      <a href="calendar.html" class="nav-item-link "><i class="bi bi-calendar3 nav-icon"></i><span class="nav-label">Calendar</span></a>
+      <a href="invoice.html" class="nav-item-link "><i class="bi bi-receipt nav-icon"></i><span class="nav-label">Invoice</span></a>
+      <a href="profile.html" class="nav-item-link "><i class="bi bi-person-circle nav-icon"></i><span class="nav-label">Profile</span></a>
+      <a href="widgets.html" class="nav-item-link "><i class="bi bi-columns-gap nav-icon"></i><span class="nav-label">Widgets</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">System</div>
+      <a href="#" class="nav-item-link"><i class="bi bi-gear-fill nav-icon"></i><span class="nav-label">Settings</span></a>
+      <a href="login.html" class="nav-item-link"><i class="bi bi-box-arrow-left nav-icon"></i><span class="nav-label">Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar">JD</div>
+      <div><div class="user-name">Jane Doe</div><div class="user-role">Administrator</div></div>
+    </div>
+  </aside>
+  <div class="main-area" id="mainArea">
+    <header data-cd="topbar">
+      <button data-cd="sidebar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="topbar-search"><i class="bi bi-search search-icon"></i><input type="search" placeholder="Search anything..." /></div>
+      <div class="topbar-actions">
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('densityMenu')"><i class="bi bi-layout-sidebar-inset"></i></button>
+          <div class="cd-dropdown-menu" id="densityMenu">
+            <button class="cd-dropdown-item" onclick="setDensity('compact')"><i class="bi bi-arrows-collapse"></i> Compact</button>
+            <button class="cd-dropdown-item" onclick="setDensity('comfortable')"><i class="bi bi-dash-lg"></i> Comfortable</button>
+            <button class="cd-dropdown-item" onclick="setDensity('spacious')"><i class="bi bi-arrows-expand"></i> Spacious</button>
+          </div>
+        </div>
+        <button class="topbar-btn" onclick="toggleTheme()"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('notifMenu')"><i class="bi bi-bell-fill"></i><span class="badge-count">5</span></button>
+          <div class="cd-dropdown-menu" id="notifMenu" style="min-width:260px">
+            <div style="padding:10px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--cd-border)">Notifications</div>
+            <button class="cd-dropdown-item"><i class="bi bi-person-plus" style="color:var(--cd-primary)"></i><span>New user registered <span style="font-size:11px;color:var(--cd-text-subtle)">— 2m ago</span></span></button>
+            <div class="cd-dropdown-divider"></div>
+            <button class="cd-dropdown-item" style="justify-content:center;color:var(--cd-primary)">View all</button>
+          </div>
+        </div>
+        <div class="cd-dropdown">
+          <button class="topbar-user" onclick="toggleDropdown('userMenu')">
+            <div class="avatar">JD</div><span class="user-name">Jane Doe</span><i class="bi bi-chevron-down" style="font-size:11px;color:var(--cd-text-subtle)"></i>
+          </button>
+          <div class="cd-dropdown-menu" id="userMenu">
+            <a href="profile.html" class="cd-dropdown-item"><i class="bi bi-person"></i> Profile</a>
+            <button class="cd-dropdown-item"><i class="bi bi-gear"></i> Settings</button>
+            <div class="cd-dropdown-divider"></div>
+            <a href="login.html" class="cd-dropdown-item" style="color:var(--cd-danger)"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <ol class="cd-breadcrumb"><li><a href="index.html">Home</a></li><li><a href="#">Mailbox</a></li><li class="active">Inbox</li></ol>
+      <div style="margin-bottom:24px"><h1 class="page-title">Mailbox Inbox</h1><p class="page-subtitle">Your email messages.</p></div>
+      <div class="row g-4" style="--bs-gutter-x:16px">
+        <div class="col-md-3">
+          <div class="cd-card">
+            <div class="cd-card-body">
+              <a href="mailbox-compose.html" class="cd-btn cd-btn-primary" style="width:100%;justify-content:center;margin-bottom:16px"><i class="bi bi-pencil-fill"></i> Compose</a>
+              <ul style="list-style:none;padding:0;margin:0">
+                <li><a href="mailbox-inbox.html" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:var(--cd-radius-sm);text-decoration:none;background:var(--cd-primary-light);color:var(--cd-primary);font-size:13px;font-weight:500;margin-bottom:2px"><span><i class="bi bi-inbox me-2"></i>Inbox</span><span style="background:var(--cd-danger);color:#fff;font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700">3</span></a></li>
+                <li><a href="#" style="display:flex;align-items:center;padding:9px 12px;border-radius:var(--cd-radius-sm);text-decoration:none;color:var(--cd-text-muted);font-size:13px;margin-bottom:2px"><i class="bi bi-send me-2"></i>Sent</a></li>
+                <li><a href="#" style="display:flex;align-items:center;padding:9px 12px;border-radius:var(--cd-radius-sm);text-decoration:none;color:var(--cd-text-muted);font-size:13px;margin-bottom:2px"><i class="bi bi-file-earmark me-2"></i>Drafts</a></li>
+                <li><a href="#" style="display:flex;align-items:center;padding:9px 12px;border-radius:var(--cd-radius-sm);text-decoration:none;color:var(--cd-text-muted);font-size:13px;margin-bottom:2px"><i class="bi bi-star me-2"></i>Starred</a></li>
+                <li><a href="#" style="display:flex;align-items:center;padding:9px 12px;border-radius:var(--cd-radius-sm);text-decoration:none;color:var(--cd-text-muted);font-size:13px"><i class="bi bi-trash me-2"></i>Trash</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="cd-card">
+            <div style="padding:14px 20px;border-bottom:1px solid var(--cd-border);display:flex;align-items:center;gap:12px">
+              <input type="checkbox" style="width:16px;height:16px;accent-color:var(--cd-primary)" />
+              <div style="position:relative;flex:1;max-width:280px"><i class="bi bi-search" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--cd-text-subtle);font-size:13px"></i><input type="search" placeholder="Search mail..." style="width:100%;padding:7px 12px 7px 30px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;background:var(--cd-surface);color:var(--cd-text);font-family:var(--cd-font);outline:none" /></div>
+              <div style="margin-left:auto;color:var(--cd-text-muted);font-size:13px">1–8 of 48</div>
+            </div>
+            <ul style="list-style:none;padding:0;margin:0" data-cd="mail-list">
+              <li style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--cd-border);cursor:pointer;font-weight:600" data-cd="mail-item" onclick="location='mailbox-read.html'" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background=''">
+                <input type="checkbox" style="width:16px;height:16px;accent-color:var(--cd-primary)" onclick="event.stopPropagation()" />
+                <i class="bi bi-star" style="color:var(--cd-text-subtle);font-size:14px"></i>
+                <div style="width:32px;height:32px;border-radius:50%;background:#3B82F6;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">AJ</div>
+                <div style="flex:1;overflow:hidden"><div style="font-size:13px;color:var(--cd-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Alice Johnson</div><div style="font-size:12px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Q1 Report: Please review the attached Q1 financial report and provide feedback...</div></div>
+                <span style="font-size:11px;color:var(--cd-text-subtle);white-space:nowrap">10:24</span>
+              </li>
+              <li style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--cd-border);cursor:pointer" data-cd="mail-item" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background=''">
+                <input type="checkbox" style="width:16px;height:16px;accent-color:var(--cd-primary)" />
+                <i class="bi bi-star-fill" style="color:var(--cd-warning);font-size:14px"></i>
+                <div style="width:32px;height:32px;border-radius:50%;background:#6366F1;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">BM</div>
+                <div style="flex:1;overflow:hidden"><div style="font-size:13px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Bob Martinez</div><div style="font-size:12px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Team meeting notes from today's standup — action items and decisions</div></div>
+                <span style="font-size:11px;color:var(--cd-text-subtle);white-space:nowrap">9:15</span>
+              </li>
+              <li style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--cd-border);cursor:pointer;font-weight:600" data-cd="mail-item" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background=''">
+                <input type="checkbox" style="width:16px;height:16px;accent-color:var(--cd-primary)" />
+                <i class="bi bi-star" style="color:var(--cd-text-subtle);font-size:14px"></i>
+                <div style="width:32px;height:32px;border-radius:50%;background:#16A34A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">CW</div>
+                <div style="flex:1;overflow:hidden"><div style="font-size:13px;color:var(--cd-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Carol White</div><div style="font-size:12px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Design review scheduled — new component specs ready for approval</div></div>
+                <span style="font-size:11px;color:var(--cd-text-subtle);white-space:nowrap">Yesterday</span>
+              </li>
+              <li style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--cd-border);cursor:pointer" data-cd="mail-item" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background=''">
+                <input type="checkbox" style="width:16px;height:16px;accent-color:var(--cd-primary)" />
+                <i class="bi bi-star" style="color:var(--cd-text-subtle);font-size:14px"></i>
+                <div style="width:32px;height:32px;border-radius:50%;background:#F59E0B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">DK</div>
+                <div style="flex:1;overflow:hidden"><div style="font-size:13px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">David Kim</div><div style="font-size:12px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Invoice #1024 — Please find attached the invoice for services rendered</div></div>
+                <span style="font-size:11px;color:var(--cd-text-subtle);white-space:nowrap">Mon</span>
+              </li>
+              <li style="display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer" data-cd="mail-item" onmouseover="this.style.background='var(--cd-surface-2)'" onmouseout="this.style.background=''">
+                <input type="checkbox" style="width:16px;height:16px;accent-color:var(--cd-primary)" />
+                <i class="bi bi-star" style="color:var(--cd-text-subtle);font-size:14px"></i>
+                <div style="width:32px;height:32px;border-radius:50%;background:#0EA5E9;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">EL</div>
+                <div style="flex:1;overflow:hidden"><div style="font-size:13px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Eva Lopez</div><div style="font-size:12px;color:var(--cd-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Onboarding checklist — please complete before your first day</div></div>
+                <span style="font-size:11px;color:var(--cd-text-subtle);white-space:nowrap">Sun</span>
+              </li>
+            </ul>
+            <div style="padding:14px 20px;border-top:1px solid var(--cd-border);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:13px;color:var(--cd-text-muted)">Showing 1–5 of 48</span>
+              <div style="display:flex;gap:4px">
+                <button style="padding:6px 12px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);background:var(--cd-surface);color:var(--cd-text-muted);font-size:13px;cursor:pointer" disabled><i class="bi bi-chevron-left"></i></button>
+                <button style="padding:6px 12px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);background:var(--cd-surface);color:var(--cd-text-muted);font-size:13px;cursor:pointer"><i class="bi bi-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999" onclick="closeSidebarMobile()"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const sidebar=document.getElementById('sidebar'),mainArea=document.getElementById('mainArea'),backdrop=document.getElementById('backdrop');
+const isMobile=()=>window.innerWidth<=768;
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  if(isMobile()){sidebar.classList.toggle('mobile-open');backdrop.style.display=sidebar.classList.contains('mobile-open')?'block':'none';}
+  else{sidebar.classList.toggle('collapsed');mainArea.classList.toggle('expanded');}
+});
+function closeSidebarMobile(){sidebar.classList.remove('mobile-open');backdrop.style.display='none';}
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeIcon').className=d?'bi bi-moon-fill':'bi bi-sun-fill';}
+function setDensity(d){document.documentElement.setAttribute('data-density',d);closeAllDropdowns();}
+function toggleDropdown(id){const m=document.getElementById(id),s=m.classList.contains('show');closeAllDropdowns();if(!s)m.classList.add('show');}
+function closeAllDropdowns(){document.querySelectorAll('.cd-dropdown-menu.show').forEach(m=>m.classList.remove('show'));}
+document.addEventListener('click',e=>{if(!e.target.closest('.cd-dropdown'))closeAllDropdowns();});
+</script>
+
+</body>
+</html>

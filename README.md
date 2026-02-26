@@ -8,7 +8,7 @@ ControlDeck Pro is a production-quality admin panel design system with two compl
 
 ## Preview
 
-Screenshots of all pages at 1440 × 900. Bootstrap 5 pages show both columns; Tailwind-only pages show the Tailwind column.
+Screenshots of all pages at 1440 × 900. Each row shows Bootstrap 5 on the left and Tailwind + Alpine on the right.
 
 ---
 
@@ -157,29 +157,29 @@ Screenshots of all pages at 1440 × 900. Bootstrap 5 pages show both columns; Ta
 |---|---|
 | ![Blank – Bootstrap](docs/screenshots/bootstrap/blank.png) | ![Blank – Tailwind](docs/screenshots/tailwind/blank.png) |
 
-#### Settings *(Tailwind only)*
-| Tailwind + Alpine |
-|---|
-| ![Settings – Tailwind](docs/screenshots/tailwind/settings.png) |
+#### Settings
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Settings – Bootstrap](docs/screenshots/bootstrap/settings.png) | ![Settings – Tailwind](docs/screenshots/tailwind/settings.png) |
 
-#### Notifications *(Tailwind only)*
-| Tailwind + Alpine |
-|---|
-| ![Notifications – Tailwind](docs/screenshots/tailwind/notifications.png) |
+#### Notifications
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Notifications – Bootstrap](docs/screenshots/bootstrap/notifications.png) | ![Notifications – Tailwind](docs/screenshots/tailwind/notifications.png) |
 
-#### Tasks / Kanban *(Tailwind only)*
-| Tailwind + Alpine |
-|---|
-| ![Tasks – Tailwind](docs/screenshots/tailwind/tasks.png) |
+#### Tasks / Kanban
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Tasks – Bootstrap](docs/screenshots/bootstrap/tasks.png) | ![Tasks – Tailwind](docs/screenshots/tailwind/tasks.png) |
 
 ---
 
-### Top Navigation Layout *(Tailwind only)*
+### Top Navigation Layout
 
 #### Top Navigation
-| Tailwind + Alpine |
-|---|
-| ![Top Navigation – Tailwind](docs/screenshots/tailwind/topnav.png) |
+| Bootstrap 5 | Tailwind + Alpine |
+|---|---|
+| ![Top Navigation – Bootstrap](docs/screenshots/bootstrap/topnav.png) | ![Top Navigation – Tailwind](docs/screenshots/tailwind/topnav.png) |
 
 ---
 
@@ -241,7 +241,7 @@ ControlDeck-Pro/
 ├── shared/
 │   └── css/
 │       └── variables.css        # CSS custom properties contract
-├── bootstrap/                   # Bootstrap 5 + jQuery stack (28 pages)
+├── bootstrap/                   # Bootstrap 5 + jQuery stack (32 pages)
 │   ├── index.html               # Dashboard v1
 │   ├── dashboard2.html          # Dashboard v2
 │   ├── users.html               # Users management
@@ -264,6 +264,10 @@ ControlDeck-Pro/
 │   ├── calendar.html            # Calendar
 │   ├── invoice.html             # Invoice
 │   ├── profile.html             # Profile
+│   ├── settings.html            # Settings (tabs: General, Profile, Security, Notifications, API Keys)
+│   ├── notifications.html       # Notification centre (All / Unread filter)
+│   ├── tasks.html               # Tasks Kanban board (4 columns + list view)
+│   ├── topnav.html              # Top Navigation layout variant (horizontal mega-menu)
 │   ├── login.html               # Login
 │   ├── register.html            # Register
 │   ├── lockscreen.html          # Lockscreen

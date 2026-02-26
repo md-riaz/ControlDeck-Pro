@@ -8,7 +8,7 @@ ControlDeck Pro is a production-quality admin panel design system with two compl
 
 ## Preview
 
-Screenshots of all 28 pages in both stacks (1440 × 900). Each row shows Bootstrap 5 on the left and Tailwind + Alpine on the right.
+Screenshots of all pages at 1440 × 900. Bootstrap 5 pages show both columns; Tailwind-only pages show the Tailwind column.
 
 ---
 
@@ -157,6 +157,30 @@ Screenshots of all 28 pages in both stacks (1440 × 900). Each row shows Bootstr
 |---|---|
 | ![Blank – Bootstrap](docs/screenshots/bootstrap/blank.png) | ![Blank – Tailwind](docs/screenshots/tailwind/blank.png) |
 
+#### Settings *(Tailwind only)*
+| Tailwind + Alpine |
+|---|
+| ![Settings – Tailwind](docs/screenshots/tailwind/settings.png) |
+
+#### Notifications *(Tailwind only)*
+| Tailwind + Alpine |
+|---|
+| ![Notifications – Tailwind](docs/screenshots/tailwind/notifications.png) |
+
+#### Tasks / Kanban *(Tailwind only)*
+| Tailwind + Alpine |
+|---|
+| ![Tasks – Tailwind](docs/screenshots/tailwind/tasks.png) |
+
+---
+
+### Top Navigation Layout *(Tailwind only)*
+
+#### Top Navigation
+| Tailwind + Alpine |
+|---|
+| ![Top Navigation – Tailwind](docs/screenshots/tailwind/topnav.png) |
+
 ---
 
 ### Auth
@@ -198,7 +222,7 @@ Screenshots of all 28 pages in both stacks (1440 × 900). Each row shows Bootstr
 - 🌗 **Dark Mode** — toggle on every page, persists via `data-theme` attribute
 - 📐 **Density Switcher** — compact / comfortable / spacious via `data-density`
 - 🗂️ **Collapsible Sidebar** — collapses to icon-only rail with smooth transition
-- 🔗 **Multi-level Navigation** — expandable sub-menus with chevron animation
+- 🔗 **Multi-level Navigation** — expandable sub-menus with chevron animation (sidebar + horizontal topbar variant)
 - 📊 **KPI Stat Cards** — icon, value, label, trend badge (up/down)
 - 🗃️ **Data Tables** — sortable headers, search filter, status badges, bulk checkbox, pagination
 - 🔔 **Notification Panel** — bell icon with count badge, dropdown list
@@ -246,7 +270,39 @@ ControlDeck-Pro/
 │   ├── 404.html                 # Error 404
 │   ├── 500.html                 # Error 500
 │   └── blank.html               # Blank page
-├── tailwind/                    # Tailwind CSS + Alpine.js stack (28 pages, same set)
+├── tailwind/                    # Tailwind CSS + Alpine.js stack (32 pages)
+│   ├── index.html               # Dashboard v1
+│   ├── dashboard2.html          # Dashboard v2
+│   ├── users.html               # Users management
+│   ├── widgets.html             # Widgets
+│   ├── ui-general.html          # UI General
+│   ├── ui-icons.html            # UI Icons
+│   ├── ui-modals.html           # UI Modals
+│   ├── ui-timeline.html         # UI Timeline
+│   ├── form-general.html        # Forms General
+│   ├── form-advanced.html       # Forms Advanced
+│   ├── form-editors.html        # Form Editors
+│   ├── table-simple.html        # Table Simple
+│   ├── table-datatables.html    # DataTables
+│   ├── chart-line.html          # Chart Line
+│   ├── chart-bar.html           # Chart Bar
+│   ├── chart-pie.html           # Chart Pie
+│   ├── mailbox-inbox.html       # Mailbox Inbox
+│   ├── mailbox-compose.html     # Mailbox Compose
+│   ├── mailbox-read.html        # Mailbox Read
+│   ├── calendar.html            # Calendar
+│   ├── invoice.html             # Invoice
+│   ├── profile.html             # Profile
+│   ├── settings.html            # Settings (tabs: General, Profile, Security, Notifications, API Keys)
+│   ├── notifications.html       # Notification centre (All / Unread filter)
+│   ├── tasks.html               # Tasks Kanban board (4 columns + list view)
+│   ├── topnav.html              # Top Navigation layout variant (horizontal mega-menu)
+│   ├── login.html               # Login
+│   ├── register.html            # Register
+│   ├── lockscreen.html          # Lockscreen
+│   ├── 404.html                 # Error 404
+│   ├── 500.html                 # Error 500
+│   └── blank.html               # Blank page
 ├── docs/
 │   └── screenshots/             # Page screenshots (Bootstrap + Tailwind)
 │       ├── bootstrap/

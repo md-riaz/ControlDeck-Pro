@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" x-data="app('invoice')" :data-theme="theme" :data-density="density">
+<html lang="en" x-data="app('notifications')" :data-theme="theme" :data-density="density">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invoice — ControlDeck Pro</title>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications — ControlDeck Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -169,35 +168,66 @@
     </div>
   </header>
     <main class="p-6 flex-1">
-      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Invoice</span></nav>
-      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Invoice #INV-2025-0042</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">Printable invoice template.</p></div>
-
-      <div class="rounded-xl border p-8 max-w-3xl" style="background:var(--cd-surface);border-color:var(--cd-border)">
-        <div class="flex items-start justify-between mb-8">
-          <div><div class="text-xl font-bold mb-1" style="color:var(--cd-text)">ControlDeck Pro</div><div class="text-sm" style="color:var(--cd-text-muted)">123 Main Street, Suite 400<br/>San Francisco, CA 94105<br/>billing@controldeck.io</div></div>
-          <div class="text-right"><div class="text-3xl font-black uppercase tracking-widest mb-2" style="color:var(--cd-primary)">Invoice</div><div class="text-sm" style="color:var(--cd-text-muted)"># INV-2025-0042</div><div class="text-xs mt-1" style="color:var(--cd-text-subtle)">Issued: Feb 25, 2025<br/>Due: Mar 25, 2025</div></div>
+      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Notifications</span></nav>
+      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Notifications</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">View and manage all your notifications.</p></div>
+      <div x-data="notificationsCtrl()">
+        <!-- Filters & Actions toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex gap-2">
+            <button @click="filter='all'" class="px-4 py-2 rounded-lg text-sm font-medium border-0 cursor-pointer transition-colors duration-150" :style="filter==='all'?'background:var(--cd-primary);color:#fff':'background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)'">All <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full" :style="filter==='all'?'background:rgba(255,255,255,.3)':'background:var(--cd-surface-2)'" x-text="notifications.length"></span></button>
+            <button @click="filter='unread'" class="px-4 py-2 rounded-lg text-sm font-medium border-0 cursor-pointer transition-colors duration-150" :style="filter==='unread'?'background:var(--cd-primary);color:#fff':'background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)'">Unread <span class="ml-1 text-xs px-1.5 py-0.5 rounded-full" :style="filter==='unread'?'background:rgba(255,255,255,.3)':'background:var(--cd-surface-2)'" x-text="notifications.filter(n=>!n.read).length"></span></button>
+          </div>
+          <button @click="markAllRead()" class="px-4 py-2 rounded-lg text-sm font-medium border cursor-pointer transition-colors duration-150" style="background:var(--cd-surface);color:var(--cd-primary);border-color:var(--cd-primary)" @mouseover="$el.style.background='var(--cd-primary-light)'" @mouseout="$el.style.background='var(--cd-surface)'">Mark all as read</button>
         </div>
-        <div class="grid grid-cols-2 gap-6 mb-8">
-          <div class="p-4 rounded-xl" style="background:var(--cd-surface-2)"><div class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:var(--cd-text-subtle)">Bill To</div><div class="font-semibold" style="color:var(--cd-text)">Acme Corporation</div><div class="text-sm mt-1" style="color:var(--cd-text-muted)">456 Business Ave<br/>New York, NY 10001<br/>accounts@acme.com</div></div>
-          <div class="p-4 rounded-xl" style="background:var(--cd-surface-2)"><div class="text-xs font-semibold uppercase tracking-widest mb-2" style="color:var(--cd-text-subtle)">Payment Details</div><div class="text-sm space-y-1" style="color:var(--cd-text-muted)"><div>Bank: First National Bank</div><div>Account: ****4821</div><div>Routing: 021000021</div></div></div>
-        </div>
-        <table class="cd-table mb-4"><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th class="text-right">Amount</th></tr></thead><tbody>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">ControlDeck Pro — Enterprise License</div><div class="text-xs" style="color:var(--cd-text-subtle)">Annual subscription, 50 seats</div></td><td>1</td><td>$2,400.00</td><td class="text-right">$2,400.00</td></tr>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">Priority Support</div><div class="text-xs" style="color:var(--cd-text-subtle)">24/7 dedicated support</div></td><td>12</td><td>$100.00</td><td class="text-right">$1,200.00</td></tr>
-          <tr><td><div class="font-medium" style="color:var(--cd-text)">Onboarding &amp; Training</div></td><td>1</td><td>$400.00</td><td class="text-right">$400.00</td></tr>
-        </tbody></table>
-        <div class="flex justify-end mb-8">
-          <div class="w-64 space-y-2">
-            <div class="flex justify-between text-sm" style="color:var(--cd-text-muted)"><span>Subtotal</span><span>$4,000.00</span></div>
-            <div class="flex justify-between text-sm" style="color:var(--cd-text-muted)"><span>Tax (8%)</span><span>$320.00</span></div>
-            <div class="flex justify-between font-bold text-base pt-2 border-t" style="color:var(--cd-text);border-color:var(--cd-border)"><span>Total Due</span><span style="color:var(--cd-primary)">$4,320.00</span></div>
+        <!-- Notifications list -->
+        <div class="rounded-xl border overflow-hidden" style="background:var(--cd-surface);border-color:var(--cd-border)">
+          <template x-for="(n, i) in filtered" :key="n.id">
+            <div class="flex items-start gap-4 px-5 py-4 border-b cursor-pointer transition-colors duration-150" :style="!n.read?'background:var(--cd-primary-light)':''" style="border-color:var(--cd-border)" @click="n.read=true" @mouseover="$el.style.background=(n.read?'var(--cd-surface-2)':'var(--cd-primary-light)')" @mouseout="$el.style.background=(n.read?'':'var(--cd-primary-light)')">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white" :style="`background:${n.color}`" x-html="n.icon"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="text-sm font-medium m-0" style="color:var(--cd-text)" x-text="n.title"></p>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    <span x-show="!n.read" class="w-2 h-2 rounded-full flex-shrink-0" style="background:var(--cd-primary)"></span>
+                    <span class="text-xs whitespace-nowrap" style="color:var(--cd-text-subtle)" x-text="n.time"></span>
+                  </div>
+                </div>
+                <p class="text-sm m-0 mt-0.5" style="color:var(--cd-text-muted)" x-text="n.body"></p>
+                <span class="inline-block text-xs px-2 py-0.5 rounded-full mt-1.5 font-medium" :style="n.typeStyle" x-text="n.type"></span>
+              </div>
+            </div>
+          </template>
+          <div x-show="filtered.length===0" class="px-5 py-12 text-center">
+            <svg class="mx-auto mb-3 opacity-30" width="40" height="40" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg>
+            <p class="text-sm" style="color:var(--cd-text-muted)">No notifications to show.</p>
           </div>
         </div>
-        <div class="flex gap-3 border-t pt-6" style="border-color:var(--cd-border)">
-          <button onclick="window.print()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white border-none cursor-pointer" style="background:var(--cd-primary)">🖨 Print Invoice</button>
-          <button class="px-5 py-2.5 rounded-xl text-sm font-semibold border cursor-pointer" style="background:transparent;border-color:var(--cd-border);color:var(--cd-text-muted)">⬇ Download PDF</button>
-        </div>
       </div>
+      <script>
+        function notificationsCtrl() {
+          const iconUser = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4z"/></svg>';
+          const iconOrder = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1z"/></svg>';
+          const iconSys = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492z"/></svg>';
+          const iconSec = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>';
+          return {
+            filter: 'all',
+            notifications: [
+              {id:1, title:'New user registered', body:'Alice Johnson created a new account.', time:'2 min ago', read:false, color:'#3B82F6', icon:iconUser, type:'User', typeStyle:'background:var(--cd-info-light);color:var(--cd-info)'},
+              {id:2, title:'Order #1042 placed', body:'A new order has been received and awaits processing.', time:'15 min ago', read:false, color:'#16A34A', icon:iconOrder, type:'Order', typeStyle:'background:var(--cd-success-light);color:var(--cd-success)'},
+              {id:3, title:'Security alert', body:'Unusual sign-in detected from a new device in Berlin.', time:'1 hour ago', read:false, color:'#DC2626', icon:iconSec, type:'Security', typeStyle:'background:var(--cd-danger-light);color:var(--cd-danger)'},
+              {id:4, title:'System update available', body:'Version 3.2.1 is ready to install. Maintenance window: Sunday 02:00 UTC.', time:'3 hours ago', read:false, color:'#F59E0B', icon:iconSys, type:'System', typeStyle:'background:var(--cd-warning-light);color:var(--cd-warning)'},
+              {id:5, title:'Bob Martinez updated profile', body:'User profile information was updated successfully.', time:'5 hours ago', read:true, color:'#6366F1', icon:iconUser, type:'User', typeStyle:'background:var(--cd-info-light);color:var(--cd-info)'},
+              {id:6, title:'Order #1038 shipped', body:'Order has been dispatched and is on its way.', time:'Yesterday', read:true, color:'#16A34A', icon:iconOrder, type:'Order', typeStyle:'background:var(--cd-success-light);color:var(--cd-success)'},
+              {id:7, title:'New admin invitation sent', body:'An invitation was sent to carol@example.com.', time:'2 days ago', read:true, color:'#3B82F6', icon:iconUser, type:'User', typeStyle:'background:var(--cd-info-light);color:var(--cd-info)'},
+              {id:8, title:'Database backup completed', body:'Automated backup completed successfully. Size: 2.4 GB.', time:'3 days ago', read:true, color:'#0EA5E9', icon:iconSys, type:'System', typeStyle:'background:var(--cd-info-light);color:var(--cd-info)'},
+            ],
+            get filtered() {
+              return this.filter === 'unread' ? this.notifications.filter(n => !n.read) : this.notifications;
+            },
+            markAllRead() { this.notifications.forEach(n => n.read = true); }
+          }
+        }
+      </script>
     </main>
   </div>
 </div>

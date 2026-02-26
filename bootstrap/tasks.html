@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasks — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-success-light: #F0FDF4;
+      --cd-warning: #F59E0B; --cd-warning-light: #FFFBEB;
+      --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-info: #0EA5E9; --cd-info-light: #F0F9FF;
+      --cd-sidebar-width: 260px; --cd-sidebar-collapsed-width: 64px; --cd-topbar-height: 60px;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --cd-font-xs: 12px; --cd-font-sm: 13px; --cd-font-base: 14px; --cd-font-md: 16px;
+      --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-success-light: #14532D;
+      --cd-warning-light: #451A03; --cd-danger-light: #450A0A; --cd-info-light: #0C4A6E;
+    }
+    [data-density="compact"] { font-size: calc(14px * 0.88); }
+    [data-density="spacious"] { font-size: calc(14px * 1.12); }
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:var(--cd-font);font-size:var(--cd-font-base);background:var(--cd-bg);color:var(--cd-text);margin:0;min-height:100vh}
+    [data-cd="app"]{display:flex;min-height:100vh}
+    [data-cd="sidebar"]{width:var(--cd-sidebar-width);min-height:100vh;background:var(--cd-surface);border-right:1px solid var(--cd-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:1000;transition:width var(--cd-transition);overflow:hidden;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar"].collapsed{width:var(--cd-sidebar-collapsed-width)}
+    .sidebar-brand{height:var(--cd-topbar-height);display:flex;align-items:center;padding:0 16px;gap:12px;border-bottom:1px solid var(--cd-border);flex-shrink:0;text-decoration:none}
+    .sidebar-brand .brand-icon{width:32px;height:32px;background:var(--cd-primary);border-radius:var(--cd-radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+    .sidebar-brand .brand-name{font-weight:700;font-size:16px;color:var(--cd-text);white-space:nowrap;overflow:hidden}
+    .sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 0}
+    .sidebar-nav::-webkit-scrollbar{width:4px}
+    .sidebar-nav::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    .nav-section-label{font-size:11px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px 8px;white-space:nowrap;overflow:hidden}
+    .nav-item-link{display:flex;align-items:center;gap:12px;padding:8px 16px;color:var(--cd-text-muted);text-decoration:none;font-size:13px;font-weight:500;transition:background var(--cd-transition),color var(--cd-transition);white-space:nowrap;overflow:hidden;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+    .nav-item-link:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .nav-item-link.active{background:var(--cd-primary-light);color:var(--cd-primary)}
+    .nav-item-link .nav-icon{font-size:16px;flex-shrink:0;width:18px;text-align:center}
+    .nav-item-link .nav-label{flex:1}
+    .nav-item-link .nav-badge{background:var(--cd-danger);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600}
+    .sidebar-footer{padding:12px 16px;border-top:1px solid var(--cd-border);display:flex;align-items:center;gap:12px;overflow:hidden}
+    .sidebar-footer .avatar{width:32px;height:32px;border-radius:50%;background:var(--cd-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+    .sidebar-footer .user-name{font-size:13px;font-weight:600;color:var(--cd-text);white-space:nowrap}
+    .sidebar-footer .user-role{font-size:11px;color:var(--cd-text-subtle);white-space:nowrap}
+    .main-area{margin-left:var(--cd-sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left var(--cd-transition)}
+    .main-area.expanded{margin-left:var(--cd-sidebar-collapsed-width)}
+    [data-cd="topbar"]{height:60px;background:var(--cd-surface);border-bottom:1px solid var(--cd-border);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:900;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar-toggle"]{background:none;border:none;color:var(--cd-text-muted);font-size:18px;padding:8px;border-radius:var(--cd-radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center}
+    [data-cd="sidebar-toggle"]:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-search{flex:1;max-width:360px;position:relative}
+    .topbar-search input{width:100%;padding:8px 16px 8px 36px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;color:var(--cd-text);outline:none;font-family:var(--cd-font)}
+    .topbar-search .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--cd-text-subtle);font-size:14px}
+    .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .topbar-btn{width:36px;height:36px;background:none;border:none;border-radius:var(--cd-radius-sm);color:var(--cd-text-muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+    .topbar-btn:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-btn .badge-count{position:absolute;top:4px;right:4px;background:var(--cd-danger);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--cd-surface)}
+    .topbar-user{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:var(--cd-radius-sm);cursor:pointer;border:none;background:none;color:var(--cd-text)}
+    .topbar-user:hover{background:var(--cd-surface-2)}
+    .topbar-user .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .topbar-user .user-name{font-size:13px;font-weight:500}
+    .page-content{padding:24px;flex:1}
+    .page-title{font-size:20px;font-weight:700;color:var(--cd-text);margin:0 0 4px}
+    .page-subtitle{font-size:13px;color:var(--cd-text-muted);margin:0}
+    .cd-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--cd-text-muted);margin-bottom:16px;padding:0;list-style:none}
+    .cd-breadcrumb li+li::before{content:"/";margin-right:8px;color:var(--cd-text-subtle)}
+    .cd-breadcrumb a{color:var(--cd-text-muted);text-decoration:none}
+    .cd-breadcrumb a:hover{color:var(--cd-primary)}
+    .cd-breadcrumb .active{color:var(--cd-text);font-weight:500}
+    .cd-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-sm);overflow:hidden}
+    .cd-card-header{padding:16px 20px;border-bottom:1px solid var(--cd-border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .cd-card-title{font-size:16px;font-weight:600;color:var(--cd-text);margin:0}
+    .cd-card-body{padding:20px}
+    .cd-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+    .cd-badge-success{background:var(--cd-success-light);color:var(--cd-success)}
+    .cd-badge-warning{background:var(--cd-warning-light);color:var(--cd-warning)}
+    .cd-badge-danger{background:var(--cd-danger-light);color:var(--cd-danger)}
+    .cd-badge-info{background:var(--cd-info-light);color:var(--cd-info)}
+    .cd-badge-neutral{background:var(--cd-surface-2);color:var(--cd-text-muted)}
+    .cd-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+    .cd-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--cd-radius-sm);font-size:13px;font-weight:500;font-family:var(--cd-font);cursor:pointer;border:1px solid transparent;transition:all var(--cd-transition);text-decoration:none}
+    .cd-btn-primary{background:var(--cd-primary);color:#fff;border-color:var(--cd-primary)}
+    .cd-btn-primary:hover{background:var(--cd-primary-hover);border-color:var(--cd-primary-hover);color:#fff}
+    .cd-btn-ghost{background:transparent;color:var(--cd-text-muted);border-color:var(--cd-border)}
+    .cd-btn-ghost:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-btn-sm{padding:4px 12px;font-size:11px}
+    .cd-btn-danger{background:var(--cd-danger);color:#fff;border-color:var(--cd-danger)}
+    .cd-btn-success{background:var(--cd-success);color:#fff;border-color:var(--cd-success)}
+    .cd-dropdown{position:relative}
+    .cd-dropdown-menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-md);min-width:180px;z-index:2000;display:none;padding:8px 0}
+    .cd-dropdown-menu.show{display:block}
+    .cd-dropdown-item{display:flex;align-items:center;gap:12px;padding:8px 16px;font-size:13px;color:var(--cd-text-muted);cursor:pointer;transition:background var(--cd-transition);text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:var(--cd-font)}
+    .cd-dropdown-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-dropdown-divider{height:1px;background:var(--cd-border);margin:8px 0}
+    [data-cd="sidebar"].collapsed .nav-label,[data-cd="sidebar"].collapsed .brand-name,[data-cd="sidebar"].collapsed .nav-section-label,[data-cd="sidebar"].collapsed .sidebar-footer .user-name,[data-cd="sidebar"].collapsed .sidebar-footer .user-role,[data-cd="sidebar"].collapsed .nav-badge{display:none}
+    [data-cd="sidebar"].collapsed .nav-item-link{justify-content:center;padding:12px 0}
+    [data-cd="sidebar"].collapsed .sidebar-footer{justify-content:center}
+    .divider{height:1px;background:var(--cd-border);margin:8px 0}
+    .cd-table-wrap{overflow-x:auto}
+    .cd-table{width:100%;border-collapse:collapse;font-size:13px}
+    .cd-table th{padding:12px 16px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--cd-text-subtle);background:var(--cd-surface-2);border-bottom:1px solid var(--cd-border);white-space:nowrap}
+    .cd-table td{padding:12px 16px;border-bottom:1px solid var(--cd-border);color:var(--cd-text);vertical-align:middle}
+    .cd-table tbody tr:hover{background:var(--cd-surface-2)}
+    .cd-table tbody tr:last-child td{border-bottom:none}
+    @media(max-width:768px){[data-cd="sidebar"]{transform:translateX(-100%);width:var(--cd-sidebar-width)!important}[data-cd="sidebar"].mobile-open{transform:translateX(0)}.main-area{margin-left:0!important}.topbar-search{display:none}}
+
+    /* Tasks / Kanban styles */
+    .kanban-col-card{border-top:3px solid var(--cd-border);background:var(--cd-surface-2);border-radius:var(--cd-radius-md);padding:0}
+    .kanban-col-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .kanban-col-title{font-size:13px;font-weight:600;color:var(--cd-text)}
+    .kanban-col-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--cd-surface);border:1px solid var(--cd-border);color:var(--cd-text-muted)}
+    .kanban-tasks{padding:0 12px 12px;display:flex;flex-direction:column;gap:10px}
+    .task-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);padding:14px;box-shadow:var(--cd-shadow-sm);transition:box-shadow var(--cd-transition)}
+    .task-card:hover{box-shadow:var(--cd-shadow-md)}
+    .task-card-title{font-size:13px;font-weight:600;color:var(--cd-text);margin:0 0 6px}
+    .task-card-desc{font-size:12px;color:var(--cd-text-muted);margin:0 0 12px;line-height:1.5}
+    .task-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .task-card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .task-due{font-size:11px;color:var(--cd-text-subtle);display:flex;align-items:center;gap:4px}
+    .task-avatars{display:flex;align-items:center}
+    .task-avatar{width:24px;height:24px;border-radius:50%;border:2px solid var(--cd-surface);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;margin-left:-6px}
+    .task-avatar:first-child{margin-left:0}
+    .view-toggle{display:flex;gap:4px}
+    .view-toggle-btn{padding:6px 14px;border:1px solid var(--cd-border);background:var(--cd-surface);color:var(--cd-text-muted);font-size:13px;font-weight:500;font-family:var(--cd-font);cursor:pointer;border-radius:var(--cd-radius-sm);transition:all var(--cd-transition);display:inline-flex;align-items:center;gap:6px}
+    .view-toggle-btn.active{background:var(--cd-primary);color:#fff;border-color:var(--cd-primary)}
+    .view-toggle-btn:not(.active):hover{background:var(--cd-surface-2);color:var(--cd-text)}
+  </style>
+</head>
+<body>
+<div data-cd="app">
+  <aside data-cd="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-layers-fill"></i></div>
+      <span class="brand-name">ControlDeck</span>
+    </a>
+    <nav class="sidebar-nav" data-cd="nav-tree">
+      <div class="nav-section-label">Main</div>
+      <a href="index.html" class="nav-item-link " data-nav="dashboard"><i class="bi bi-grid-fill nav-icon"></i><span class="nav-label">Dashboard</span></a>
+      <a href="users.html" class="nav-item-link " data-nav="users"><i class="bi bi-people-fill nav-icon"></i><span class="nav-label">Users</span></a>
+      <a href="#" class="nav-item-link"><i class="bi bi-bag-fill nav-icon"></i><span class="nav-label">Orders</span><span class="nav-badge">12</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">UI Elements</div>
+      <a href="ui-general.html" class="nav-item-link "><i class="bi bi-palette nav-icon"></i><span class="nav-label">UI General</span></a>
+      <a href="ui-icons.html" class="nav-item-link "><i class="bi bi-emoji-smile nav-icon"></i><span class="nav-label">Icons</span></a>
+      <a href="ui-modals.html" class="nav-item-link "><i class="bi bi-window nav-icon"></i><span class="nav-label">Modals</span></a>
+      <a href="ui-timeline.html" class="nav-item-link "><i class="bi bi-clock-history nav-icon"></i><span class="nav-label">Timeline</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Forms</div>
+      <a href="form-general.html" class="nav-item-link "><i class="bi bi-ui-checks nav-icon"></i><span class="nav-label">General</span></a>
+      <a href="form-advanced.html" class="nav-item-link "><i class="bi bi-sliders nav-icon"></i><span class="nav-label">Advanced</span></a>
+      <a href="form-editors.html" class="nav-item-link "><i class="bi bi-pencil-square nav-icon"></i><span class="nav-label">Editors</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Tables</div>
+      <a href="table-simple.html" class="nav-item-link "><i class="bi bi-table nav-icon"></i><span class="nav-label">Simple Table</span></a>
+      <a href="table-datatables.html" class="nav-item-link "><i class="bi bi-grid-3x3 nav-icon"></i><span class="nav-label">Data Tables</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Charts</div>
+      <a href="chart-line.html" class="nav-item-link "><i class="bi bi-graph-up nav-icon"></i><span class="nav-label">Line Chart</span></a>
+      <a href="chart-bar.html" class="nav-item-link "><i class="bi bi-bar-chart-fill nav-icon"></i><span class="nav-label">Bar Chart</span></a>
+      <a href="chart-pie.html" class="nav-item-link "><i class="bi bi-pie-chart-fill nav-icon"></i><span class="nav-label">Pie Chart</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Pages</div>
+      <a href="mailbox-inbox.html" class="nav-item-link "><i class="bi bi-envelope-fill nav-icon"></i><span class="nav-label">Mailbox</span><span class="nav-badge">3</span></a>
+      <a href="calendar.html" class="nav-item-link "><i class="bi bi-calendar3 nav-icon"></i><span class="nav-label">Calendar</span></a>
+      <a href="invoice.html" class="nav-item-link "><i class="bi bi-receipt nav-icon"></i><span class="nav-label">Invoice</span></a>
+      <a href="profile.html" class="nav-item-link "><i class="bi bi-person-circle nav-icon"></i><span class="nav-label">Profile</span></a>
+      <a href="widgets.html" class="nav-item-link "><i class="bi bi-columns-gap nav-icon"></i><span class="nav-label">Widgets</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">System</div>
+      <a href="settings.html" class="nav-item-link "><i class="bi bi-gear-fill nav-icon"></i><span class="nav-label">Settings</span></a>
+      <a href="notifications.html" class="nav-item-link "><i class="bi bi-bell-fill nav-icon"></i><span class="nav-label">Notifications</span><span class="nav-badge">5</span></a>
+      <a href="tasks.html" class="nav-item-link active"><i class="bi bi-kanban-fill nav-icon"></i><span class="nav-label">Tasks</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar">JD</div>
+      <div><div class="user-name">Jane Doe</div><div class="user-role">Administrator</div></div>
+    </div>
+  </aside>
+  <div class="main-area" id="mainArea">
+    <header data-cd="topbar">
+      <button data-cd="sidebar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="topbar-search"><i class="bi bi-search search-icon"></i><input type="search" placeholder="Search anything..." /></div>
+      <div class="topbar-actions">
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('densityMenu')"><i class="bi bi-layout-sidebar-inset"></i></button>
+          <div class="cd-dropdown-menu" id="densityMenu">
+            <button class="cd-dropdown-item" onclick="setDensity('compact')"><i class="bi bi-arrows-collapse"></i> Compact</button>
+            <button class="cd-dropdown-item" onclick="setDensity('comfortable')"><i class="bi bi-dash-lg"></i> Comfortable</button>
+            <button class="cd-dropdown-item" onclick="setDensity('spacious')"><i class="bi bi-arrows-expand"></i> Spacious</button>
+          </div>
+        </div>
+        <button class="topbar-btn" onclick="toggleTheme()"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('notifMenu')"><i class="bi bi-bell-fill"></i><span class="badge-count">5</span></button>
+          <div class="cd-dropdown-menu" id="notifMenu" style="min-width:260px">
+            <div style="padding:10px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--cd-border)">Notifications</div>
+            <button class="cd-dropdown-item"><i class="bi bi-person-plus" style="color:var(--cd-primary)"></i><span>New user registered <span style="font-size:11px;color:var(--cd-text-subtle)">— 2m ago</span></span></button>
+            <div class="cd-dropdown-divider"></div>
+            <button class="cd-dropdown-item" style="justify-content:center;color:var(--cd-primary)">View all</button>
+          </div>
+        </div>
+        <div class="cd-dropdown">
+          <button class="topbar-user" onclick="toggleDropdown('userMenu')">
+            <div class="avatar">JD</div><span class="user-name">Jane Doe</span><i class="bi bi-chevron-down" style="font-size:11px;color:var(--cd-text-subtle)"></i>
+          </button>
+          <div class="cd-dropdown-menu" id="userMenu">
+            <a href="profile.html" class="cd-dropdown-item"><i class="bi bi-person"></i> Profile</a>
+            <button class="cd-dropdown-item"><i class="bi bi-gear"></i> Settings</button>
+            <div class="cd-dropdown-divider"></div>
+            <a href="login.html" class="cd-dropdown-item" style="color:var(--cd-danger)"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <ol class="cd-breadcrumb"><li><a href="index.html">Home</a></li><li class="active">Tasks</li></ol>
+
+      <!-- Page header -->
+      <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+          <h1 class="page-title">Tasks</h1>
+          <p class="page-subtitle">Manage and track your team's work across all projects.</p>
+        </div>
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" id="btnBoard" onclick="toggleView('board')"><i class="bi bi-kanban"></i> Board</button>
+          <button class="view-toggle-btn" id="btnList" onclick="toggleView('list')"><i class="bi bi-list-ul"></i> List</button>
+        </div>
+      </div>
+
+      <!-- Board view -->
+      <div id="boardView">
+        <div class="row g-3">
+
+          <!-- To Do -->
+          <div class="col">
+            <div class="kanban-col-card" style="border-top-color:#64748B">
+              <div class="kanban-col-header">
+                <span class="kanban-col-title">To Do</span>
+                <span class="kanban-col-count">3</span>
+              </div>
+              <div class="kanban-tasks">
+
+                <div class="task-card">
+                  <p class="task-card-title">Design new onboarding flow</p>
+                  <p class="task-card-desc">Create wireframes and prototype for the updated user onboarding experience.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-danger">High</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Mar 1</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#3B82F6">JD</div>
+                      <div class="task-avatar" style="background:#6366F1">AK</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">Update API documentation</p>
+                  <p class="task-card-desc">Review and update all REST API endpoint docs with the latest changes.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-warning">Medium</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Mar 5</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#16A34A">TM</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">Fix CSV export bug</p>
+                  <p class="task-card-desc">Resolve encoding issue causing special characters to break CSV exports.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-danger">High</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Feb 28</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#DC2626">RV</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- In Progress -->
+          <div class="col">
+            <div class="kanban-col-card" style="border-top-color:#3B82F6">
+              <div class="kanban-col-header">
+                <span class="kanban-col-title">In Progress</span>
+                <span class="kanban-col-count">3</span>
+              </div>
+              <div class="kanban-tasks">
+
+                <div class="task-card">
+                  <p class="task-card-title">Implement dark mode</p>
+                  <p class="task-card-desc">Add full dark mode support across all dashboard pages using CSS variables.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-danger">High</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Mar 3</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#3B82F6">JD</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">Mobile sidebar</p>
+                  <p class="task-card-desc">Build responsive off-canvas sidebar with smooth animation for mobile screens.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-danger">High</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Mar 2</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#6366F1">AK</div>
+                      <div class="task-avatar" style="background:#F59E0B">SP</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">Add 2FA support</p>
+                  <p class="task-card-desc">Integrate TOTP-based two-factor authentication into the login flow.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-warning">Medium</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Mar 10</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#0EA5E9">NL</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Review -->
+          <div class="col">
+            <div class="kanban-col-card" style="border-top-color:#F59E0B">
+              <div class="kanban-col-header">
+                <span class="kanban-col-title">Review</span>
+                <span class="kanban-col-count">2</span>
+              </div>
+              <div class="kanban-tasks">
+
+                <div class="task-card">
+                  <p class="task-card-title">Billing module v2</p>
+                  <p class="task-card-desc">Code review for the revamped billing and subscription management module.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-danger">High</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Feb 27</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#8B5CF6">PW</div>
+                      <div class="task-avatar" style="background:#3B82F6">JD</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">User roles refactor</p>
+                  <p class="task-card-desc">Simplify permissions model and align role definitions with the new RBAC spec.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-neutral">Low</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Mar 8</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#16A34A">TM</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Done -->
+          <div class="col">
+            <div class="kanban-col-card" style="border-top-color:#16A34A">
+              <div class="kanban-col-header">
+                <span class="kanban-col-title">Done</span>
+                <span class="kanban-col-count">3</span>
+              </div>
+              <div class="kanban-tasks">
+
+                <div class="task-card">
+                  <p class="task-card-title">Dashboard redesign</p>
+                  <p class="task-card-desc">Shipped the fully revamped dashboard with new charts and widget layout.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-danger">High</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Feb 20</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#3B82F6">JD</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">Notification system</p>
+                  <p class="task-card-desc">Built real-time in-app notification feed with read/unread state management.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-warning">Medium</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Feb 22</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#EC4899">ML</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-card">
+                  <p class="task-card-title">CI/CD pipeline setup</p>
+                  <p class="task-card-desc">Configured GitHub Actions workflows for automated testing and deployment.</p>
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <span class="cd-badge cd-badge-neutral">Low</span>
+                      <span class="task-due"><i class="bi bi-calendar3"></i>Feb 18</span>
+                    </div>
+                    <div class="task-avatars">
+                      <div class="task-avatar" style="background:#0EA5E9">NL</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /boardView -->
+
+      <!-- List view -->
+      <div id="listView" style="display:none">
+        <div class="cd-card">
+          <div class="cd-table-wrap">
+            <table class="cd-table">
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                  <th>Assignees</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:500">Design new onboarding flow</td>
+                  <td><span class="cd-badge cd-badge-danger">High</span></td>
+                  <td><span class="cd-badge cd-badge-neutral">To Do</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Mar 1</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#3B82F6">JD</div><div class="task-avatar" style="background:#6366F1">AK</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Update API documentation</td>
+                  <td><span class="cd-badge cd-badge-warning">Medium</span></td>
+                  <td><span class="cd-badge cd-badge-neutral">To Do</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Mar 5</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#16A34A">TM</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Fix CSV export bug</td>
+                  <td><span class="cd-badge cd-badge-danger">High</span></td>
+                  <td><span class="cd-badge cd-badge-neutral">To Do</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Feb 28</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#DC2626">RV</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Implement dark mode</td>
+                  <td><span class="cd-badge cd-badge-danger">High</span></td>
+                  <td><span class="cd-badge cd-badge-info">In Progress</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Mar 3</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#3B82F6">JD</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Mobile sidebar</td>
+                  <td><span class="cd-badge cd-badge-danger">High</span></td>
+                  <td><span class="cd-badge cd-badge-info">In Progress</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Mar 2</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#6366F1">AK</div><div class="task-avatar" style="background:#F59E0B">SP</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Add 2FA support</td>
+                  <td><span class="cd-badge cd-badge-warning">Medium</span></td>
+                  <td><span class="cd-badge cd-badge-info">In Progress</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Mar 10</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#0EA5E9">NL</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Billing module v2</td>
+                  <td><span class="cd-badge cd-badge-danger">High</span></td>
+                  <td><span class="cd-badge cd-badge-warning">Review</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Feb 27</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#8B5CF6">PW</div><div class="task-avatar" style="background:#3B82F6">JD</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">User roles refactor</td>
+                  <td><span class="cd-badge cd-badge-neutral">Low</span></td>
+                  <td><span class="cd-badge cd-badge-warning">Review</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Mar 8</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#16A34A">TM</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Dashboard redesign</td>
+                  <td><span class="cd-badge cd-badge-danger">High</span></td>
+                  <td><span class="cd-badge cd-badge-success">Done</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Feb 20</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#3B82F6">JD</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">Notification system</td>
+                  <td><span class="cd-badge cd-badge-warning">Medium</span></td>
+                  <td><span class="cd-badge cd-badge-success">Done</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Feb 22</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#EC4899">ML</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:500">CI/CD pipeline setup</td>
+                  <td><span class="cd-badge cd-badge-neutral">Low</span></td>
+                  <td><span class="cd-badge cd-badge-success">Done</span></td>
+                  <td><span class="task-due"><i class="bi bi-calendar3"></i> Feb 18</span></td>
+                  <td><div class="task-avatars"><div class="task-avatar" style="background:#0EA5E9">NL</div></div></td>
+                  <td><button class="cd-btn cd-btn-ghost cd-btn-sm">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div><!-- /listView -->
+
+    </main>
+  </div>
+</div>
+<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(function () {
+  var isMobile = function () { return $(window).width() <= 768; };
+
+  $('#sidebarToggle').on('click', function () {
+    if (isMobile()) {
+      $('#sidebar').toggleClass('mobile-open');
+      $('#backdrop').toggle($('#sidebar').hasClass('mobile-open'));
+    } else {
+      $('#sidebar').toggleClass('collapsed');
+      $('#mainArea').toggleClass('expanded');
+    }
+  });
+
+  $('#backdrop').on('click', function () {
+    $('#sidebar').removeClass('mobile-open');
+    $('#backdrop').hide();
+  });
+
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('.cd-dropdown').length) closeAllDropdowns();
+  });
+});
+
+function closeAllDropdowns() { $('.cd-dropdown-menu.show').removeClass('show'); }
+function toggleDropdown(id) { var open = $('#' + id).hasClass('show'); closeAllDropdowns(); if (!open) $('#' + id).addClass('show'); }
+function toggleTheme() { var dark = $('html').attr('data-theme') === 'dark'; $('html').attr('data-theme', dark ? 'light' : 'dark'); $('#themeIcon').attr('class', dark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'); }
+function setDensity(d) { $('html').attr('data-density', d); closeAllDropdowns(); }
+</script>
+<script>
+function toggleView(v) {
+  if (v === 'board') {
+    $('#boardView').show();
+    $('#listView').hide();
+    $('#btnBoard').addClass('active');
+    $('#btnList').removeClass('active');
+  } else {
+    $('#boardView').hide();
+    $('#listView').show();
+    $('#btnList').addClass('active');
+    $('#btnBoard').removeClass('active');
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" x-data="topNavApp()" :data-theme="theme" :data-density="density">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Navigation — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:['selector','[data-theme="dark"]'],theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <style>
+    :root{--cd-bg:#F8FAFC;--cd-surface:#FFFFFF;--cd-surface-2:#F1F5F9;--cd-border:#E2E8F0;--cd-text:#0F172A;--cd-text-muted:#475569;--cd-text-subtle:#94A3B8;--cd-primary:#3B82F6;--cd-primary-hover:#2563EB;--cd-primary-light:#EFF6FF;--cd-success:#16A34A;--cd-success-light:#F0FDF4;--cd-warning:#F59E0B;--cd-warning-light:#FFFBEB;--cd-danger:#DC2626;--cd-danger-light:#FEF2F2;--cd-info:#0EA5E9;--cd-info-light:#F0F9FF;--cd-shadow-sm:0 1px 2px rgba(2,6,23,.06);--cd-shadow-md:0 8px 24px rgba(2,6,23,.10);--cd-font:Inter,system-ui,-apple-system,sans-serif}
+    [data-theme="dark"]{--cd-bg:#0F172A;--cd-surface:#1E293B;--cd-surface-2:#334155;--cd-border:#334155;--cd-text:#F1F5F9;--cd-text-muted:#94A3B8;--cd-text-subtle:#64748B;--cd-primary-light:#1E3A5F;--cd-success-light:#14532D;--cd-warning-light:#451A03;--cd-danger-light:#450A0A;--cd-info-light:#0C4A6E}
+    [data-density="compact"]{font-size:calc(14px * 0.88)}[data-density="spacious"]{font-size:calc(14px * 1.12)}
+    body{font-family:var(--cd-font);background:var(--cd-bg);color:var(--cd-text);margin:0}
+    .ss::-webkit-scrollbar{width:4px}.ss::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    /* Topnav link hover */
+    .tn-link{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;text-decoration:none;font-size:13.5px;font-weight:500;white-space:nowrap;cursor:pointer;border:0;background:transparent;transition:background .15s,color .15s}
+    .tn-link:hover{background:var(--cd-surface-2)}
+    .tn-link.active{background:var(--cd-primary-light);color:var(--cd-primary)}
+    /* Dropdown panel */
+    .tn-dropdown{position:absolute;top:calc(100% + 6px);left:0;z-index:60;min-width:180px;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:12px;box-shadow:var(--cd-shadow-md);overflow:hidden}
+    .tn-dropdown-item{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;color:var(--cd-text-muted);text-decoration:none;cursor:pointer;border:0;background:transparent;width:100%;text-align:left;transition:background .12s}
+    .tn-dropdown-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .tn-dropdown-item.active{color:var(--cd-primary);font-weight:600;background:var(--cd-primary-light)}
+    /* Mobile drawer */
+    .mobile-drawer{position:fixed;inset:0;top:60px;z-index:50;overflow-y:auto;background:var(--cd-surface);border-top:1px solid var(--cd-border);box-shadow:var(--cd-shadow-md)}
+    .mobile-group-btn{display:flex;align-items:center;gap:10px;padding:10px 16px;width:100%;font-size:14px;font-weight:500;cursor:pointer;border:0;background:transparent;color:var(--cd-text-muted);text-align:left;transition:background .12s}
+    .mobile-group-btn:hover{background:var(--cd-surface-2)}
+    .mobile-item{display:flex;align-items:center;text-decoration:none;padding:9px 16px 9px 44px;font-size:13px;color:var(--cd-text-muted);transition:background .12s}
+    .mobile-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .mobile-item.active{color:var(--cd-primary);font-weight:600;background:var(--cd-primary-light)}
+    /* stat card */
+    .stat-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:12px;padding:20px;box-shadow:var(--cd-shadow-sm)}
+    .cd-table{width:100%;border-collapse:collapse;font-size:13px}
+    .cd-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--cd-text-subtle);background:var(--cd-surface-2);border-bottom:1px solid var(--cd-border)}
+    .cd-table td{padding:11px 14px;border-bottom:1px solid var(--cd-border);color:var(--cd-text);vertical-align:middle}
+    .cd-table tbody tr:hover{background:var(--cd-surface-2)}
+    .cd-table tbody tr:last-child td{border-bottom:none}
+  </style>
+</head>
+<body style="background:var(--cd-bg);color:var(--cd-text)">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TOP NAVIGATION BAR
+════════════════════════════════════════════════════════════════ -->
+<header data-cd="topbar" class="sticky top-0 z-50 border-b" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+
+  <!-- Main row -->
+  <div class="flex items-center gap-2 px-4 h-[60px]">
+
+    <!-- Brand -->
+    <a href="index.html" class="flex items-center gap-2.5 no-underline flex-shrink-0 mr-2">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:var(--cd-primary)">CD</div>
+      <span class="font-bold text-sm hidden sm:block" style="color:var(--cd-text)">ControlDeck</span>
+    </a>
+
+    <!-- ── Desktop horizontal nav (hidden on mobile) ── -->
+    <nav class="hidden md:flex items-center gap-0.5 flex-1">
+
+      <!-- Dashboard -->
+      <a href="index.html" class="tn-link" :class="activeNav==='dashboard'?'active':''" @click="activeNav='dashboard'" style="color:var(--cd-text-muted)">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 1 0 .553l-.921.921a.35.35 0 0 1-.445-.553l.92-.92a.39.39 0 0 1 .446 0M5.44 6.44a.35.35 0 0 1-.553.445L3.967 5.965a.35.35 0 0 1 .446-.553zm.222 6.86a4 4 0 1 1 4.667 0H5.663z"/></svg>
+        Dashboard
+      </a>
+
+      <!-- Users dropdown -->
+      <div class="relative" x-data="{open:false}">
+        <button class="tn-link" :class="['all-users','roles','invitations'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.276ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>
+          Users
+          <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" class="transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+        </button>
+        <div x-show="open" @click.outside="open=false" x-transition:enter="transition-all duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="tn-dropdown">
+          <a href="users.html" class="tn-dropdown-item" :class="activeNav==='all-users'?'active':''" @click="activeNav='all-users';open=false">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/></svg>All Users</a>
+          <a href="#" class="tn-dropdown-item" :class="activeNav==='roles'?'active':''" @click="activeNav='roles';open=false">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>Roles &amp; Permissions</a>
+          <a href="#" class="tn-dropdown-item" :class="activeNav==='invitations'?'active':''" @click="activeNav='invitations';open=false">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741zM1 11.105l4.708-2.897L1 5.383z"/></svg>Invitations</a>
+        </div>
+      </div>
+
+      <!-- UI Elements mega dropdown -->
+      <div class="relative" x-data="{open:false}">
+        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>
+          Components
+          <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" class="transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+        </button>
+        <!-- Mega menu panel -->
+        <div x-show="open" @click.outside="open=false" x-transition:enter="transition-all duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="tn-dropdown" style="min-width:520px;padding:16px">
+          <div class="grid grid-cols-3 gap-4">
+            <!-- UI -->
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-widest mb-2 px-2" style="color:var(--cd-text-subtle)">UI</div>
+              <a href="ui-general.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-general'?'active':''" @click="activeNav='ui-general';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5z"/></svg>General</a>
+              <a href="ui-icons.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-icons'?'active':''" @click="activeNav='ui-icons';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14z"/></svg>Icons</a>
+              <a href="ui-modals.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-modals'?'active':''" @click="activeNav='ui-modals';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 0A2.5 2.5 0 0 0 0 2.5v11A2.5 2.5 0 0 0 2.5 16h11a2.5 2.5 0 0 0 2.5-2.5v-11A2.5 2.5 0 0 0 13.5 0h-11z"/></svg>Modals</a>
+              <a href="ui-timeline.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-timeline'?'active':''" @click="activeNav='ui-timeline';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/></svg>Timeline</a>
+              <a href="widgets.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='widgets'?'active':''" @click="activeNav='widgets';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5z"/></svg>Widgets</a>
+            </div>
+            <!-- Forms + Tables -->
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-widest mb-2 px-2" style="color:var(--cd-text-subtle)">Forms</div>
+              <a href="form-general.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='form-general'?'active':''" @click="activeNav='form-general';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/></svg>General</a>
+              <a href="form-advanced.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='form-advanced'?'active':''" @click="activeNav='form-advanced';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z"/></svg>Advanced</a>
+              <a href="form-editors.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='form-editors'?'active':''" @click="activeNav='form-editors';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168z"/></svg>Editors</a>
+              <div class="text-xs font-semibold uppercase tracking-widest mt-3 mb-2 px-2" style="color:var(--cd-text-subtle)">Tables</div>
+              <a href="table-simple.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='table-simple'?'active':''" @click="activeNav='table-simple';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z"/></svg>Simple</a>
+              <a href="table-datatables.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='table-datatables'?'active':''" @click="activeNav='table-datatables';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z"/></svg>DataTables</a>
+            </div>
+            <!-- Charts -->
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-widest mb-2 px-2" style="color:var(--cd-text-subtle)">Charts</div>
+              <a href="chart-line.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='chart-line'?'active':''" @click="activeNav='chart-line';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 0h1v15h15v1H0V0zm14.5 4.5a.5.5 0 0 0-1 0v3.793L7.707 2.5a.5.5 0 0 0-.707 0l-3.5 3.5a.5.5 0 1 0 .707.707L7.5 3.914 13 9.414V7.5a.5.5 0 0 0 .5.5z"/></svg>Line Chart</a>
+              <a href="chart-bar.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='chart-bar'?'active':''" @click="activeNav='chart-bar';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M4 11H2v3h2zm5-4H7v7h2zm5-5h-2v12h2z"/></svg>Bar Chart</a>
+              <a href="chart-pie.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='chart-pie'?'active':''" @click="activeNav='chart-pie';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M7.5 1.018a7 7 0 0 0-4.79 11.566L7.5 7.793V1.018zm1 0V7.5h6.482A7.001 7.001 0 0 0 8.5 1.018zM14.982 8.5H8.207l-4.79 4.79A7 7 0 0 0 14.982 8.5z"/></svg>Pie Chart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pages dropdown -->
+      <div class="relative" x-data="{open:false}">
+        <button class="tn-link" :class="['mailbox','calendar','tasks','invoice','profile','blank'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>
+          Pages
+          <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" class="transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+        </button>
+        <div x-show="open" @click.outside="open=false" x-transition:enter="transition-all duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="tn-dropdown" style="min-width:360px;padding:12px">
+          <div class="grid grid-cols-2 gap-1">
+            <a href="mailbox-inbox.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='mailbox'?'active':''" @click="activeNav='mailbox';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1z"/></svg>Mailbox <span class="ml-auto text-xs px-1.5 py-0.5 rounded-full text-white" style="background:var(--cd-danger);font-size:9px">3</span></a>
+            <a href="calendar.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='calendar'?'active':''" @click="activeNav='calendar';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>Calendar</a>
+            <a href="tasks.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='tasks'?'active':''" @click="activeNav='tasks';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5z"/></svg>Tasks</a>
+            <a href="invoice.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='invoice'?'active':''" @click="activeNav='invoice';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>Invoice</a>
+            <a href="profile.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='profile'?'active':''" @click="activeNav='profile';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4z"/></svg>Profile</a>
+            <a href="blank.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='blank'?'active':''" @click="activeNav='blank';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>Blank Page</a>
+            <a href="settings.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='settings'?'active':''" @click="activeNav='settings';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52z"/></svg>Settings</a>
+            <a href="notifications.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='notifications'?'active':''" @click="activeNav='notifications';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg>Notifications</a>
+          </div>
+          <div style="height:1px;background:var(--cd-border);margin:10px -4px"></div>
+          <div class="text-xs font-semibold uppercase tracking-widest mb-2 px-2 mt-2" style="color:var(--cd-text-subtle)">Error Pages</div>
+          <div class="flex gap-1 flex-wrap px-2">
+            <a href="login.html" class="tn-dropdown-item rounded-lg" style="padding:6px 10px;font-size:12px">Login</a>
+            <a href="register.html" class="tn-dropdown-item rounded-lg" style="padding:6px 10px;font-size:12px">Register</a>
+            <a href="lockscreen.html" class="tn-dropdown-item rounded-lg" style="padding:6px 10px;font-size:12px">Lockscreen</a>
+            <a href="404.html" class="tn-dropdown-item rounded-lg" style="padding:6px 10px;font-size:12px">404</a>
+            <a href="500.html" class="tn-dropdown-item rounded-lg" style="padding:6px 10px;font-size:12px">500</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar layout link -->
+      <a href="index.html" class="tn-link ml-1" style="color:var(--cd-text-subtle);font-size:12px">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5-1v12h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM4 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2z"/></svg>
+        Sidebar Layout
+      </a>
+    </nav>
+
+    <!-- Right side actions -->
+    <div class="ml-auto flex items-center gap-1.5">
+      <!-- Search (desktop) -->
+      <div class="relative hidden sm:block">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11"/></svg>
+        <input type="search" placeholder="Search…" class="pl-8 pr-3 py-1.5 text-sm rounded-lg border outline-none" style="width:180px;background:var(--cd-surface-2);border-color:var(--cd-border);color:var(--cd-text);font-family:var(--cd-font)" onfocus="this.style.borderColor='var(--cd-primary)';this.style.boxShadow='0 0 0 3px rgba(59,130,246,.15)'" onblur="this.style.borderColor='var(--cd-border)';this.style.boxShadow=''" />
+      </div>
+
+      <!-- Theme toggle -->
+      <button @click="theme=theme==='dark'?'light':'dark';localStorage.setItem('cd:theme',theme)" class="w-8 h-8 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg x-show="theme!=='dark'" width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/></svg>
+        <svg x-show="theme==='dark'" width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8"/></svg>
+      </button>
+
+      <!-- Notifications -->
+      <div class="relative" x-data="{open:false}">
+        <button @click="open=!open" class="relative w-8 h-8 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg>
+          <span class="absolute top-1 right-1 w-3.5 h-3.5 flex items-center justify-center text-white rounded-full border-2 leading-none" style="font-size:8px;font-weight:700;background:var(--cd-danger);border-color:var(--cd-surface)">5</span>
+        </button>
+        <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 rounded-xl border shadow-lg z-50 overflow-hidden" style="width:280px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+          <div class="px-4 py-3 text-sm font-semibold border-b" style="color:var(--cd-text);border-color:var(--cd-border)">Notifications</div>
+          <a href="notifications.html" class="flex items-start gap-3 px-4 py-3 text-sm no-underline" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <svg class="flex-shrink-0 mt-0.5" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-primary)"><path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/><path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/></svg>
+            <div><div class="font-medium" style="color:var(--cd-text);font-size:13px">New user registered</div><div style="font-size:11px;color:var(--cd-text-subtle)">2 minutes ago</div></div>
+          </a>
+          <a href="notifications.html" class="flex items-start gap-3 px-4 py-3 text-sm no-underline border-b" style="color:var(--cd-text-muted);border-color:var(--cd-border)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <svg class="flex-shrink-0 mt-0.5" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-success)"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
+            <div><div class="font-medium" style="color:var(--cd-text);font-size:13px">Order #4821 placed</div><div style="font-size:11px;color:var(--cd-text-subtle)">18 minutes ago</div></div>
+          </a>
+          <div class="text-center py-2"><a href="notifications.html" class="text-sm font-medium no-underline" style="color:var(--cd-primary)">View all</a></div>
+        </div>
+      </div>
+
+      <!-- User menu -->
+      <div class="relative" x-data="{open:false}">
+        <button @click="open=!open" class="flex items-center gap-2 px-2 py-1 rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</div>
+          <span class="text-sm font-medium hidden sm:block">Jane Doe</span>
+          <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+        </button>
+        <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 py-2 rounded-xl border shadow-lg z-50" style="min-width:180px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+          <a href="profile.html" class="tn-dropdown-item">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4z"/></svg>Profile</a>
+          <a href="settings.html" class="tn-dropdown-item">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52z"/></svg>Settings</a>
+          <div style="height:1px;background:var(--cd-border);margin:4px 0"></div>
+          <a href="login.html" class="tn-dropdown-item" style="color:var(--cd-danger)">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/><path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/></svg>Sign Out</a>
+        </div>
+      </div>
+
+      <!-- Mobile hamburger (shown on small screens) -->
+      <button @click="mobileMenuOpen=!mobileMenuOpen" class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer ml-1" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg x-show="!mobileMenuOpen" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></svg>
+        <svg x-show="mobileMenuOpen" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Mobile menu drawer ── -->
+  <div x-show="mobileMenuOpen" x-transition:enter="transition-all duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="md:hidden border-t ss" style="border-color:var(--cd-border);max-height:calc(100vh - 60px);overflow-y:auto">
+    <!-- Search -->
+    <div class="px-4 py-3">
+      <div class="relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11"/></svg>
+        <input type="search" placeholder="Search…" class="w-full pl-9 pr-4 py-2 text-sm rounded-lg border outline-none" style="background:var(--cd-surface-2);border-color:var(--cd-border);color:var(--cd-text);font-family:var(--cd-font)" />
+      </div>
+    </div>
+    <!-- Nav groups -->
+    <a href="index.html" class="mobile-group-btn" :class="activeNav==='dashboard'?'active':''" @click="activeNav='dashboard';mobileMenuOpen=false">
+      <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 1 0 .553l-.921.921a.35.35 0 0 1-.445-.553l.92-.92a.39.39 0 0 1 .446 0M5.44 6.44a.35.35 0 0 1-.553.445L3.967 5.965a.35.35 0 0 1 .446-.553zm.222 6.86a4 4 0 1 1 4.667 0H5.663z"/></svg>
+      Dashboard
+    </a>
+    <!-- Users group -->
+    <div x-data="{open:false}">
+      <button @click="open=!open" class="mobile-group-btn">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1 .005-.001.019-.004.112-.034a7 7 0 0 1 1.09-.168A7 7 0 0 1 11 14zm4.988-.824.006.01A7 7 0 0 1 11 14zm-.004-.002c-.059.006-.11.003-.148-.013a1 1 0 0 0-.158-.014L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4M3.5 6a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>
+        Users
+        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+      </button>
+      <div x-show="open" style="background:var(--cd-surface-2)">
+        <a href="users.html" class="mobile-item" @click="mobileMenuOpen=false">All Users</a>
+        <a href="#" class="mobile-item" @click="mobileMenuOpen=false">Roles &amp; Permissions</a>
+        <a href="#" class="mobile-item" @click="mobileMenuOpen=false">Invitations</a>
+      </div>
+    </div>
+    <!-- UI group -->
+    <div x-data="{open:false}">
+      <button @click="open=!open" class="mobile-group-btn">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>
+        Components
+        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+      </button>
+      <div x-show="open" style="background:var(--cd-surface-2)">
+        <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">UI</div>
+        <a href="ui-general.html" class="mobile-item" @click="mobileMenuOpen=false">General</a>
+        <a href="ui-icons.html" class="mobile-item" @click="mobileMenuOpen=false">Icons</a>
+        <a href="ui-modals.html" class="mobile-item" @click="mobileMenuOpen=false">Modals</a>
+        <a href="ui-timeline.html" class="mobile-item" @click="mobileMenuOpen=false">Timeline</a>
+        <a href="widgets.html" class="mobile-item" @click="mobileMenuOpen=false">Widgets</a>
+        <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Forms</div>
+        <a href="form-general.html" class="mobile-item" @click="mobileMenuOpen=false">General</a>
+        <a href="form-advanced.html" class="mobile-item" @click="mobileMenuOpen=false">Advanced</a>
+        <a href="form-editors.html" class="mobile-item" @click="mobileMenuOpen=false">Editors</a>
+        <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Tables</div>
+        <a href="table-simple.html" class="mobile-item" @click="mobileMenuOpen=false">Simple Table</a>
+        <a href="table-datatables.html" class="mobile-item" @click="mobileMenuOpen=false">Data Tables</a>
+        <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Charts</div>
+        <a href="chart-line.html" class="mobile-item" @click="mobileMenuOpen=false">Line Chart</a>
+        <a href="chart-bar.html" class="mobile-item" @click="mobileMenuOpen=false">Bar Chart</a>
+        <a href="chart-pie.html" class="mobile-item" @click="mobileMenuOpen=false">Pie Chart</a>
+      </div>
+    </div>
+    <!-- Pages group -->
+    <div x-data="{open:false}">
+      <button @click="open=!open" class="mobile-group-btn">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg>
+        Pages
+        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+      </button>
+      <div x-show="open" style="background:var(--cd-surface-2)">
+        <a href="mailbox-inbox.html" class="mobile-item" @click="mobileMenuOpen=false">Mailbox</a>
+        <a href="calendar.html" class="mobile-item" @click="mobileMenuOpen=false">Calendar</a>
+        <a href="tasks.html" class="mobile-item" @click="mobileMenuOpen=false">Tasks</a>
+        <a href="invoice.html" class="mobile-item" @click="mobileMenuOpen=false">Invoice</a>
+        <a href="profile.html" class="mobile-item" @click="mobileMenuOpen=false">Profile</a>
+        <a href="settings.html" class="mobile-item" @click="mobileMenuOpen=false">Settings</a>
+        <a href="notifications.html" class="mobile-item" @click="mobileMenuOpen=false">Notifications</a>
+        <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Auth</div>
+        <a href="login.html" class="mobile-item" @click="mobileMenuOpen=false">Login</a>
+        <a href="register.html" class="mobile-item" @click="mobileMenuOpen=false">Register</a>
+        <a href="404.html" class="mobile-item" @click="mobileMenuOpen=false">404 Error</a>
+      </div>
+    </div>
+    <div class="h-3"></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE CONTENT
+════════════════════════════════════════════════════════════════ -->
+<main class="p-5 sm:p-6" style="max-width:1400px;margin:0 auto">
+
+  <!-- Breadcrumb & Title -->
+  <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Top Navigation</span></nav>
+  <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Top Navigation Layout</h1>
+      <p class="text-sm m-0" style="color:var(--cd-text-muted)">A horizontal navigation variation with dropdown mega-menus and full mobile responsiveness.</p>
+    </div>
+    <div class="flex gap-2">
+      <a href="index.html" class="flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border no-underline" style="color:var(--cd-text-muted);border-color:var(--cd-border);background:var(--cd-surface)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background='var(--cd-surface)'">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5-1v12h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM4 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2z"/></svg>Sidebar Layout
+      </a>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="stat-card">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--cd-text-subtle)">Total Users</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--cd-primary-light)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-primary)"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.276ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold mb-1" style="color:var(--cd-text)">24,521</div>
+      <div class="text-xs" style="color:var(--cd-success)">↑ 12.4% <span style="color:var(--cd-text-subtle)">vs last month</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--cd-text-subtle)">Revenue</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--cd-success-light)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-success)"><path d="M1 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm5-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm5-5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5z"/></svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold mb-1" style="color:var(--cd-text)">$128,430</div>
+      <div class="text-xs" style="color:var(--cd-success)">↑ 8.1% <span style="color:var(--cd-text-subtle)">vs last month</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--cd-text-subtle)">Orders</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--cd-warning-light)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-warning)"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/></svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold mb-1" style="color:var(--cd-text)">3,842</div>
+      <div class="text-xs" style="color:var(--cd-danger)">↓ 2.3% <span style="color:var(--cd-text-subtle)">vs last month</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-semibold uppercase tracking-wider" style="color:var(--cd-text-subtle)">Sessions</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--cd-info-light)">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-info)"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5z"/></svg>
+        </div>
+      </div>
+      <div class="text-2xl font-bold mb-1" style="color:var(--cd-text)">1,209</div>
+      <div class="text-xs" style="color:var(--cd-success)">↑ 5.7% <span style="color:var(--cd-text-subtle)">vs last hour</span></div>
+    </div>
+  </div>
+
+  <!-- Two column layout: Recent Activity + Quick Actions -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+
+    <!-- Recent Users table (2/3 width) -->
+    <div class="lg:col-span-2 rounded-xl border overflow-hidden" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+      <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color:var(--cd-border)">
+        <h2 class="text-sm font-semibold m-0" style="color:var(--cd-text)">Recent Users</h2>
+        <a href="users.html" class="text-xs font-medium no-underline" style="color:var(--cd-primary)">View all</a>
+      </div>
+      <table class="cd-table">
+        <thead><tr><th>User</th><th>Role</th><th>Status</th><th>Last Login</th></tr></thead>
+        <tbody>
+          <template x-for="u in recentUsers" :key="u.id">
+            <tr>
+              <td>
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" :style="`background:${u.color}`" x-text="u.initials"></div>
+                  <div>
+                    <div class="font-medium text-xs" style="color:var(--cd-text)" x-text="u.name"></div>
+                    <div class="text-xs" style="color:var(--cd-text-subtle)" x-text="u.email"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:var(--cd-primary-light);color:var(--cd-primary)" x-text="u.role"></span></td>
+              <td>
+                <span class="text-xs px-2 py-0.5 rounded-full font-medium"
+                  :style="u.status==='Active'?'background:var(--cd-success-light);color:var(--cd-success)':u.status==='Pending'?'background:var(--cd-warning-light);color:var(--cd-warning)':'background:var(--cd-danger-light);color:var(--cd-danger)'"
+                  x-text="u.status"></span>
+              </td>
+              <td class="text-xs" style="color:var(--cd-text-muted)" x-text="u.lastLogin"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Quick links panel (1/3 width) -->
+    <div class="rounded-xl border" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+      <div class="px-5 py-4 border-b" style="border-color:var(--cd-border)">
+        <h2 class="text-sm font-semibold m-0" style="color:var(--cd-text)">Quick Links</h2>
+      </div>
+      <div class="p-4 flex flex-col gap-1">
+        <a href="users.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--cd-primary-light)"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-primary)"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/></svg></div>
+          <span class="text-sm">Users</span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto" style="color:var(--cd-text-subtle)"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </a>
+        <a href="tasks.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--cd-info-light)"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-info)"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5z"/></svg></div>
+          <span class="text-sm">Tasks</span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto" style="color:var(--cd-text-subtle)"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </a>
+        <a href="mailbox-inbox.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--cd-warning-light)"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-warning)"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1z"/></svg></div>
+          <span class="text-sm">Mailbox <span class="text-xs px-1.5 py-0.5 rounded-full ml-1 text-white" style="background:var(--cd-danger);font-size:9px">3</span></span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto" style="color:var(--cd-text-subtle)"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </a>
+        <a href="settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--cd-success-light)"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-success)"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52z"/></svg></div>
+          <span class="text-sm">Settings</span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto" style="color:var(--cd-text-subtle)"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </a>
+        <a href="notifications.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--cd-danger-light)"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-danger)"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg></div>
+          <span class="text-sm">Notifications <span class="text-xs px-1.5 py-0.5 rounded-full ml-1 text-white" style="background:var(--cd-danger);font-size:9px">5</span></span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto" style="color:var(--cd-text-subtle)"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </a>
+        <div style="height:1px;background:var(--cd-border);margin:4px 0"></div>
+        <a href="chart-line.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg no-underline transition-colors" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:var(--cd-primary-light)"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-primary)"><path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/></svg></div>
+          <span class="text-sm">Charts &amp; Reports</span>
+          <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" class="ml-auto" style="color:var(--cd-text-subtle)"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature highlight: Layout info -->
+  <div class="rounded-xl border p-5" style="background:var(--cd-primary-light);border-color:var(--cd-primary);border-style:dashed">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white flex-shrink-0" style="background:var(--cd-primary)">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5-1v12h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM4 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2z"/></svg>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold m-0 mb-1" style="color:var(--cd-primary)">Top Navigation Layout Variation</h3>
+        <p class="text-sm m-0 mb-3" style="color:var(--cd-text-muted)">This page demonstrates the <strong>horizontal topbar navigation</strong> variation. All navigation links live in the header bar instead of a sidebar, giving more vertical space to content. Dropdowns and mega-menus reveal grouped links on hover/click.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background:var(--cd-primary);color:#fff">Mega-menu dropdowns</span>
+          <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)">Responsive hamburger</span>
+          <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)">Dark mode support</span>
+          <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background:var(--cd-surface);color:var(--cd-text-muted);border:1px solid var(--cd-border)">Alpine.js powered</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function topNavApp() {
+    return {
+      theme: localStorage.getItem('cd:theme') || 'light',
+      density: localStorage.getItem('cd:density') || 'comfortable',
+      activeNav: 'topnav',
+      mobileMenuOpen: false,
+      recentUsers: [
+        {id:1, name:'Alice Johnson', email:'alice@example.com', initials:'AJ', color:'#3B82F6', role:'Admin', status:'Active', lastLogin:'2 min ago'},
+        {id:2, name:'Bob Martinez', email:'bob@example.com', initials:'BM', color:'#6366F1', role:'Editor', status:'Active', lastLogin:'15 min ago'},
+        {id:3, name:'Carol White', email:'carol@example.com', initials:'CW', color:'#16A34A', role:'Viewer', status:'Pending', lastLogin:'1 hour ago'},
+        {id:4, name:'David Kim', email:'david@example.com', initials:'DK', color:'#F59E0B', role:'Manager', status:'Active', lastLogin:'3 hours ago'},
+        {id:5, name:'Eva Lopez', email:'eva@example.com', initials:'EL', color:'#EC4899', role:'Admin', status:'Active', lastLogin:'Yesterday'},
+      ]
+    }
+  }
+</script>
+</body>
+</html>

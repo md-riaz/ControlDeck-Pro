@@ -161,7 +161,7 @@
 
       <!-- Users dropdown -->
       <div class="cd-dropdown" style="position:relative">
-        <button class="tn-nav-btn" onclick="toggleTnDropdown('usersMenu')">
+        <button class="tn-nav-btn" onclick="toggleDropdown('usersMenu')">
           <i class="bi bi-people"></i> Users <i class="bi bi-chevron-down" style="font-size:10px"></i>
         </button>
         <div class="tn-dropdown" id="usersMenu">
@@ -173,7 +173,7 @@
 
       <!-- Components mega-menu -->
       <div class="cd-dropdown" style="position:relative">
-        <button class="tn-nav-btn" onclick="toggleTnDropdown('componentsMenu')">
+        <button class="tn-nav-btn" onclick="toggleDropdown('componentsMenu')">
           <i class="bi bi-grid"></i> Components <i class="bi bi-chevron-down" style="font-size:10px"></i>
         </button>
         <div class="tn-dropdown tn-mega" id="componentsMenu" style="display:none">
@@ -209,7 +209,7 @@
 
       <!-- Pages dropdown -->
       <div class="cd-dropdown" style="position:relative">
-        <button class="tn-nav-btn" onclick="toggleTnDropdown('pagesMenu')">
+        <button class="tn-nav-btn" onclick="toggleDropdown('pagesMenu')">
           <i class="bi bi-file-earmark"></i> Pages <i class="bi bi-chevron-down" style="font-size:10px"></i>
         </button>
         <div class="tn-dropdown" id="pagesMenu" style="min-width:360px;padding:12px 8px">
@@ -480,54 +480,23 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  /* ── Theme toggle ────────────────────────────────────────── */
-  function toggleTheme() {
-    const html = document.documentElement;
-    const dark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', dark ? 'light' : 'dark');
-    document.getElementById('themeIcon').className = dark ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
-  }
-
-  /* ── Generic dropdown (topbar right menus) ───────────────── */
-  function toggleDropdown(id) {
-    const menu = document.getElementById(id);
-    const isOpen = menu.classList.contains('show');
-    closeAllDropdowns();
-    if (!isOpen) menu.classList.add('show');
-  }
-
-  function closeAllDropdowns() {
-    document.querySelectorAll('.cd-dropdown-menu.show, .tn-dropdown.show').forEach(el => {
-      el.classList.remove('show');
-    });
-  }
-
-  /* ── Top-nav dropdown (nav area) ─────────────────────────── */
-  function toggleTnDropdown(id) {
-    const menu = document.getElementById(id);
-    const isOpen = menu.classList.contains('show');
-    closeAllDropdowns();
-    if (!isOpen) menu.classList.add('show');
-  }
-
-  /* ── Mobile nav toggle ───────────────────────────────────── */
-  function toggleMobileNav() {
-    const nav = document.getElementById('mobileNav');
-    nav.classList.toggle('show');
-  }
-
-  /* ── Click outside to close ──────────────────────────────── */
-  document.addEventListener('click', function (e) {
-    const inDropdown = e.target.closest('.cd-dropdown, [onclick^="toggleTnDropdown"]');
-    const inMobileBtn = e.target.closest('#hamburger');
-    const inMobileNav = e.target.closest('#mobileNav');
+$(function () {
+  $(document).on('click', function (e) {
+    var inDropdown = $(e.target).closest('.cd-dropdown, [onclick^="toggleDropdown"]').length;
+    var inHamburger = $(e.target).closest('#hamburger').length;
+    var inMobileNav = $(e.target).closest('#mobileNav').length;
     if (!inDropdown) closeAllDropdowns();
-    if (!inMobileBtn && !inMobileNav) {
-      document.getElementById('mobileNav').classList.remove('show');
-    }
+    if (!inHamburger && !inMobileNav) $('#mobileNav').removeClass('show');
   });
+});
+
+function closeAllDropdowns() { $('.cd-dropdown-menu.show, .tn-dropdown.show').removeClass('show'); }
+function toggleDropdown(id) { var open = $('#' + id).hasClass('show'); closeAllDropdowns(); if (!open) $('#' + id).addClass('show'); }
+function toggleMobileNav() { $('#mobileNav').toggleClass('show'); }
+function toggleTheme() { var dark = $('html').attr('data-theme') === 'dark'; $('html').attr('data-theme', dark ? 'light' : 'dark'); $('#themeIcon').attr('class', dark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'); }
 </script>
 </body>
 </html>

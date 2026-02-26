@@ -404,29 +404,45 @@
     </main>
   </div>
 </div>
-<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999" onclick="closeSidebarMobile()"></div>
+<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-const sidebar=document.getElementById('sidebar'),mainArea=document.getElementById('mainArea'),backdrop=document.getElementById('backdrop');
-const isMobile=()=>window.innerWidth<=768;
-document.getElementById('sidebarToggle').addEventListener('click',()=>{
-  if(isMobile()){sidebar.classList.toggle('mobile-open');backdrop.style.display=sidebar.classList.contains('mobile-open')?'block':'none';}
-  else{sidebar.classList.toggle('collapsed');mainArea.classList.toggle('expanded');}
+$(function () {
+  var isMobile = function () { return $(window).width() <= 768; };
+
+  $('#sidebarToggle').on('click', function () {
+    if (isMobile()) {
+      $('#sidebar').toggleClass('mobile-open');
+      $('#backdrop').toggle($('#sidebar').hasClass('mobile-open'));
+    } else {
+      $('#sidebar').toggleClass('collapsed');
+      $('#mainArea').toggleClass('expanded');
+    }
+  });
+
+  $('#backdrop').on('click', function () {
+    $('#sidebar').removeClass('mobile-open');
+    $('#backdrop').hide();
+  });
+
+  $(document).on('click', function (e) {
+    if (!$(e.target).closest('.cd-dropdown').length) closeAllDropdowns();
+  });
 });
-function closeSidebarMobile(){sidebar.classList.remove('mobile-open');backdrop.style.display='none';}
-function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeIcon').className=d?'bi bi-moon-fill':'bi bi-sun-fill';}
-function setDensity(d){document.documentElement.setAttribute('data-density',d);closeAllDropdowns();}
-function toggleDropdown(id){const m=document.getElementById(id),s=m.classList.contains('show');closeAllDropdowns();if(!s)m.classList.add('show');}
-function closeAllDropdowns(){document.querySelectorAll('.cd-dropdown-menu.show').forEach(m=>m.classList.remove('show'));}
-document.addEventListener('click',e=>{if(!e.target.closest('.cd-dropdown'))closeAllDropdowns();});
+
+function closeAllDropdowns() { $('.cd-dropdown-menu.show').removeClass('show'); }
+function toggleDropdown(id) { var open = $('#' + id).hasClass('show'); closeAllDropdowns(); if (!open) $('#' + id).addClass('show'); }
+function toggleTheme() { var dark = $('html').attr('data-theme') === 'dark'; $('html').attr('data-theme', dark ? 'light' : 'dark'); $('#themeIcon').attr('class', dark ? 'bi bi-moon-fill' : 'bi bi-sun-fill'); }
+function setDensity(d) { $('html').attr('data-density', d); closeAllDropdowns(); }
 </script>
 <script>
-const ST_TABS=['st-general','st-profile','st-security','st-notifications','st-apikeys'];
-function swTab(btn,id){
-  document.querySelectorAll('.settings-nav .nav-item-link').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  ST_TABS.forEach(t=>{document.getElementById(t).style.display='none';});
-  document.getElementById(id).style.display='block';
+var ST_TABS = ['#st-general', '#st-profile', '#st-security', '#st-notifications', '#st-apikeys'];
+function swTab(btn, id) {
+  $('.settings-nav .nav-item-link').removeClass('active');
+  $(btn).addClass('active');
+  $(ST_TABS.join(',')).hide();
+  $('#' + id).show();
 }
 </script>
 </body>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top Nav Layout — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    /* ── CD Token Variables ─────────────────────────────────── */
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-success-light: #F0FDF4;
+      --cd-warning: #F59E0B; --cd-warning-light: #FFFBEB;
+      --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-info: #0EA5E9; --cd-info-light: #F0F9FF;
+      --cd-sidebar-width: 260px; --cd-sidebar-collapsed-width: 64px; --cd-topbar-height: 60px;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-space-1: 4px; --cd-space-2: 8px; --cd-space-3: 12px; --cd-space-4: 16px;
+      --cd-space-5: 20px; --cd-space-6: 24px; --cd-space-8: 32px; --cd-space-10: 40px;
+      --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --cd-font-xs: 12px; --cd-font-sm: 13px; --cd-font-base: 14px; --cd-font-md: 16px;
+      --cd-font-lg: 18px; --cd-font-xl: 20px; --cd-font-2xl: 24px;
+      --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-success-light: #14532D;
+      --cd-warning-light: #451A03; --cd-danger-light: #450A0A; --cd-info-light: #0C4A6E;
+    }
+    [data-density="compact"]  { font-size: calc(var(--cd-font-base) * 0.88); }
+    [data-density="spacious"] { font-size: calc(var(--cd-font-base) * 1.12); }
+
+    /* ── Base ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: var(--cd-font); font-size: var(--cd-font-base); background: var(--cd-bg); color: var(--cd-text); margin: 0; min-height: 100vh; }
+
+    /* ── CD Utilities ───────────────────────────────────────── */
+    .cd-card { background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: var(--cd-radius-md); box-shadow: var(--cd-shadow-sm); overflow: hidden; }
+    .cd-card-header { padding: var(--cd-space-4) var(--cd-space-5); border-bottom: 1px solid var(--cd-border); display: flex; align-items: center; justify-content: space-between; gap: var(--cd-space-3); }
+    .cd-card-title { font-size: var(--cd-font-md); font-weight: 600; color: var(--cd-text); margin: 0; }
+    .cd-card-body { padding: var(--cd-space-5); }
+    .cd-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .cd-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .cd-badge-success { background: var(--cd-success-light); color: var(--cd-success); }
+    .cd-badge-warning { background: var(--cd-warning-light); color: var(--cd-warning); }
+    .cd-badge-danger  { background: var(--cd-danger-light);  color: var(--cd-danger);  }
+    .cd-badge-info    { background: var(--cd-info-light);    color: var(--cd-info);    }
+    .cd-badge-neutral { background: var(--cd-surface-2);     color: var(--cd-text-muted); }
+    .cd-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--cd-radius-sm); font-size: var(--cd-font-sm); font-weight: 500; font-family: var(--cd-font); cursor: pointer; border: 1px solid transparent; transition: all var(--cd-transition); text-decoration: none; }
+    .cd-btn-primary { background: var(--cd-primary); color: #fff; border-color: var(--cd-primary); }
+    .cd-btn-primary:hover { background: var(--cd-primary-hover); border-color: var(--cd-primary-hover); color: #fff; }
+    .cd-btn-ghost { background: transparent; color: var(--cd-text-muted); border-color: var(--cd-border); }
+    .cd-btn-ghost:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .cd-btn-sm { padding: 4px 12px; font-size: 11px; }
+    .cd-table-wrap { overflow-x: auto; }
+    .cd-table { width: 100%; border-collapse: collapse; font-size: var(--cd-font-sm); }
+    .cd-table th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--cd-text-subtle); background: var(--cd-surface-2); border-bottom: 1px solid var(--cd-border); white-space: nowrap; }
+    .cd-table td { padding: 12px 16px; border-bottom: 1px solid var(--cd-border); color: var(--cd-text); vertical-align: middle; }
+    .cd-table tbody tr:hover { background: var(--cd-surface-2); }
+    .cd-table tbody tr:last-child td { border-bottom: none; }
+    .cd-dropdown { position: relative; }
+    .cd-dropdown-menu { position: absolute; top: calc(100% + 4px); right: 0; background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: var(--cd-radius-md); box-shadow: var(--cd-shadow-md); min-width: 180px; z-index: 2000; display: none; padding: 8px 0; }
+    .cd-dropdown-menu.show { display: block; }
+    .cd-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 8px 16px; font-size: var(--cd-font-sm); color: var(--cd-text-muted); cursor: pointer; transition: background var(--cd-transition); text-decoration: none; border: none; background: none; width: 100%; text-align: left; font-family: var(--cd-font); }
+    .cd-dropdown-item:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .cd-dropdown-divider { height: 1px; background: var(--cd-border); margin: 8px 0; }
+    .topbar-btn { width: 36px; height: 36px; background: none; border: none; border-radius: var(--cd-radius-sm); color: var(--cd-text-muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+    .topbar-btn:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .topbar-btn .badge-count { position: absolute; top: 4px; right: 4px; background: var(--cd-danger); color: #fff; font-size: 10px; font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0 3px; border: 2px solid var(--cd-surface); }
+    .topbar-user { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: var(--cd-radius-sm); cursor: pointer; border: none; background: none; color: var(--cd-text); font-family: var(--cd-font); }
+    .topbar-user:hover { background: var(--cd-surface-2); }
+    .topbar-user .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #3B82F6, #6366F1); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .topbar-user .user-name { font-size: var(--cd-font-sm); font-weight: 500; }
+    .stat-card { background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: var(--cd-radius-md); padding: var(--cd-space-5); box-shadow: var(--cd-shadow-sm); transition: box-shadow var(--cd-transition); }
+    .stat-card:hover { box-shadow: var(--cd-shadow-md); }
+    .stat-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--cd-space-3); }
+    .stat-card-icon { width: 44px; height: 44px; border-radius: var(--cd-radius-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .stat-card-value { font-size: var(--cd-font-2xl); font-weight: 700; color: var(--cd-text); line-height: 1.2; }
+    .stat-card-label { font-size: var(--cd-font-sm); color: var(--cd-text-muted); margin-top: var(--cd-space-1); }
+    .stat-card-trend { display: inline-flex; align-items: center; gap: 3px; font-size: var(--cd-font-xs); font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: var(--cd-space-3); }
+    .trend-up   { background: var(--cd-success-light); color: var(--cd-success); }
+    .trend-down { background: var(--cd-danger-light);  color: var(--cd-danger);  }
+    .user-cell { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .user-name-cell { font-weight: 500; font-size: var(--cd-font-sm); }
+    .text-muted-cd { color: var(--cd-text-muted); }
+    .quick-link-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--cd-border); text-decoration: none; color: var(--cd-text-muted); font-size: var(--cd-font-sm); transition: color var(--cd-transition); }
+    .quick-link-item:last-child { border-bottom: none; }
+    .quick-link-item:hover { color: var(--cd-primary); }
+    .quick-link-icon { width: 30px; height: 30px; border-radius: var(--cd-radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+
+    /* ── Top Nav specific ───────────────────────────────────── */
+    .tn-nav { display: flex; align-items: center; gap: 4px; margin-left: 24px; flex: 1; }
+    .tn-nav-btn { background: none; border: none; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--cd-text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: var(--cd-font); }
+    .tn-nav-btn:hover, .tn-nav-btn.active { background: var(--cd-surface-2); color: var(--cd-text); }
+    .tn-dropdown { position: absolute; top: calc(100% + 6px); left: 0; z-index: 1000; background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: 12px; box-shadow: var(--cd-shadow-md); min-width: 180px; padding: 8px 0; display: none; }
+    .tn-dropdown.show { display: block; }
+    .tn-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 13px; color: var(--cd-text-muted); text-decoration: none; cursor: pointer; border: 0; background: transparent; width: 100%; font-family: var(--cd-font); }
+    .tn-dropdown-item:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .tn-mega { min-width: 520px; padding: 16px; }
+    .tn-mega-col { flex: 1; }
+    .tn-mega-col-title { font-size: 11px; font-weight: 600; color: var(--cd-text-subtle); text-transform: uppercase; letter-spacing: .06em; padding: 4px 8px 8px; margin-bottom: 4px; border-bottom: 1px solid var(--cd-border); }
+
+    /* ── Topbar ─────────────────────────────────────────────── */
+    [data-cd="topbar"] { height: 60px; background: var(--cd-surface); border-bottom: 1px solid var(--cd-border); display: flex; align-items: center; padding: 0 24px; position: sticky; top: 0; z-index: 900; box-shadow: var(--cd-shadow-sm); }
+    .tn-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+    .tn-brand .brand-icon { width: 32px; height: 32px; background: var(--cd-primary); border-radius: var(--cd-radius-sm); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; flex-shrink: 0; }
+    .tn-brand .brand-name { font-weight: 700; font-size: 16px; color: var(--cd-text); white-space: nowrap; }
+    .tn-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .tn-search { position: relative; }
+    .tn-search input { max-width: 200px; width: 200px; padding: 7px 14px 7px 34px; background: var(--cd-surface-2); border: 1px solid var(--cd-border); border-radius: var(--cd-radius-sm); font-size: 13px; color: var(--cd-text); outline: none; font-family: var(--cd-font); }
+    .tn-search input:focus { border-color: var(--cd-primary); }
+    .tn-search .s-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--cd-text-subtle); font-size: 13px; }
+
+    /* ── Mobile nav collapse ────────────────────────────────── */
+    .tn-hamburger { display: none; background: none; border: none; color: var(--cd-text-muted); font-size: 20px; cursor: pointer; padding: 6px; border-radius: var(--cd-radius-sm); }
+    .tn-hamburger:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .tn-mobile-nav { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--cd-surface); border-bottom: 1px solid var(--cd-border); box-shadow: var(--cd-shadow-md); padding: 8px 0; z-index: 899; }
+    .tn-mobile-nav.show { display: block; }
+    .tn-mobile-nav a, .tn-mobile-nav button { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--cd-text-muted); text-decoration: none; background: none; border: none; width: 100%; text-align: left; font-family: var(--cd-font); cursor: pointer; }
+    .tn-mobile-nav a:hover, .tn-mobile-nav button:hover { background: var(--cd-surface-2); color: var(--cd-text); }
+    .tn-mobile-divider { height: 1px; background: var(--cd-border); margin: 6px 0; }
+
+    @media (max-width: 991px) {
+      .tn-nav { display: none; }
+      .tn-hamburger { display: flex; align-items: center; justify-content: center; }
+      .tn-search input { max-width: 140px; width: 140px; }
+    }
+    @media (max-width: 576px) {
+      .tn-search { display: none; }
+      .topbar-user .user-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div data-cd="app" style="min-height:100vh;background:var(--cd-bg)">
+
+  <!-- ── Topbar ─────────────────────────────────────────────── -->
+  <header data-cd="topbar" style="position:relative">
+
+    <!-- Logo -->
+    <a href="index.html" class="tn-brand">
+      <div class="brand-icon"><i class="bi bi-layers-fill"></i></div>
+      <span class="brand-name">ControlDeck</span>
+    </a>
+
+    <!-- Sidebar layout link -->
+    <a href="index.html" class="cd-btn cd-btn-ghost cd-btn-sm" style="margin-left:16px;flex-shrink:0">
+      <i class="bi bi-arrow-left"></i> Sidebar Layout
+    </a>
+
+    <!-- Main nav buttons -->
+    <nav class="tn-nav" id="tnNav">
+
+      <!-- Users dropdown -->
+      <div class="cd-dropdown" style="position:relative">
+        <button class="tn-nav-btn" onclick="toggleTnDropdown('usersMenu')">
+          <i class="bi bi-people"></i> Users <i class="bi bi-chevron-down" style="font-size:10px"></i>
+        </button>
+        <div class="tn-dropdown" id="usersMenu">
+          <a href="users.html" class="tn-dropdown-item"><i class="bi bi-people-fill"></i> All Users</a>
+          <a href="#" class="tn-dropdown-item"><i class="bi bi-shield-check"></i> Roles &amp; Permissions</a>
+          <a href="#" class="tn-dropdown-item"><i class="bi bi-envelope-plus"></i> Invitations</a>
+        </div>
+      </div>
+
+      <!-- Components mega-menu -->
+      <div class="cd-dropdown" style="position:relative">
+        <button class="tn-nav-btn" onclick="toggleTnDropdown('componentsMenu')">
+          <i class="bi bi-grid"></i> Components <i class="bi bi-chevron-down" style="font-size:10px"></i>
+        </button>
+        <div class="tn-dropdown tn-mega" id="componentsMenu" style="display:none">
+          <div style="display:flex;gap:16px">
+            <!-- Column 1: UI Elements -->
+            <div class="tn-mega-col">
+              <div class="tn-mega-col-title">UI Elements</div>
+              <a href="ui-general.html"   class="tn-dropdown-item"><i class="bi bi-palette"></i> General</a>
+              <a href="ui-icons.html"     class="tn-dropdown-item"><i class="bi bi-emoji-smile"></i> Icons</a>
+              <a href="ui-modals.html"    class="tn-dropdown-item"><i class="bi bi-window"></i> Modals</a>
+              <a href="ui-timeline.html"  class="tn-dropdown-item"><i class="bi bi-clock-history"></i> Timeline</a>
+              <a href="widgets.html"      class="tn-dropdown-item"><i class="bi bi-columns-gap"></i> Widgets</a>
+            </div>
+            <!-- Column 2: Forms & Tables -->
+            <div class="tn-mega-col">
+              <div class="tn-mega-col-title">Forms &amp; Tables</div>
+              <a href="form-general.html"    class="tn-dropdown-item"><i class="bi bi-ui-checks"></i> General</a>
+              <a href="form-advanced.html"   class="tn-dropdown-item"><i class="bi bi-sliders"></i> Advanced</a>
+              <a href="form-editors.html"    class="tn-dropdown-item"><i class="bi bi-pencil-square"></i> Editors</a>
+              <a href="table-simple.html"    class="tn-dropdown-item"><i class="bi bi-table"></i> Simple Table</a>
+              <a href="table-datatables.html" class="tn-dropdown-item"><i class="bi bi-grid-3x3"></i> DataTables</a>
+            </div>
+            <!-- Column 3: Charts -->
+            <div class="tn-mega-col">
+              <div class="tn-mega-col-title">Charts</div>
+              <a href="chart-line.html" class="tn-dropdown-item"><i class="bi bi-graph-up"></i> Line</a>
+              <a href="chart-bar.html"  class="tn-dropdown-item"><i class="bi bi-bar-chart-fill"></i> Bar</a>
+              <a href="chart-pie.html"  class="tn-dropdown-item"><i class="bi bi-pie-chart-fill"></i> Pie</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pages dropdown -->
+      <div class="cd-dropdown" style="position:relative">
+        <button class="tn-nav-btn" onclick="toggleTnDropdown('pagesMenu')">
+          <i class="bi bi-file-earmark"></i> Pages <i class="bi bi-chevron-down" style="font-size:10px"></i>
+        </button>
+        <div class="tn-dropdown" id="pagesMenu" style="min-width:360px;padding:12px 8px">
+          <div style="display:flex;gap:4px">
+            <div style="flex:1">
+              <a href="mailbox-inbox.html" class="tn-dropdown-item"><i class="bi bi-envelope-fill"></i> Mailbox</a>
+              <a href="calendar.html"      class="tn-dropdown-item"><i class="bi bi-calendar3"></i> Calendar</a>
+              <a href="tasks.html"         class="tn-dropdown-item"><i class="bi bi-check2-square"></i> Tasks</a>
+              <a href="invoice.html"       class="tn-dropdown-item"><i class="bi bi-receipt"></i> Invoice</a>
+            </div>
+            <div style="flex:1">
+              <a href="profile.html"       class="tn-dropdown-item"><i class="bi bi-person-circle"></i> Profile</a>
+              <a href="settings.html"      class="tn-dropdown-item"><i class="bi bi-gear-fill"></i> Settings</a>
+              <a href="notifications.html" class="tn-dropdown-item"><i class="bi bi-bell-fill"></i> Notifications</a>
+              <a href="login.html"         class="tn-dropdown-item"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- Right actions -->
+    <div class="tn-right">
+      <!-- Search -->
+      <div class="tn-search">
+        <i class="bi bi-search s-icon"></i>
+        <input type="search" placeholder="Search…" />
+      </div>
+
+      <!-- Theme toggle -->
+      <button class="topbar-btn" onclick="toggleTheme()" title="Toggle theme">
+        <i class="bi bi-moon-fill" id="themeIcon"></i>
+      </button>
+
+      <!-- Notifications -->
+      <div class="cd-dropdown">
+        <button class="topbar-btn" onclick="toggleDropdown('notifMenu')" title="Notifications">
+          <i class="bi bi-bell-fill"></i>
+          <span class="badge-count">5</span>
+        </button>
+        <div class="cd-dropdown-menu" id="notifMenu" style="min-width:260px">
+          <div style="padding:10px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--cd-border)">Notifications</div>
+          <button class="cd-dropdown-item"><i class="bi bi-person-plus" style="color:var(--cd-primary)"></i><span>New user registered <span style="font-size:11px;color:var(--cd-text-subtle)">— 2m ago</span></span></button>
+          <button class="cd-dropdown-item"><i class="bi bi-exclamation-triangle" style="color:var(--cd-warning)"></i><span>Server load high <span style="font-size:11px;color:var(--cd-text-subtle)">— 15m ago</span></span></button>
+          <button class="cd-dropdown-item"><i class="bi bi-check-circle" style="color:var(--cd-success)"></i><span>Deployment succeeded <span style="font-size:11px;color:var(--cd-text-subtle)">— 1h ago</span></span></button>
+          <div class="cd-dropdown-divider"></div>
+          <button class="cd-dropdown-item" style="justify-content:center;color:var(--cd-primary)">View all notifications</button>
+        </div>
+      </div>
+
+      <!-- User menu -->
+      <div class="cd-dropdown">
+        <button class="topbar-user" onclick="toggleDropdown('userMenu')">
+          <div class="avatar">JD</div>
+          <span class="user-name">Jane Doe</span>
+          <i class="bi bi-chevron-down" style="font-size:11px;color:var(--cd-text-subtle)"></i>
+        </button>
+        <div class="cd-dropdown-menu" id="userMenu">
+          <a href="profile.html"  class="cd-dropdown-item"><i class="bi bi-person"></i> Profile</a>
+          <a href="settings.html" class="cd-dropdown-item"><i class="bi bi-gear"></i> Settings</a>
+          <div class="cd-dropdown-divider"></div>
+          <a href="login.html"    class="cd-dropdown-item" style="color:var(--cd-danger)"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+        </div>
+      </div>
+
+      <!-- Hamburger (mobile) -->
+      <button class="tn-hamburger" onclick="toggleMobileNav()" id="hamburger" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+
+    <!-- Mobile nav panel -->
+    <div class="tn-mobile-nav" id="mobileNav">
+      <a href="users.html"><i class="bi bi-people-fill"></i> All Users</a>
+      <a href="#"><i class="bi bi-shield-check"></i> Roles &amp; Permissions</a>
+      <div class="tn-mobile-divider"></div>
+      <a href="ui-general.html"><i class="bi bi-palette"></i> UI General</a>
+      <a href="ui-icons.html"><i class="bi bi-emoji-smile"></i> Icons</a>
+      <a href="ui-modals.html"><i class="bi bi-window"></i> Modals</a>
+      <a href="form-general.html"><i class="bi bi-ui-checks"></i> Forms — General</a>
+      <a href="table-simple.html"><i class="bi bi-table"></i> Simple Table</a>
+      <a href="chart-line.html"><i class="bi bi-graph-up"></i> Line Chart</a>
+      <div class="tn-mobile-divider"></div>
+      <a href="mailbox-inbox.html"><i class="bi bi-envelope-fill"></i> Mailbox</a>
+      <a href="calendar.html"><i class="bi bi-calendar3"></i> Calendar</a>
+      <a href="tasks.html"><i class="bi bi-check2-square"></i> Tasks</a>
+      <a href="profile.html"><i class="bi bi-person-circle"></i> Profile</a>
+      <a href="settings.html"><i class="bi bi-gear-fill"></i> Settings</a>
+      <a href="login.html"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+    </div>
+  </header>
+
+  <!-- ── Main content ────────────────────────────────────────── -->
+  <main style="padding:24px">
+
+    <!-- Page heading -->
+    <div style="margin-bottom:24px">
+      <h1 style="font-size:20px;font-weight:700;color:var(--cd-text);margin:0 0 4px">Dashboard</h1>
+      <p style="font-size:13px;color:var(--cd-text-muted);margin:0">Welcome back, Jane. Here's what's happening today.</p>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">1,284</div>
+              <div class="stat-card-label">Total Users</div>
+            </div>
+            <div class="stat-card-icon" style="background:var(--cd-primary-light);color:var(--cd-primary)">
+              <i class="bi bi-people-fill"></i>
+            </div>
+          </div>
+          <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-short"></i> 12% vs last month</div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">$48.2k</div>
+              <div class="stat-card-label">Revenue</div>
+            </div>
+            <div class="stat-card-icon" style="background:var(--cd-success-light);color:var(--cd-success)">
+              <i class="bi bi-currency-dollar"></i>
+            </div>
+          </div>
+          <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-short"></i> 8% vs last month</div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">342</div>
+              <div class="stat-card-label">Active Sessions</div>
+            </div>
+            <div class="stat-card-icon" style="background:var(--cd-info-light);color:var(--cd-info)">
+              <i class="bi bi-activity"></i>
+            </div>
+          </div>
+          <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-short"></i> 5% vs last hour</div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div>
+              <div class="stat-card-value">28</div>
+              <div class="stat-card-label">Pending Tasks</div>
+            </div>
+            <div class="stat-card-icon" style="background:var(--cd-warning-light);color:var(--cd-warning)">
+              <i class="bi bi-check2-square"></i>
+            </div>
+          </div>
+          <div class="stat-card-trend trend-down"><i class="bi bi-arrow-down-short"></i> 3% vs yesterday</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lower row: Recent Users + Quick Links -->
+    <div class="row g-3">
+
+      <!-- Recent Users table -->
+      <div class="col-md-8">
+        <div class="cd-card">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title">Recent Users</h2>
+            <a href="users.html" class="cd-btn cd-btn-primary cd-btn-sm"><i class="bi bi-plus-lg"></i> Add User</a>
+          </div>
+          <div class="cd-table-wrap">
+            <table class="cd-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="user-cell"><div class="user-avatar" style="background:#3B82F6">AJ</div><div class="user-name-cell">Alice Johnson</div></div></td>
+                  <td class="text-muted-cd">alice@example.com</td>
+                  <td><span class="cd-badge cd-badge-info">Admin</span></td>
+                  <td><span class="cd-badge cd-badge-success">Active</span></td>
+                  <td class="text-muted-cd">Jan 2, 2025</td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="user-avatar" style="background:#6366F1">BM</div><div class="user-name-cell">Bob Martinez</div></div></td>
+                  <td class="text-muted-cd">bob@example.com</td>
+                  <td><span class="cd-badge cd-badge-neutral">Editor</span></td>
+                  <td><span class="cd-badge cd-badge-success">Active</span></td>
+                  <td class="text-muted-cd">Jan 8, 2025</td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="user-avatar" style="background:#16A34A">CL</div><div class="user-name-cell">Carol Lee</div></div></td>
+                  <td class="text-muted-cd">carol@example.com</td>
+                  <td><span class="cd-badge cd-badge-neutral">Viewer</span></td>
+                  <td><span class="cd-badge cd-badge-warning">Pending</span></td>
+                  <td class="text-muted-cd">Jan 15, 2025</td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="user-avatar" style="background:#F59E0B">DK</div><div class="user-name-cell">David Kim</div></div></td>
+                  <td class="text-muted-cd">david@example.com</td>
+                  <td><span class="cd-badge cd-badge-neutral">Editor</span></td>
+                  <td><span class="cd-badge cd-badge-danger">Suspended</span></td>
+                  <td class="text-muted-cd">Jan 20, 2025</td>
+                </tr>
+                <tr>
+                  <td><div class="user-cell"><div class="user-avatar" style="background:#0EA5E9">EP</div><div class="user-name-cell">Emma Patel</div></div></td>
+                  <td class="text-muted-cd">emma@example.com</td>
+                  <td><span class="cd-badge cd-badge-info">Admin</span></td>
+                  <td><span class="cd-badge cd-badge-success">Active</span></td>
+                  <td class="text-muted-cd">Feb 3, 2025</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4">
+        <div class="cd-card">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title">Quick Links</h2>
+          </div>
+          <div class="cd-card-body" style="padding-top:8px;padding-bottom:8px">
+            <a href="users.html"         class="quick-link-item">
+              <div class="quick-link-icon" style="background:var(--cd-primary-light);color:var(--cd-primary)"><i class="bi bi-people-fill"></i></div>
+              <span>Users</span>
+              <i class="bi bi-chevron-right ms-auto" style="font-size:11px"></i>
+            </a>
+            <a href="settings.html"      class="quick-link-item">
+              <div class="quick-link-icon" style="background:var(--cd-surface-2);color:var(--cd-text-muted)"><i class="bi bi-gear-fill"></i></div>
+              <span>Settings</span>
+              <i class="bi bi-chevron-right ms-auto" style="font-size:11px"></i>
+            </a>
+            <a href="notifications.html" class="quick-link-item">
+              <div class="quick-link-icon" style="background:var(--cd-info-light);color:var(--cd-info)"><i class="bi bi-bell-fill"></i></div>
+              <span>Notifications</span>
+              <i class="bi bi-chevron-right ms-auto" style="font-size:11px"></i>
+            </a>
+            <a href="tasks.html"         class="quick-link-item">
+              <div class="quick-link-icon" style="background:var(--cd-warning-light);color:var(--cd-warning)"><i class="bi bi-check2-square"></i></div>
+              <span>Tasks</span>
+              <i class="bi bi-chevron-right ms-auto" style="font-size:11px"></i>
+            </a>
+            <a href="#"                  class="quick-link-item">
+              <div class="quick-link-icon" style="background:var(--cd-success-light);color:var(--cd-success)"><i class="bi bi-bar-chart-fill"></i></div>
+              <span>Reports</span>
+              <i class="bi bi-chevron-right ms-auto" style="font-size:11px"></i>
+            </a>
+            <a href="#"                  class="quick-link-item">
+              <div class="quick-link-icon" style="background:var(--cd-danger-light);color:var(--cd-danger)"><i class="bi bi-key-fill"></i></div>
+              <span>API Keys</span>
+              <i class="bi bi-chevron-right ms-auto" style="font-size:11px"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  /* ── Theme toggle ────────────────────────────────────────── */
+  function toggleTheme() {
+    const html = document.documentElement;
+    const dark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', dark ? 'light' : 'dark');
+    document.getElementById('themeIcon').className = dark ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+  }
+
+  /* ── Generic dropdown (topbar right menus) ───────────────── */
+  function toggleDropdown(id) {
+    const menu = document.getElementById(id);
+    const isOpen = menu.classList.contains('show');
+    closeAllDropdowns();
+    if (!isOpen) menu.classList.add('show');
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.cd-dropdown-menu.show, .tn-dropdown.show').forEach(el => {
+      el.classList.remove('show');
+    });
+  }
+
+  /* ── Top-nav dropdown (nav area) ─────────────────────────── */
+  function toggleTnDropdown(id) {
+    const menu = document.getElementById(id);
+    const isOpen = menu.classList.contains('show');
+    closeAllDropdowns();
+    if (!isOpen) menu.classList.add('show');
+  }
+
+  /* ── Mobile nav toggle ───────────────────────────────────── */
+  function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    nav.classList.toggle('show');
+  }
+
+  /* ── Click outside to close ──────────────────────────────── */
+  document.addEventListener('click', function (e) {
+    const inDropdown = e.target.closest('.cd-dropdown, [onclick^="toggleTnDropdown"]');
+    const inMobileBtn = e.target.closest('#hamburger');
+    const inMobileNav = e.target.closest('#mobileNav');
+    if (!inDropdown) closeAllDropdowns();
+    if (!inMobileBtn && !inMobileNav) {
+      document.getElementById('mobileNav').classList.remove('show');
+    }
+  });
+</script>
+</body>
+</html>

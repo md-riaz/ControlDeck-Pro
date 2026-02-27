@@ -83,7 +83,7 @@
 
       <!-- UI Elements mega dropdown -->
       <div class="relative" x-data="{open:false}">
-        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
+        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','ui-accordion','ui-carousel','ui-command','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>
           Components
           <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" class="transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
@@ -99,6 +99,9 @@
               <a href="ui-modals.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-modals'?'active':''" @click="activeNav='ui-modals';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 0A2.5 2.5 0 0 0 0 2.5v11A2.5 2.5 0 0 0 2.5 16h11a2.5 2.5 0 0 0 2.5-2.5v-11A2.5 2.5 0 0 0 13.5 0h-11z"/></svg>Modals</a>
               <a href="ui-timeline.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-timeline'?'active':''" @click="activeNav='ui-timeline';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/></svg>Timeline</a>
               <a href="widgets.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='widgets'?'active':''" @click="activeNav='widgets';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5z"/></svg>Widgets</a>
+              <a href="ui-accordion.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-accordion'?'active':''" @click="activeNav='ui-accordion';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0h-13zm0 6A1.5 1.5 0 0 0 0 7.5v2A1.5 1.5 0 0 0 1.5 11h13A1.5 1.5 0 0 0 16 9.5v-2A1.5 1.5 0 0 0 14.5 6h-13z"/></svg>Accordion</a>
+              <a href="ui-carousel.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-carousel'?'active':''" @click="activeNav='ui-carousel';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5v-7zM1.5 4a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-13z"/></svg>Carousel</a>
+              <a href="ui-command.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-command'?'active':''" @click="activeNav='ui-command';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/></svg>Command</a>
             </div>
             <!-- Forms + Tables -->
             <div>
@@ -259,6 +262,9 @@
         <a href="ui-modals.html" class="mobile-item" @click="mobileMenuOpen=false">Modals</a>
         <a href="ui-timeline.html" class="mobile-item" @click="mobileMenuOpen=false">Timeline</a>
         <a href="widgets.html" class="mobile-item" @click="mobileMenuOpen=false">Widgets</a>
+        <a href="ui-accordion.html" class="mobile-item" @click="mobileMenuOpen=false">Accordion</a>
+        <a href="ui-carousel.html" class="mobile-item" @click="mobileMenuOpen=false">Carousel</a>
+        <a href="ui-command.html" class="mobile-item" @click="mobileMenuOpen=false">Command</a>
         <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Forms</div>
         <a href="form-general.html" class="mobile-item" @click="mobileMenuOpen=false">General</a>
         <a href="form-advanced.html" class="mobile-item" @click="mobileMenuOpen=false">Advanced</a>

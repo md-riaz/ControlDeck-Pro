@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" x-data="app('ui-rating')" :data-theme="theme" :data-density="density">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rating &#8212; ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:['selector','[data-theme="dark"]'],theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+  <style>
+    :root{--cd-bg:#F8FAFC;--cd-surface:#FFFFFF;--cd-surface-2:#F1F5F9;--cd-border:#E2E8F0;--cd-text:#0F172A;--cd-text-muted:#475569;--cd-text-subtle:#94A3B8;--cd-primary:#3B82F6;--cd-primary-hover:#2563EB;--cd-primary-light:#EFF6FF;--cd-success:#16A34A;--cd-success-light:#F0FDF4;--cd-warning:#F59E0B;--cd-warning-light:#FFFBEB;--cd-danger:#DC2626;--cd-danger-light:#FEF2F2;--cd-info:#0EA5E9;--cd-info-light:#F0F9FF;--cd-shadow-sm:0 1px 2px rgba(2,6,23,.06);--cd-shadow-md:0 8px 24px rgba(2,6,23,.10);--cd-font:Inter,system-ui,-apple-system,sans-serif;--cd-transition:200ms ease}
+    [data-theme="dark"]{--cd-bg:#0F172A;--cd-surface:#1E293B;--cd-surface-2:#334155;--cd-border:#334155;--cd-text:#F1F5F9;--cd-text-muted:#94A3B8;--cd-text-subtle:#64748B;--cd-primary-light:#1E3A5F;--cd-success-light:#14532D;--cd-warning-light:#451A03;--cd-danger-light:#450A0A;--cd-info-light:#0C4A6E}
+    [data-density="compact"]{font-size:calc(14px * 0.88)}[data-density="spacious"]{font-size:calc(14px * 1.12)}
+    body{font-family:var(--cd-font);background:var(--cd-bg);color:var(--cd-text)}
+    .ss::-webkit-scrollbar{width:4px}.ss::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    .input-f{width:100%;padding:9px 12px;border:1px solid var(--cd-border);border-radius:8px;font-size:13px;font-family:var(--cd-font);background:var(--cd-surface);color:var(--cd-text);outline:none}
+    .input-f:focus{border-color:var(--cd-primary);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+    @keyframes spin-ring{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body style="background:var(--cd-bg);color:var(--cd-text)">
+<div data-cd="app" class="flex min-h-screen">
+<aside data-cd="sidebar" :style="window.innerWidth<768?(mobileOpen?'width:260px;transform:translateX(0);box-shadow:var(--cd-shadow-md)':'width:260px;transform:translateX(-260px)'):(sidebarOpen?'width:260px':'width:64px')" class="fixed inset-y-0 left-0 z-50 flex flex-col border-r transition-all duration-200 ss" style="background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+    <a href="index.html" class="flex items-center gap-3 px-4 flex-shrink-0 no-underline" style="height:60px;border-bottom:1px solid var(--cd-border)">
+      <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style="background:var(--cd-primary)">CD</div>
+      <span x-show="sidebarOpen" class="font-bold text-base whitespace-nowrap" style="color:var(--cd-text)">ControlDeck</span>
+    </a>
+    <nav class="flex-1 overflow-y-auto overflow-x-hidden py-3" data-cd="nav-tree">
+      <div x-show="sidebarOpen" class="px-4 py-1 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">Main</div>
+      <a href="index.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" :style="activeNav==='dashboard'?'background:var(--cd-primary-light);color:var(--cd-primary)':'color:var(--cd-text-muted)'" @click="activeNav='dashboard'" @mouseover="$el.style.background=(activeNav==='dashboard'?'var(--cd-primary-light)':'var(--cd-surface-2)')" @mouseout="$el.style.background=(activeNav==='dashboard'?'var(--cd-primary-light)':'')">&nbsp;<svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 1 0 .553l-.921.921a.35.35 0 0 1-.445-.553l.92-.92a.39.39 0 0 1 .446 0M5.44 6.44a.35.35 0 0 1-.553.445L3.967 5.965a.35.35 0 0 1 .446-.553zm.222 6.86a4 4 0 1 1 4.667 0H5.663z"/></svg><span x-show="sidebarOpen">Dashboard</span></a>
+      <div style="height:1px;background:var(--cd-border);margin:8px 0"></div>
+      <div x-show="sidebarOpen" class="px-4 py-1 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">UI</div>
+      <div>
+        <button @click="toggleNav('ui')" class="flex items-center gap-3 px-4 py-2 w-full text-sm font-medium text-left transition-colors duration-150 border-0 bg-transparent cursor-pointer" :style="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','ui-accordion','ui-carousel','ui-command','ui-toast','ui-drawer','ui-skeleton','ui-tabs','ui-badge','ui-progress','ui-stepper','ui-pagination','ui-empty-state','ui-list','ui-rating','ui-chip'].includes(activeNav)?'color:var(--cd-primary)':'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg><span x-show="sidebarOpen" class="flex-1">UI Elements</span><svg x-show="sidebarOpen" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" :class="openNavs.includes('ui')?'rotate-90':''" class="transition-transform duration-200 flex-shrink-0"><path d="m4.646 1.646.707-.707L12 7.586 5.353 14.939l-.707-.707L10.586 8z"/></svg></button>
+        <div x-show="openNavs.includes('ui') && sidebarOpen" x-transition:enter="transition-all duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" style="background:var(--cd-surface-2)">
+          <a href="ui-general.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-general'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-general'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-general'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>General</a>
+          <a href="ui-icons.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-icons'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-icons'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-icons'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Icons</a>
+          <a href="ui-modals.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-modals'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-modals'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-modals'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Modals</a>
+          <a href="ui-timeline.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-timeline'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-timeline'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-timeline'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Timeline</a>
+          <a href="widgets.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='widgets'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='widgets'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='widgets'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Widgets</a>
+          <a href="ui-accordion.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-accordion'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-accordion'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-accordion'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Accordion</a>
+          <a href="ui-carousel.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-carousel'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-carousel'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-carousel'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Carousel</a>
+          <a href="ui-command.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-command'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-command'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-command'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Command</a>
+          <a href="ui-toast.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-toast'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-toast'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-toast'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Toast</a>
+          <a href="ui-drawer.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-drawer'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-drawer'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-drawer'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Drawer</a>
+          <a href="ui-skeleton.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-skeleton'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-skeleton'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-skeleton'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Skeleton</a>
+          <a href="ui-tabs.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-tabs'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-tabs'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-tabs'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Tabs</a>
+          <a href="ui-badge.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-badge'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-badge'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-badge'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Badge</a>
+          <a href="ui-progress.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-progress'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-progress'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-progress'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Progress</a>
+          <a href="ui-stepper.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-stepper'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-stepper'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-stepper'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Stepper</a>
+          <a href="ui-pagination.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-pagination'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-pagination'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-pagination'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Pagination</a>
+          <a href="ui-empty-state.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-empty-state'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-empty-state'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-empty-state'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Empty State</a>
+          <a href="ui-list.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-list'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-list'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-list'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>List</a>
+          <a href="ui-rating.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-rating'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-rating'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-rating'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Rating</a>
+          <a href="ui-chip.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='ui-chip'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='ui-chip'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='ui-chip'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Chip / Tag</a>
+        </div>
+      </div>
+      <div>
+        <button @click="toggleNav('forms')" class="flex items-center gap-3 px-4 py-2 w-full text-sm font-medium text-left transition-colors duration-150 border-0 bg-transparent cursor-pointer" :style="['form-general','form-advanced','form-editors'].includes(activeNav)?'color:var(--cd-primary)':'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/><path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3h9v1h-9zm0 2h6v1h-6z"/></svg><span x-show="sidebarOpen" class="flex-1">Forms</span><svg x-show="sidebarOpen" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" :class="openNavs.includes('forms')?'rotate-90':''" class="transition-transform duration-200 flex-shrink-0"><path d="m4.646 1.646.707-.707L12 7.586 5.353 14.939l-.707-.707L10.586 8z"/></svg></button>
+        <div x-show="openNavs.includes('forms') && sidebarOpen" x-transition:enter="transition-all duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" style="background:var(--cd-surface-2)">
+          <a href="form-general.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='form-general'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='form-general'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='form-general'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>General</a>
+          <a href="form-advanced.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='form-advanced'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='form-advanced'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='form-advanced'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Advanced</a>
+          <a href="form-editors.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='form-editors'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='form-editors'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='form-editors'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Editors</a>
+        </div>
+      </div>
+      <div>
+        <button @click="toggleNav('tables')" class="flex items-center gap-3 px-4 py-2 w-full text-sm font-medium text-left transition-colors duration-150 border-0 bg-transparent cursor-pointer" :style="['table-simple','table-datatables'].includes(activeNav)?'color:var(--cd-primary)':'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"/></svg><span x-show="sidebarOpen" class="flex-1">Tables</span><svg x-show="sidebarOpen" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" :class="openNavs.includes('tables')?'rotate-90':''" class="transition-transform duration-200 flex-shrink-0"><path d="m4.646 1.646.707-.707L12 7.586 5.353 14.939l-.707-.707L10.586 8z"/></svg></button>
+        <div x-show="openNavs.includes('tables') && sidebarOpen" x-transition:enter="transition-all duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" style="background:var(--cd-surface-2)">
+          <a href="table-simple.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='table-simple'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='table-simple'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='table-simple'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Simple Table</a>
+          <a href="table-datatables.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='table-datatables'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='table-datatables'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='table-datatables'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Data Tables</a>
+        </div>
+      </div>
+      <div>
+        <button @click="toggleNav('charts')" class="flex items-center gap-3 px-4 py-2 w-full text-sm font-medium text-left transition-colors duration-150 border-0 bg-transparent cursor-pointer" :style="['chart-line','chart-bar','chart-pie'].includes(activeNav)?'color:var(--cd-primary)':'color:var(--cd-text-muted)'" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/></svg><span x-show="sidebarOpen" class="flex-1">Charts</span><svg x-show="sidebarOpen" width="12" height="12" fill="currentColor" viewBox="0 0 16 16" :class="openNavs.includes('charts')?'rotate-90':''" class="transition-transform duration-200 flex-shrink-0"><path d="m4.646 1.646.707-.707L12 7.586 5.353 14.939l-.707-.707L10.586 8z"/></svg></button>
+        <div x-show="openNavs.includes('charts') && sidebarOpen" x-transition:enter="transition-all duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" style="background:var(--cd-surface-2)">
+          <a href="chart-line.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='chart-line'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='chart-line'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='chart-line'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Line Chart</a>
+          <a href="chart-bar.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='chart-bar'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='chart-bar'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='chart-bar'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Bar Chart</a>
+          <a href="chart-pie.html" class="flex items-center text-sm no-underline py-2 pl-11 pr-4 transition-colors duration-150" :style="activeNav==='chart-pie'?'color:var(--cd-primary);font-weight:500':'color:var(--cd-text-muted)'" @click="activeNav='chart-pie'" @mouseover="$el.style.background='var(--cd-border)'" @mouseout="$el.style.background=''"><span class="w-1.5 h-1.5 rounded-full mr-2 flex-shrink-0" :style="activeNav==='chart-pie'?'background:var(--cd-primary)':'background:var(--cd-text-subtle)'"></span>Pie Chart</a>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--cd-border);margin:8px 0"></div>
+      <div x-show="sidebarOpen" class="px-4 py-1 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">Pages</div>
+      <a href="calendar.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" :style="activeNav==='calendar'?'background:var(--cd-primary-light);color:var(--cd-primary)':'color:var(--cd-text-muted)'" @click="activeNav='calendar'" @mouseover="$el.style.background=(activeNav==='calendar'?'var(--cd-primary-light)':'var(--cd-surface-2)')" @mouseout="$el.style.background=(activeNav==='calendar'?'var(--cd-primary-light)':'')">&nbsp;<svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg><span x-show="sidebarOpen">Calendar</span></a>
+      <a href="invoice.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" :style="activeNav==='invoice'?'background:var(--cd-primary-light);color:var(--cd-primary)':'color:var(--cd-text-muted)'" @click="activeNav='invoice'" @mouseover="$el.style.background=(activeNav==='invoice'?'var(--cd-primary-light)':'var(--cd-surface-2)')" @mouseout="$el.style.background=(activeNav==='invoice'?'var(--cd-primary-light)':'')">&nbsp;<svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/></svg><span x-show="sidebarOpen">Invoice</span></a>
+      <a href="profile.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" :style="activeNav==='profile'?'background:var(--cd-primary-light);color:var(--cd-primary)':'color:var(--cd-text-muted)'" @click="activeNav='profile'" @mouseover="$el.style.background=(activeNav==='profile'?'var(--cd-primary-light)':'var(--cd-surface-2)')" @mouseout="$el.style.background=(activeNav==='profile'?'var(--cd-primary-light)':'')">&nbsp;<svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/></svg><span x-show="sidebarOpen">Profile</span></a>
+      <div style="height:1px;background:var(--cd-border);margin:8px 0"></div>
+      <div x-show="sidebarOpen" class="px-4 py-1 text-xs font-semibold uppercase tracking-widest" style="color:var(--cd-text-subtle)">System</div>
+      <a href="settings.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/></svg><span x-show="sidebarOpen">Settings</span></a>
+      <a href="login.html" class="flex items-center gap-3 px-4 py-2 text-sm font-medium no-underline transition-colors duration-150" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/><path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/></svg><span x-show="sidebarOpen">Sign Out</span></a>
+    </nav>
+    <div class="flex items-center gap-3 p-4 flex-shrink-0" style="border-top:1px solid var(--cd-border)">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="background:var(--cd-primary)">JD</div>
+      <div x-show="sidebarOpen" class="overflow-hidden"><div class="text-sm font-semibold whitespace-nowrap" style="color:var(--cd-text)">Jane Doe</div><div class="text-xs whitespace-nowrap" style="color:var(--cd-text-subtle)">Administrator</div></div>
+    </div>
+  </aside>
+<div class="flex flex-col flex-1 min-h-screen transition-all duration-200" :style="window.innerWidth<768?'margin-left:0':(sidebarOpen?'margin-left:260px':'margin-left:64px')">
+    <header data-cd="topbar" class="flex items-center gap-4 px-6 sticky top-0 z-40" style="height:60px;background:var(--cd-surface);border-bottom:1px solid var(--cd-border);box-shadow:var(--cd-shadow-sm)">
+      <button data-cd="sidebar-toggle" @click="toggleSidebar()" class="w-9 h-9 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></svg>
+      </button>
+      <div class="relative flex-1 max-w-sm">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2" width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="color:var(--cd-text-subtle)"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414zm-5.242 1.156a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11"/></svg>
+        <input type="search" placeholder="Search anything..." class="w-full pl-9 pr-4 py-2 text-sm rounded-lg border outline-none" style="background:var(--cd-surface-2);border-color:var(--cd-border);color:var(--cd-text);font-family:var(--cd-font)" onfocus="this.style.borderColor='var(--cd-primary)'" onblur="this.style.borderColor='var(--cd-border)'" />
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <button @click="setTheme(theme==='dark'?'light':'dark')" class="w-9 h-9 flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+          <svg x-show="theme!=='dark'" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/></svg>
+          <svg x-show="theme==='dark'" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8"/></svg>
+        </button>
+        <div class="relative" x-data="{open:false}">
+          <button @click="open=!open" class="w-9 h-9 relative flex items-center justify-center rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/></svg>
+            <span class="absolute top-1 right-1 flex items-center justify-content-center text-white rounded-full border-2" style="width:14px;height:14px;font-size:8px;font-weight:700;background:var(--cd-danger);border-color:var(--cd-surface)">5</span>
+          </button>
+          <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 rounded-xl border shadow-lg z-50 overflow-hidden" style="width:240px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+            <div class="px-4 py-3 text-sm font-semibold border-b" style="color:var(--cd-text);border-color:var(--cd-border)">Notifications</div>
+            <button class="flex gap-3 px-4 py-3 w-full text-left text-sm border-0 bg-transparent cursor-pointer" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''"><div style="color:var(--cd-primary);font-size:8px;margin-top:3px">&#9679;</div><div><div class="font-medium" style="color:var(--cd-text);font-size:12px">New user registered</div><div style="font-size:11px;color:var(--cd-text-subtle)">2 min ago</div></div></button>
+            <div class="py-2 text-center border-t" style="border-color:var(--cd-border)"><button class="text-sm font-medium border-0 bg-transparent cursor-pointer" style="color:var(--cd-primary)">View all</button></div>
+          </div>
+        </div>
+        <div class="relative" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center gap-2 px-2 py-1 rounded-lg border-0 bg-transparent cursor-pointer" style="color:var(--cd-text)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</div>
+            <span class="text-sm font-medium hidden sm:block">Jane Doe</span>
+          </button>
+          <div x-show="open" @click.outside="open=false" x-transition class="absolute right-0 mt-1 py-2 rounded-xl border shadow-lg z-50" style="min-width:160px;background:var(--cd-surface);border-color:var(--cd-border);box-shadow:var(--cd-shadow-md)">
+            <a href="profile.html" class="flex px-4 py-2 text-sm no-underline" style="color:var(--cd-text-muted)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Profile</a>
+            <div style="height:1px;background:var(--cd-border);margin:4px 0"></div>
+            <a href="login.html" class="flex px-4 py-2 text-sm no-underline" style="color:var(--cd-danger)" @mouseover="$el.style.background='var(--cd-surface-2)'" @mouseout="$el.style.background=''">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="p-6 flex-1">
+      <nav class="flex items-center gap-2 text-sm mb-4"><a href="index.html" class="no-underline hover:underline" style="color:var(--cd-text-muted)">Home</a><span style="color:var(--cd-text-subtle)">/</span><a href="#" class="no-underline hover:underline" style="color:var(--cd-text-muted)">UI Elements</a><span style="color:var(--cd-text-subtle)">/</span><span class="font-medium" style="color:var(--cd-text)">Rating</span></nav>
+      <div class="mb-6"><h1 class="text-xl font-bold m-0 mb-1" style="color:var(--cd-text)">Rating &amp; Review</h1><p class="text-sm m-0" style="color:var(--cd-text-muted)">Star ratings, review breakdowns, and interactive feedback controls.</p></div>
+
+      <div class="grid grid-cols-1 gap-6">
+
+        <!-- Card 1: Interactive Star Rating -->
+        <div class="rounded-xl border p-5" style="background:var(--cd-surface);border-color:var(--cd-border)"
+          x-data="{rating:0,hover:0}">
+          <h2 class="font-semibold text-sm mb-4" style="color:var(--cd-text)">Interactive Star Rating</h2>
+          <div class="flex flex-col gap-6">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">Click to Rate</p>
+              <div class="flex items-center gap-1 mb-2">
+                <template x-for="i in [1,2,3,4,5]" :key="i">
+                  <button @click="rating=i" @mouseover="hover=i" @mouseout="hover=0"
+                    class="border-0 bg-transparent cursor-pointer p-0.5 transition-transform" style="line-height:1"
+                    :style="hover>0?(i<=hover?'transform:scale(1.15)':''):(i<=rating?'transform:scale(1.1)':'')">
+                    <svg width="28" height="28" viewBox="0 0 24 24" :fill="(hover>0?(i<=hover):(i<=rating))?'#F59E0B':'var(--cd-border)'" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </button>
+                </template>
+                <span class="ml-3 text-sm font-semibold" style="color:var(--cd-text)" x-text="rating>0?rating+' / 5 stars':'Not rated'"></span>
+                <button x-show="rating>0" @click="rating=0;hover=0" class="ml-2 text-xs border-0 bg-transparent cursor-pointer" style="color:var(--cd-primary)">Clear</button>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">Read-Only Display (3.7)</p>
+              <div class="flex items-center gap-1">
+                <template x-for="i in [1,2,3,4,5]" :key="i">
+                  <svg width="20" height="20" viewBox="0 0 24 24" :fill="i<=3?'#F59E0B':(i===4?'url(#half)':'var(--cd-border)')" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="half"><stop offset="70%" stop-color="#F59E0B"/><stop offset="70%" stop-color="var(--cd-border)"/></linearGradient></defs>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </template>
+                <span class="ml-2 text-sm font-semibold" style="color:var(--cd-text)">3.7 / 5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Rating Sizes -->
+        <div class="rounded-xl border p-5" style="background:var(--cd-surface);border-color:var(--cd-border)">
+          <h2 class="font-semibold text-sm mb-4" style="color:var(--cd-text)">Rating Sizes</h2>
+          <div class="flex flex-col gap-4">
+            <template x-for="(size,i) in [{label:'Small',px:16},{label:'Default',px:24},{label:'Large',px:32}]" :key="i">
+              <div class="flex items-center gap-4">
+                <span class="w-20 text-xs font-medium" style="color:var(--cd-text-muted)" x-text="size.label+' ('+size.px+'px)'"></span>
+                <div class="flex items-center gap-0.5">
+                  <template x-for="j in [1,2,3,4,5]" :key="j">
+                    <svg :width="size.px" :height="size.px" viewBox="0 0 24 24" :fill="j<=4?'#F59E0B':'var(--cd-border)'" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </template>
+                  <span class="ml-2 text-xs" style="color:var(--cd-text-muted)">4.0</span>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Card 3: Review Breakdown -->
+        <div class="rounded-xl border p-5" style="background:var(--cd-surface);border-color:var(--cd-border)">
+          <h2 class="font-semibold text-sm mb-4" style="color:var(--cd-text)">Review Breakdown</h2>
+          <div class="flex flex-col sm:flex-row gap-6 items-start">
+            <div class="flex flex-col items-center gap-1 flex-shrink-0">
+              <span class="text-5xl font-bold" style="color:var(--cd-text)">4.3</span>
+              <div class="flex items-center gap-0.5">
+                <template x-for="i in [1,2,3,4,5]" :key="i">
+                  <svg width="18" height="18" viewBox="0 0 24 24" :fill="i<=4?'#F59E0B':'var(--cd-border)'" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </template>
+              </div>
+              <span class="text-xs" style="color:var(--cd-text-muted)">Based on 1,284 reviews</span>
+            </div>
+            <div class="flex-1 w-full">
+              <template x-for="(row,i) in [{stars:5,pct:58},{stars:4,pct:25},{stars:3,pct:10},{stars:2,pct:4},{stars:1,pct:3}]" :key="i">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="text-xs w-8 text-right flex-shrink-0" style="color:var(--cd-text-muted)" x-text="row.stars+'★'"></span>
+                  <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:var(--cd-border)">
+                    <div class="h-full rounded-full transition-all duration-500" style="background:#F59E0B" :style="'width:'+row.pct+'%'"></div>
+                  </div>
+                  <span class="text-xs w-8 flex-shrink-0" style="color:var(--cd-text-muted)" x-text="row.pct+'%'"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Emoji Satisfaction Rating -->
+        <div class="rounded-xl border p-5" style="background:var(--cd-surface);border-color:var(--cd-border)"
+          x-data="{selected:null,nps:null,labels:['Very Unhappy','Unhappy','Neutral','Happy','Very Happy'],emojis:['😞','😕','😐','🙂','😄']}">
+          <h2 class="font-semibold text-sm mb-4" style="color:var(--cd-text)">Emoji Satisfaction Rating</h2>
+          <div class="mb-5">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">How do you feel?</p>
+            <div class="flex items-center gap-3 flex-wrap">
+              <template x-for="(emoji,i) in emojis" :key="i">
+                <button @click="selected=i" class="flex flex-col items-center gap-1 p-3 rounded-xl border-2 cursor-pointer bg-transparent transition-all duration-150"
+                  :style="selected===i?'border-color:var(--cd-primary);background:var(--cd-primary-light)':'border-color:var(--cd-border);background:var(--cd-surface)'">
+                  <span class="text-2xl leading-none" x-text="emoji"></span>
+                  <span class="text-xs" :style="selected===i?'color:var(--cd-primary);font-weight:600':'color:var(--cd-text-muted)'" x-text="labels[i]"></span>
+                </button>
+              </template>
+            </div>
+            <p class="text-xs mt-2" style="color:var(--cd-text-muted)" x-text="selected!==null?'Selected: '+labels[selected]:'No selection'"></p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">Net Promoter Score (0–10)</p>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <template x-for="n in [0,1,2,3,4,5,6,7,8,9,10]" :key="n">
+                <button @click="nps=n" class="w-9 h-9 rounded-lg text-sm font-semibold border-2 cursor-pointer transition-all duration-150"
+                  :style="nps===n?'background:var(--cd-primary);color:#fff;border-color:var(--cd-primary)':'background:var(--cd-surface);color:var(--cd-text-muted);border-color:var(--cd-border)'"
+                  x-text="n"></button>
+              </template>
+            </div>
+            <p class="text-xs mt-2" style="color:var(--cd-text-muted)" x-text="nps!==null?'NPS score: '+nps:'Not selected'"></p>
+          </div>
+        </div>
+
+        <!-- Card 5: Like / Dislike & Heart -->
+        <div class="rounded-xl border p-5" style="background:var(--cd-surface);border-color:var(--cd-border)">
+          <h2 class="font-semibold text-sm mb-5" style="color:var(--cd-text)">Like / Dislike &amp; Heart</h2>
+          <!-- Thumbs row -->
+          <div class="mb-5" x-data="{likes:142,dislikes:18,voted:null}">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">Thumbs Up / Down</p>
+            <div class="flex items-center gap-3">
+              <button @click="voted==='up'?(likes--,voted=null):(voted==='down'?(dislikes--,likes++,voted='up'):(likes++,voted='up'))"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-semibold cursor-pointer transition-all duration-150"
+                :style="voted==='up'?'background:var(--cd-success-light);border-color:var(--cd-success);color:var(--cd-success)':'background:var(--cd-surface);border-color:var(--cd-border);color:var(--cd-text-muted)'">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/></svg>
+                <span x-text="likes"></span>
+              </button>
+              <button @click="voted==='down'?(dislikes--,voted=null):(voted==='up'?(likes--,dislikes++,voted='down'):(dislikes++,voted='down'))"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm font-semibold cursor-pointer transition-all duration-150"
+                :style="voted==='down'?'background:var(--cd-danger-light);border-color:var(--cd-danger);color:var(--cd-danger)':'background:var(--cd-surface);border-color:var(--cd-border);color:var(--cd-text-muted)'">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.956 14.534c.065.936.952 1.659 1.908 1.42l.261-.065a1.378 1.378 0 0 0 1.012-.965c.22-.816.533-2.512.062-4.51q.205.03.443.051c.713.065 1.669.072 2.516-.21.518-.173.994-.68 1.2-1.272a2.05 2.05 0 0 0-.234-1.734q.086-.18.138-.362c.077-.27.113-.568.113-.856 0-.29-.036-.586-.113-.857a2 2 0 0 0-.16-.403c.169-.387.107-.82-.003-1.149a3.2 3.2 0 0 0-.488-.9c.054-.153.076-.313.076-.465a1.86 1.86 0 0 0-.253-.912C13.1.522 12.437 0 11.5 0H8c-.605 0-1.07.08-1.466.217a4.8 4.8 0 0 0-.97.485l-.048.029c-.504.308-.999.61-2.068.723C2.682 1.556 2 2.174 2 3v4c0 .851.685 1.433 1.357 1.616.849.232 1.574.787 2.132 1.41.56.626.914 1.28 1.039 1.638.199.575.356 1.54.428 2.59z"/></svg>
+                <span x-text="dislikes"></span>
+              </button>
+            </div>
+          </div>
+          <!-- Heart favorites -->
+          <div class="mb-5">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">Product Favorites</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <template x-for="(prod,i) in [{name:'Pro Plan',price:'$12/mo',fav:false},{name:'Enterprise',price:'$49/mo',fav:true},{name:'Starter',price:'Free',fav:false},{name:'Add-on Pack',price:'$5/mo',fav:false}]" :key="i"
+                x-data="{fav:prod.fav}">
+                <div class="rounded-xl border p-3 flex flex-col gap-2 relative" style="border-color:var(--cd-border)">
+                  <button @click="fav=!fav" class="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full border-0 bg-transparent cursor-pointer transition-colors" :style="fav?'color:#EF4444':'color:var(--cd-text-subtle)'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" :fill="fav?'#EF4444':'none'" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
+                  <div class="text-sm font-semibold" style="color:var(--cd-text)" x-text="prod.name"></div>
+                  <div class="text-xs font-bold" style="color:var(--cd-primary)" x-text="prod.price"></div>
+                </div>
+              </template>
+            </div>
+          </div>
+          <!-- Bookmark -->
+          <div x-data="{bookmarked:false}">
+            <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--cd-text-subtle)">Bookmark Toggle</p>
+            <div class="flex items-center gap-4 p-4 rounded-xl border" style="border-color:var(--cd-border)">
+              <div class="flex-1">
+                <div class="text-sm font-medium" style="color:var(--cd-text)">Getting Started Guide</div>
+                <div class="text-xs" style="color:var(--cd-text-muted)">Complete walkthrough of the admin panel features.</div>
+              </div>
+              <button @click="bookmarked=!bookmarked" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium cursor-pointer transition-all"
+                :style="bookmarked?'background:var(--cd-primary-light);border-color:var(--cd-primary);color:var(--cd-primary)':'background:var(--cd-surface);border-color:var(--cd-border);color:var(--cd-text-muted)'">
+                <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/></svg>
+                <span x-text="bookmarked?'Saved':'Save'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  function app(nav) {
+    const NAV_GROUPS = {
+      'all-users': 'users', 'roles': 'users', 'invitations': 'users',
+      'ui-general': 'ui', 'ui-icons': 'ui', 'ui-modals': 'ui', 'ui-timeline': 'ui', 'widgets': 'ui',
+      'ui-accordion': 'ui', 'ui-carousel': 'ui', 'ui-command': 'ui',
+      'ui-toast': 'ui', 'ui-drawer': 'ui', 'ui-skeleton': 'ui',
+      'ui-tabs': 'ui', 'ui-badge': 'ui', 'ui-progress': 'ui',
+      'ui-stepper': 'ui', 'ui-pagination': 'ui', 'ui-empty-state': 'ui',
+      'ui-list': 'ui', 'ui-rating': 'ui', 'ui-chip': 'ui',
+      'form-general': 'forms', 'form-advanced': 'forms', 'form-editors': 'forms',
+      'table-simple': 'tables', 'table-datatables': 'tables',
+      'chart-line': 'charts', 'chart-bar': 'charts', 'chart-pie': 'charts',
+      'mailbox': 'mailbox', 'blank': 'extras'
+    };
+    return {
+      sidebarOpen: window.innerWidth >= 768, mobileOpen: false,
+      theme: localStorage.getItem('cd:theme')||'light',
+      density: localStorage.getItem('cd:density')||'comfortable',
+      activeNav: nav||'dashboard',
+      openNavs: NAV_GROUPS[nav] ? [NAV_GROUPS[nav]] : [],
+      init() { window.addEventListener('resize', () => { if (window.innerWidth >= 768) { this.mobileOpen = false; this.sidebarOpen = true; } else { this.sidebarOpen = false; } }); },
+      toggleNav(name) { if (!this.sidebarOpen && window.innerWidth >= 768) this.sidebarOpen = true; const i = this.openNavs.indexOf(name); if (i >= 0) this.openNavs.splice(i, 1); else this.openNavs.push(name); },
+      toggleSidebar() { if (window.innerWidth < 768) this.mobileOpen = !this.mobileOpen; else { this.sidebarOpen = !this.sidebarOpen; if (!this.sidebarOpen) this.openNavs = []; } },
+      setTheme(t){this.theme=t;localStorage.setItem('cd:theme',t);},
+      setDensity(d){this.density=d;localStorage.setItem('cd:density',d);}
+    }
+  }
+</script>
+<div x-show="mobileOpen" @click="mobileOpen=false" class="fixed inset-0 z-40" style="background:rgba(0,0,0,.5)" x-transition:enter="transition-opacity duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
+</body>
+</html>

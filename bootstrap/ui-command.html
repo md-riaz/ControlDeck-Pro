@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root{--cd-bg:#F8FAFC;--cd-surface:#FFFFFF;--cd-surface-2:#F1F5F9;--cd-border:#E2E8F0;--cd-text:#0F172A;--cd-text-muted:#475569;--cd-text-subtle:#94A3B8;--cd-primary:#3B82F6;--cd-primary-hover:#2563EB;--cd-primary-light:#EFF6FF;--cd-success:#16A34A;--cd-success-light:#F0FDF4;--cd-warning:#F59E0B;--cd-warning-light:#FFFBEB;--cd-danger:#DC2626;--cd-danger-light:#FEF2F2;--cd-info:#0EA5E9;--cd-info-light:#F0F9FF;--cd-sidebar-width:260px;--cd-sidebar-collapsed-width:64px;--cd-topbar-height:60px;--cd-radius-sm:8px;--cd-radius-md:12px;--cd-shadow-sm:0 1px 2px rgba(2,6,23,.06);--cd-shadow-md:0 8px 24px rgba(2,6,23,.10);--cd-font:Inter,system-ui,-apple-system,sans-serif;--cd-transition:200ms ease}
+    [data-theme="dark"]{--cd-bg:#0F172A;--cd-surface:#1E293B;--cd-surface-2:#334155;--cd-border:#334155;--cd-text:#F1F5F9;--cd-text-muted:#94A3B8;--cd-text-subtle:#64748B;--cd-primary-light:#1E3A5F;--cd-success-light:#14532D;--cd-warning-light:#451A03;--cd-danger-light:#450A0A;--cd-info-light:#0C4A6E}
+    [data-density="compact"]{font-size:calc(14px * 0.88)}[data-density="spacious"]{font-size:calc(14px * 1.12)}
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:var(--cd-font);font-size:14px;background:var(--cd-bg);color:var(--cd-text);margin:0;min-height:100vh}
+    [data-cd="app"]{display:flex;min-height:100vh}
+    [data-cd="sidebar"]{width:var(--cd-sidebar-width);min-height:100vh;background:var(--cd-surface);border-right:1px solid var(--cd-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:1000;transition:width var(--cd-transition);overflow:hidden;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar"].collapsed{width:var(--cd-sidebar-collapsed-width)}
+    .sidebar-brand{height:var(--cd-topbar-height);display:flex;align-items:center;padding:0 16px;gap:12px;border-bottom:1px solid var(--cd-border);flex-shrink:0;text-decoration:none}
+    .sidebar-brand .brand-icon{width:32px;height:32px;background:var(--cd-primary);border-radius:var(--cd-radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+    .sidebar-brand .brand-name{font-weight:700;font-size:16px;color:var(--cd-text);white-space:nowrap;overflow:hidden}
+    .sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 0}
+    .sidebar-nav::-webkit-scrollbar{width:4px}.sidebar-nav::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    .nav-section-label{font-size:11px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px 8px;white-space:nowrap;overflow:hidden}
+    .nav-item-link{display:flex;align-items:center;gap:12px;padding:8px 16px;color:var(--cd-text-muted);text-decoration:none;font-size:13px;font-weight:500;transition:background var(--cd-transition),color var(--cd-transition);white-space:nowrap;overflow:hidden;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+    .nav-item-link:hover{background:var(--cd-surface-2);color:var(--cd-text)}.nav-item-link.active{background:var(--cd-primary-light);color:var(--cd-primary)}
+    .nav-item-link .nav-icon{font-size:16px;flex-shrink:0;width:18px;text-align:center}.nav-item-link .nav-label{flex:1}.nav-item-link .nav-badge{background:var(--cd-danger);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600}
+    .sidebar-footer{padding:12px 16px;border-top:1px solid var(--cd-border);display:flex;align-items:center;gap:12px;overflow:hidden}
+    .sidebar-footer .avatar,.topbar-user .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+    .sidebar-footer .user-name{font-size:13px;font-weight:600;color:var(--cd-text);white-space:nowrap}.sidebar-footer .user-role{font-size:11px;color:var(--cd-text-subtle);white-space:nowrap}
+    .main-area{margin-left:var(--cd-sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left var(--cd-transition)}.main-area.expanded{margin-left:var(--cd-sidebar-collapsed-width)}
+    [data-cd="topbar"]{height:60px;background:var(--cd-surface);border-bottom:1px solid var(--cd-border);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:900;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar-toggle"]{background:none;border:none;color:var(--cd-text-muted);font-size:18px;padding:8px;border-radius:var(--cd-radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center}
+    [data-cd="sidebar-toggle"]:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-search{flex:1;max-width:360px;position:relative}.topbar-search input{width:100%;padding:8px 16px 8px 36px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;color:var(--cd-text);outline:none;font-family:var(--cd-font)}
+    .topbar-search .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--cd-text-subtle);font-size:14px}
+    .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .topbar-btn{width:36px;height:36px;background:none;border:none;border-radius:var(--cd-radius-sm);color:var(--cd-text-muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+    .topbar-btn:hover{background:var(--cd-surface-2);color:var(--cd-text)}.topbar-btn .badge-count{position:absolute;top:4px;right:4px;background:var(--cd-danger);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--cd-surface)}
+    .topbar-user{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:var(--cd-radius-sm);cursor:pointer;border:none;background:none;color:var(--cd-text)}.topbar-user:hover{background:var(--cd-surface-2)}.topbar-user .user-name{font-size:13px;font-weight:500}
+    .page-content{padding:24px;flex:1}
+    .page-title{font-size:20px;font-weight:700;color:var(--cd-text);margin:0 0 4px}.page-subtitle{font-size:13px;color:var(--cd-text-muted);margin:0}
+    .cd-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--cd-text-muted);margin-bottom:16px;padding:0;list-style:none}
+    .cd-breadcrumb li+li::before{content:"/";margin-right:8px;color:var(--cd-text-subtle)}.cd-breadcrumb a{color:var(--cd-text-muted);text-decoration:none}.cd-breadcrumb a:hover{color:var(--cd-primary)}.cd-breadcrumb .active{color:var(--cd-text);font-weight:500}
+    .cd-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-sm);overflow:hidden}
+    .cd-card-header{padding:16px 20px;border-bottom:1px solid var(--cd-border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .cd-card-title{font-size:15px;font-weight:600;color:var(--cd-text);margin:0}.cd-card-subtitle{font-size:12px;color:var(--cd-text-muted);margin:2px 0 0}.cd-card-body{padding:20px}
+    .cd-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--cd-radius-sm);font-size:13px;font-weight:500;font-family:var(--cd-font);cursor:pointer;border:1px solid transparent;transition:all var(--cd-transition);text-decoration:none}
+    .cd-btn-primary{background:var(--cd-primary);color:#fff;border-color:var(--cd-primary)}.cd-btn-primary:hover{background:var(--cd-primary-hover);border-color:var(--cd-primary-hover);color:#fff}
+    .cd-btn-ghost{background:transparent;color:var(--cd-text-muted);border-color:var(--cd-border)}.cd-btn-ghost:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-dropdown{position:relative}.cd-dropdown-menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-md);min-width:180px;z-index:2000;display:none;padding:8px 0}.cd-dropdown-menu.show{display:block}
+    .cd-dropdown-item{display:flex;align-items:center;gap:12px;padding:8px 16px;font-size:13px;color:var(--cd-text-muted);cursor:pointer;transition:background var(--cd-transition);text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:var(--cd-font)}.cd-dropdown-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-dropdown-divider{height:1px;background:var(--cd-border);margin:8px 0}
+    [data-cd="sidebar"].collapsed .nav-label,[data-cd="sidebar"].collapsed .brand-name,[data-cd="sidebar"].collapsed .nav-section-label,[data-cd="sidebar"].collapsed .sidebar-footer .user-name,[data-cd="sidebar"].collapsed .sidebar-footer .user-role,[data-cd="sidebar"].collapsed .nav-badge{display:none}
+    [data-cd="sidebar"].collapsed .nav-item-link{justify-content:center;padding:12px 0}[data-cd="sidebar"].collapsed .sidebar-footer{justify-content:center}
+    .divider{height:1px;background:var(--cd-border);margin:8px 0}
+    @media(max-width:768px){[data-cd="sidebar"]{transform:translateX(-100%);width:var(--cd-sidebar-width)!important}[data-cd="sidebar"].mobile-open{transform:translateX(0)}.main-area{margin-left:0!important}.topbar-search{display:none}}
+    /* Command Palette */
+    .cd-palette{border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);overflow:hidden;box-shadow:0 20px 60px rgba(2,6,23,.15);background:var(--cd-surface)}
+    .cd-palette-search{display:flex;align-items:center;gap:12px;padding:0 16px;height:52px;border-bottom:1px solid var(--cd-border)}
+    .cd-palette-search input{flex:1;border:none;outline:none;background:transparent;font-size:13px;color:var(--cd-text);font-family:var(--cd-font)}
+    .cd-palette-body{max-height:320px;overflow-y:auto}
+    .cd-palette-section{padding-top:8px}
+    .cd-palette-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--cd-text-subtle);padding:6px 12px}
+    .cd-palette-item{display:flex;align-items:center;gap:12px;padding:10px 12px;cursor:pointer;transition:background .1s;font-size:13px;color:var(--cd-text-muted);border:none;background:none;width:100%;text-align:left;font-family:var(--cd-font)}
+    .cd-palette-item:hover,.cd-palette-item.active{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-palette-item .item-icon{width:18px;text-align:center;flex-shrink:0;font-size:14px}
+    .cd-palette-item .item-meta{margin-left:auto;font-size:11px;color:var(--cd-text-subtle)}
+    .cd-palette-footer{border-top:1px solid var(--cd-border);padding:8px 16px;background:var(--cd-surface-2);display:flex;gap:16px}
+    .cd-palette-hint{font-size:11px;color:var(--cd-text-subtle)}
+    .cd-palette-hint kbd{padding:1px 6px;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:4px;font-family:var(--cd-font)}
+    .cd-divider{height:1px;background:var(--cd-border);margin:4px 0}
+    /* Combobox */
+    .cd-combobox{position:relative}.cd-combobox-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;cursor:pointer;background:var(--cd-surface);color:var(--cd-text);font-family:var(--cd-font);transition:border-color .15s}
+    .cd-combobox-trigger:focus,.cd-combobox-trigger.open{border-color:var(--cd-primary);box-shadow:0 0 0 3px rgba(59,130,246,.15);outline:none}
+    .cd-combobox-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-md);z-index:200;overflow:hidden;display:none}
+    .cd-combobox-dropdown.show{display:block}
+    .cd-combobox-search{padding:8px;border-bottom:1px solid var(--cd-border)}
+    .cd-combobox-search input{width:100%;padding:7px 10px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;background:var(--cd-surface-2);color:var(--cd-text);outline:none;font-family:var(--cd-font)}
+    .cd-combobox-search input:focus{border-color:var(--cd-primary)}
+    .cd-combobox-list{max-height:200px;overflow-y:auto}
+    .cd-combobox-option{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;font-size:13px;color:var(--cd-text-muted);transition:background .1s}
+    .cd-combobox-option:hover{background:var(--cd-surface-2);color:var(--cd-text)}.cd-combobox-option.selected{background:var(--cd-primary-light);color:var(--cd-primary)}
+    .cd-combobox-empty{padding:16px 12px;text-align:center;font-size:13px;color:var(--cd-text-subtle)}
+    /* Context menu */
+    .ctx-zone{min-height:200px;border:2px dashed var(--cd-border);border-radius:var(--cd-radius-md);background:var(--cd-surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:context-menu;position:relative;user-select:none}
+    .ctx-menu{position:absolute;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-md);min-width:160px;z-index:100;padding:4px 0;display:none}
+    .ctx-menu.show{display:block}
+    .ctx-menu-item{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:13px;color:var(--cd-text-muted);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--cd-font)}
+    .ctx-menu-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .ctx-menu-item.danger{color:var(--cd-danger)}.ctx-menu-item.danger:hover{background:var(--cd-danger-light)}
+    .ctx-divider{height:1px;background:var(--cd-border);margin:4px 0}
+    .cd-input{width:100%;padding:9px 12px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;font-family:var(--cd-font);background:var(--cd-surface);color:var(--cd-text);outline:none}
+    .cd-input:focus{border-color:var(--cd-primary);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+  </style>
+</head>
+<body>
+<div data-cd="app">
+  <aside data-cd="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-layers-fill"></i></div>
+      <span class="brand-name">ControlDeck</span>
+    </a>
+    <nav class="sidebar-nav" data-cd="nav-tree">
+      <div class="nav-section-label">Main</div>
+      <a href="index.html" class="nav-item-link"><i class="bi bi-grid-fill nav-icon"></i><span class="nav-label">Dashboard</span></a>
+      <a href="users.html" class="nav-item-link"><i class="bi bi-people-fill nav-icon"></i><span class="nav-label">Users</span></a>
+      <a href="#" class="nav-item-link"><i class="bi bi-bag-fill nav-icon"></i><span class="nav-label">Orders</span><span class="nav-badge">12</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">UI Elements</div>
+      <a href="ui-general.html" class="nav-item-link"><i class="bi bi-palette nav-icon"></i><span class="nav-label">UI General</span></a>
+      <a href="ui-icons.html" class="nav-item-link"><i class="bi bi-emoji-smile nav-icon"></i><span class="nav-label">Icons</span></a>
+      <a href="ui-modals.html" class="nav-item-link"><i class="bi bi-window nav-icon"></i><span class="nav-label">Modals</span></a>
+      <a href="ui-timeline.html" class="nav-item-link"><i class="bi bi-clock-history nav-icon"></i><span class="nav-label">Timeline</span></a>
+      <a href="ui-accordion.html" class="nav-item-link"><i class="bi bi-layout-accordion-collapsed nav-icon"></i><span class="nav-label">Accordion</span></a>
+      <a href="ui-carousel.html" class="nav-item-link"><i class="bi bi-images nav-icon"></i><span class="nav-label">Carousel</span></a>
+      <a href="ui-command.html" class="nav-item-link active"><i class="bi bi-terminal nav-icon"></i><span class="nav-label">Command</span></a>
+      <a href="ui-toast.html" class="nav-item-link"><i class="bi bi-bell nav-icon"></i><span class="nav-label">Toast</span></a>
+      <a href="ui-drawer.html" class="nav-item-link"><i class="bi bi-layout-sidebar-reverse nav-icon"></i><span class="nav-label">Drawer</span></a>
+      <a href="ui-skeleton.html" class="nav-item-link"><i class="bi bi-card-text nav-icon"></i><span class="nav-label">Skeleton</span></a>
+      <a href="ui-tabs.html" class="nav-item-link "><i class="bi bi-folder2 nav-icon"></i><span class="nav-label">Tabs</span></a>
+      <a href="ui-badge.html" class="nav-item-link "><i class="bi bi-tag nav-icon"></i><span class="nav-label">Badge</span></a>
+      <a href="ui-progress.html" class="nav-item-link "><i class="bi bi-bar-chart-steps nav-icon"></i><span class="nav-label">Progress</span></a>
+      <a href="ui-stepper.html" class="nav-item-link "><i class="bi bi-list-ol nav-icon"></i><span class="nav-label">Stepper</span></a>
+      <a href="ui-pagination.html" class="nav-item-link "><i class="bi bi-123 nav-icon"></i><span class="nav-label">Pagination</span></a>
+      <a href="ui-empty-state.html" class="nav-item-link "><i class="bi bi-inbox nav-icon"></i><span class="nav-label">Empty State</span></a>
+      <a href="ui-list.html" class="nav-item-link "><i class="bi bi-list-ul nav-icon"></i><span class="nav-label">List</span></a>
+      <a href="ui-rating.html" class="nav-item-link "><i class="bi bi-star nav-icon"></i><span class="nav-label">Rating</span></a>
+      <a href="ui-chip.html" class="nav-item-link "><i class="bi bi-tags nav-icon"></i><span class="nav-label">Chip / Tag</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Forms</div>
+      <a href="form-general.html" class="nav-item-link"><i class="bi bi-ui-checks nav-icon"></i><span class="nav-label">General</span></a>
+      <a href="form-advanced.html" class="nav-item-link"><i class="bi bi-sliders nav-icon"></i><span class="nav-label">Advanced</span></a>
+      <a href="form-editors.html" class="nav-item-link"><i class="bi bi-pencil-square nav-icon"></i><span class="nav-label">Editors</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Tables</div>
+      <a href="table-simple.html" class="nav-item-link"><i class="bi bi-table nav-icon"></i><span class="nav-label">Simple Table</span></a>
+      <a href="table-datatables.html" class="nav-item-link"><i class="bi bi-grid-3x3 nav-icon"></i><span class="nav-label">Data Tables</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Charts</div>
+      <a href="chart-line.html" class="nav-item-link"><i class="bi bi-graph-up nav-icon"></i><span class="nav-label">Line Chart</span></a>
+      <a href="chart-bar.html" class="nav-item-link"><i class="bi bi-bar-chart-fill nav-icon"></i><span class="nav-label">Bar Chart</span></a>
+      <a href="chart-pie.html" class="nav-item-link"><i class="bi bi-pie-chart-fill nav-icon"></i><span class="nav-label">Pie Chart</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Pages</div>
+      <a href="mailbox-inbox.html" class="nav-item-link"><i class="bi bi-envelope-fill nav-icon"></i><span class="nav-label">Mailbox</span><span class="nav-badge">3</span></a>
+      <a href="calendar.html" class="nav-item-link"><i class="bi bi-calendar3 nav-icon"></i><span class="nav-label">Calendar</span></a>
+      <a href="invoice.html" class="nav-item-link"><i class="bi bi-receipt nav-icon"></i><span class="nav-label">Invoice</span></a>
+      <a href="profile.html" class="nav-item-link"><i class="bi bi-person-circle nav-icon"></i><span class="nav-label">Profile</span></a>
+      <a href="widgets.html" class="nav-item-link"><i class="bi bi-columns-gap nav-icon"></i><span class="nav-label">Widgets</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">System</div>
+      <a href="#" class="nav-item-link"><i class="bi bi-gear-fill nav-icon"></i><span class="nav-label">Settings</span></a>
+      <a href="login.html" class="nav-item-link"><i class="bi bi-box-arrow-left nav-icon"></i><span class="nav-label">Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar">JD</div>
+      <div><div class="user-name">Jane Doe</div><div class="user-role">Administrator</div></div>
+    </div>
+  </aside>
+  <div class="main-area" id="mainArea">
+    <header data-cd="topbar">
+      <button data-cd="sidebar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="topbar-search"><i class="bi bi-search search-icon"></i><input type="search" placeholder="Search anything..." /></div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" onclick="toggleTheme()"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('notifMenu')"><i class="bi bi-bell-fill"></i><span class="badge-count">5</span></button>
+          <div class="cd-dropdown-menu" id="notifMenu" style="min-width:260px">
+            <div style="padding:10px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--cd-border)">Notifications</div>
+            <button class="cd-dropdown-item"><i class="bi bi-person-plus" style="color:var(--cd-primary)"></i> New user registered</button>
+            <div class="cd-dropdown-divider"></div>
+            <button class="cd-dropdown-item" style="justify-content:center;color:var(--cd-primary)">View all</button>
+          </div>
+        </div>
+        <div class="cd-dropdown">
+          <button class="topbar-user" onclick="toggleDropdown('userMenu')">
+            <div class="avatar">JD</div><span class="user-name">Jane Doe</span><i class="bi bi-chevron-down" style="font-size:11px;color:var(--cd-text-subtle)"></i>
+          </button>
+          <div class="cd-dropdown-menu" id="userMenu">
+            <a href="profile.html" class="cd-dropdown-item"><i class="bi bi-person"></i> Profile</a>
+            <div class="cd-dropdown-divider"></div>
+            <a href="login.html" class="cd-dropdown-item" style="color:var(--cd-danger)"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <ol class="cd-breadcrumb"><li><a href="index.html">Home</a></li><li><a href="#">UI Elements</a></li><li class="active">Command</li></ol>
+      <div style="margin-bottom:24px"><h1 class="page-title">Command &amp; Combobox</h1><p class="page-subtitle">Command palette for quick actions, and searchable combobox for selection.</p></div>
+
+      <div class="row g-4">
+
+        <!-- Card 1: Command Palette -->
+        <div class="col-12">
+          <div class="cd-card">
+            <div class="cd-card-header">
+              <div><h2 class="cd-card-title">Command Palette</h2><p class="cd-card-subtitle">Quick-access launcher. Press <kbd>⌘K</kbd> in a real app to open.</p></div>
+              <div><button class="cd-btn cd-btn-primary" onclick="focusPaletteSearch()"><i class="bi bi-search"></i> Open Palette</button></div>
+            </div>
+            <div class="cd-card-body d-flex justify-content-center">
+              <div class="cd-palette w-100" style="max-width:520px">
+                <div class="cd-palette-search">
+                  <i class="bi bi-search" style="color:var(--cd-text-subtle);flex-shrink:0"></i>
+                  <input type="text" id="paletteInput" placeholder="Search commands, pages, actions..." oninput="filterPalette(this.value)" />
+                  <kbd style="padding:2px 6px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:4px;font-size:11px;color:var(--cd-text-subtle)">Esc</kbd>
+                </div>
+                <div class="cd-palette-body" id="paletteBody">
+                  <!-- Recent -->
+                  <div class="cd-palette-section" id="paletteRecent">
+                    <div class="cd-palette-label">Recent</div>
+                    <button class="cd-palette-item"><i class="bi bi-clock item-icon" style="color:var(--cd-text-subtle)"></i><span>Dashboard</span><span class="item-meta">Recently visited</span></button>
+                    <button class="cd-palette-item"><i class="bi bi-clock item-icon" style="color:var(--cd-text-subtle)"></i><span>User Management</span><span class="item-meta">Recently visited</span></button>
+                    <button class="cd-palette-item"><i class="bi bi-clock item-icon" style="color:var(--cd-text-subtle)"></i><span>Analytics Report</span><span class="item-meta">Yesterday</span></button>
+                  </div>
+                  <div class="cd-divider"></div>
+                  <!-- Navigation -->
+                  <div class="cd-palette-section" id="paletteNav">
+                    <div class="cd-palette-label">Navigation</div>
+                    <a href="index.html" class="cd-palette-item"><i class="bi bi-chevron-right item-icon" style="color:var(--cd-primary)"></i><span>Dashboard</span></a>
+                    <a href="users.html" class="cd-palette-item"><i class="bi bi-chevron-right item-icon" style="color:var(--cd-primary)"></i><span>Users</span></a>
+                    <a href="settings.html" class="cd-palette-item"><i class="bi bi-chevron-right item-icon" style="color:var(--cd-primary)"></i><span>Settings</span></a>
+                    <a href="#" class="cd-palette-item"><i class="bi bi-chevron-right item-icon" style="color:var(--cd-primary)"></i><span>Reports</span></a>
+                  </div>
+                  <div class="cd-divider"></div>
+                  <!-- Actions -->
+                  <div class="cd-palette-section" id="paletteActions">
+                    <div class="cd-palette-label">Actions</div>
+                    <button class="cd-palette-item"><i class="bi bi-person-plus item-icon" style="color:var(--cd-success)"></i><span>New User</span><span class="item-meta"><kbd style="padding:1px 4px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:3px;font-size:10px">⌘N</kbd></span></button>
+                    <button class="cd-palette-item"><i class="bi bi-download item-icon" style="color:var(--cd-info)"></i><span>Export Data</span><span class="item-meta"><kbd style="padding:1px 4px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:3px;font-size:10px">⌘E</kbd></span></button>
+                  </div>
+                  <!-- Empty state (hidden) -->
+                  <div id="paletteEmpty" style="display:none;padding:32px 16px;text-align:center;font-size:13px;color:var(--cd-text-subtle)">No results found.</div>
+                </div>
+                <div class="cd-palette-footer">
+                  <span class="cd-palette-hint"><kbd>↑↓</kbd> navigate</span>
+                  <span class="cd-palette-hint"><kbd>↵</kbd> select</span>
+                  <span class="cd-palette-hint"><kbd>Esc</kbd> close</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Combobox -->
+        <div class="col-md-6">
+          <div class="cd-card h-100">
+            <div class="cd-card-header"><h2 class="cd-card-title">Combobox</h2></div>
+            <div class="cd-card-body">
+              <p style="font-size:13px;color:var(--cd-text-muted);margin-bottom:16px">Searchable dropdown with type-to-filter functionality.</p>
+              <label style="font-size:12px;font-weight:500;color:var(--cd-text-muted);display:block;margin-bottom:8px">Select Framework</label>
+              <div class="cd-combobox" id="comboboxWrap">
+                <button class="cd-combobox-trigger" id="comboboxTrigger" onclick="toggleCombobox()">
+                  <span id="comboboxLabel" style="color:var(--cd-text-subtle)">Choose a framework...</span>
+                  <div class="d-flex align-items-center gap-1">
+                    <span id="comboboxClear" style="display:none;font-size:12px;color:var(--cd-text-subtle);padding:0 2px;cursor:pointer" onclick="clearCombobox(event)">✕</span>
+                    <i class="bi bi-chevron-down" id="comboboxChevron" style="font-size:12px;color:var(--cd-text-subtle);transition:transform .15s"></i>
+                  </div>
+                </button>
+                <div class="cd-combobox-dropdown" id="comboboxDropdown">
+                  <div class="cd-combobox-search">
+                    <input type="text" id="comboboxSearch" placeholder="Search..." oninput="filterCombobox(this.value)" />
+                  </div>
+                  <div class="cd-combobox-list" id="comboboxList">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
+              </div>
+              <div id="comboboxResult" style="display:none;margin-top:12px;padding:8px 12px;border-radius:var(--cd-radius-sm);background:var(--cd-success-light);color:var(--cd-success);font-size:12px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Context Menu -->
+        <div class="col-md-6">
+          <div class="cd-card h-100">
+            <div class="cd-card-header"><h2 class="cd-card-title">Context Menu</h2></div>
+            <div class="cd-card-body">
+              <p style="font-size:13px;color:var(--cd-text-muted);margin-bottom:16px">Right-click inside the zone to open the context menu.</p>
+              <div class="ctx-zone" id="ctxZone" oncontextmenu="showCtxMenu(event)">
+                <i class="bi bi-three-dots-vertical" style="font-size:28px;color:var(--cd-text-subtle);margin-bottom:8px"></i>
+                <div style="font-size:13px;font-weight:500;color:var(--cd-text-muted)">Right click anywhere in this area</div>
+                <div style="font-size:12px;color:var(--cd-text-subtle);margin-top:4px">Context menu will appear</div>
+                <!-- Context menu popup -->
+                <div class="ctx-menu" id="ctxMenu">
+                  <button class="ctx-menu-item" onclick="closeCtxMenu()"><i class="bi bi-eye"></i> Open</button>
+                  <button class="ctx-menu-item" onclick="closeCtxMenu()"><i class="bi bi-pencil"></i> Edit</button>
+                  <button class="ctx-menu-item" onclick="closeCtxMenu()"><i class="bi bi-copy"></i> Duplicate</button>
+                  <button class="ctx-menu-item" onclick="closeCtxMenu()"><i class="bi bi-archive"></i> Archive</button>
+                  <div class="ctx-divider"></div>
+                  <button class="ctx-menu-item danger" onclick="closeCtxMenu()"><i class="bi bi-trash"></i> Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999" onclick="closeSidebarMobile()"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Sidebar
+const sidebar=document.getElementById('sidebar'),mainArea=document.getElementById('mainArea'),backdrop=document.getElementById('backdrop');
+const isMobile=()=>window.innerWidth<=768;
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  if(isMobile()){sidebar.classList.toggle('mobile-open');backdrop.style.display=sidebar.classList.contains('mobile-open')?'block':'none';}
+  else{sidebar.classList.toggle('collapsed');mainArea.classList.toggle('expanded');}
+});
+function closeSidebarMobile(){sidebar.classList.remove('mobile-open');backdrop.style.display='none';}
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeIcon').className=d?'bi bi-sun-fill':'bi bi-moon-fill';}
+function toggleDropdown(id){const m=document.getElementById(id),s=m.classList.contains('show');closeAllDropdowns();if(!s)m.classList.add('show');}
+function closeAllDropdowns(){document.querySelectorAll('.cd-dropdown-menu.show').forEach(m=>m.classList.remove('show'));}
+document.addEventListener('click',e=>{if(!e.target.closest('.cd-dropdown'))closeAllDropdowns();});
+
+// Command Palette
+function focusPaletteSearch(){document.getElementById('paletteInput').focus();}
+const paletteData=[
+  {label:'Dashboard',type:'nav',href:'index.html'},
+  {label:'Users',type:'nav',href:'users.html'},
+  {label:'Settings',type:'nav',href:'settings.html'},
+  {label:'Reports',type:'nav',href:'#'},
+  {label:'New User',type:'action',icon:'bi-person-plus'},
+  {label:'Export Data',type:'action',icon:'bi-download'},
+];
+function filterPalette(q){
+  const body=document.getElementById('paletteBody');
+  const recent=document.getElementById('paletteRecent');
+  const nav=document.getElementById('paletteNav');
+  const actions=document.getElementById('paletteActions');
+  const empty=document.getElementById('paletteEmpty');
+  if(!q){recent.style.display='';nav.style.display='';actions.style.display='';empty.style.display='none';
+    body.querySelectorAll('.cd-divider').forEach(d=>d.style.display='');return;}
+  body.querySelectorAll('.cd-divider').forEach(d=>d.style.display='none');
+  recent.style.display='none';nav.style.display='none';actions.style.display='none';
+  const matches=paletteData.filter(i=>i.label.toLowerCase().includes(q.toLowerCase()));
+  if(!matches.length){empty.style.display='';return;}
+  empty.style.display='none';
+  // Render dynamic results using a temporary container
+  let existing=document.getElementById('paletteDynamic');
+  if(!existing){existing=document.createElement('div');existing.id='paletteDynamic';body.insertBefore(existing,body.firstChild);}
+  existing.innerHTML='<div class="cd-palette-label">Results</div>'+matches.map(m=>`<button class="cd-palette-item"><i class="bi bi-chevron-right item-icon" style="color:var(--cd-primary)"></i><span>${m.label}</span></button>`).join('');
+}
+
+// Combobox
+const frameworks=['React','Vue','Angular','Svelte','Next.js','Nuxt','Remix','SolidJS'];
+let selectedFramework=null;
+let comboboxOpen=false;
+function renderComboboxList(filter=''){
+  const list=document.getElementById('comboboxList');
+  const items=frameworks.filter(f=>f.toLowerCase().includes(filter.toLowerCase()));
+  if(!items.length){list.innerHTML='<div class="cd-combobox-empty">No frameworks found.</div>';return;}
+  list.innerHTML=items.map(f=>`<div class="cd-combobox-option${selectedFramework===f?' selected':''}" onclick="selectFramework('${f}')">${selectedFramework===f?'<i class="bi bi-check" style="color:var(--cd-primary)"></i>':''}<span>${f}</span></div>`).join('');
+}
+function toggleCombobox(){
+  comboboxOpen=!comboboxOpen;
+  document.getElementById('comboboxDropdown').classList.toggle('show',comboboxOpen);
+  document.getElementById('comboboxTrigger').classList.toggle('open',comboboxOpen);
+  document.getElementById('comboboxChevron').style.transform=comboboxOpen?'rotate(180deg)':'rotate(0)';
+  if(comboboxOpen){renderComboboxList();setTimeout(()=>document.getElementById('comboboxSearch').focus(),50);}
+}
+function filterCombobox(q){renderComboboxList(q);}
+function selectFramework(f){
+  selectedFramework=f;
+  document.getElementById('comboboxLabel').textContent=f;
+  document.getElementById('comboboxLabel').style.color='var(--cd-text)';
+  document.getElementById('comboboxClear').style.display='inline';
+  const res=document.getElementById('comboboxResult');
+  res.style.display='block';res.textContent='Selected: '+f;
+  comboboxOpen=false;
+  document.getElementById('comboboxDropdown').classList.remove('show');
+  document.getElementById('comboboxTrigger').classList.remove('open');
+  document.getElementById('comboboxChevron').style.transform='rotate(0)';
+}
+function clearCombobox(e){
+  e.stopPropagation();selectedFramework=null;
+  document.getElementById('comboboxLabel').textContent='Choose a framework...';
+  document.getElementById('comboboxLabel').style.color='var(--cd-text-subtle)';
+  document.getElementById('comboboxClear').style.display='none';
+  document.getElementById('comboboxResult').style.display='none';
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#comboboxWrap')&&comboboxOpen){
+    comboboxOpen=false;
+    document.getElementById('comboboxDropdown').classList.remove('show');
+    document.getElementById('comboboxTrigger').classList.remove('open');
+    document.getElementById('comboboxChevron').style.transform='rotate(0)';
+  }
+});
+
+// Context menu
+const ctxZone=document.getElementById('ctxZone');
+const ctxMenu=document.getElementById('ctxMenu');
+function showCtxMenu(e){
+  e.preventDefault();
+  const rect=ctxZone.getBoundingClientRect();
+  const x=Math.min(e.clientX-rect.left, rect.width-170);
+  const y=Math.min(e.clientY-rect.top, rect.height-240);
+  ctxMenu.style.left=x+'px';ctxMenu.style.top=y+'px';
+  ctxMenu.classList.add('show');
+}
+function closeCtxMenu(){ctxMenu.classList.remove('show');}
+document.addEventListener('click',()=>closeCtxMenu());
+ctxZone.addEventListener('click',e=>e.stopPropagation());
+</script>
+</body>
+</html>

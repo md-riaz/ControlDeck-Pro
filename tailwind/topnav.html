@@ -83,7 +83,7 @@
 
       <!-- UI Elements mega dropdown -->
       <div class="relative" x-data="{open:false}">
-        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','ui-accordion','ui-carousel','ui-command','ui-toast','ui-drawer','ui-skeleton','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
+        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','ui-accordion','ui-carousel','ui-command','ui-toast','ui-drawer','ui-skeleton','ui-tabs','ui-badge','ui-progress','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>
           Components
           <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" class="transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
@@ -105,6 +105,9 @@
               <a href="ui-toast.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-toast'?'active':''" @click="activeNav='ui-toast';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm0-14.082l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.918z"/></svg>Toast</a>
               <a href="ui-drawer.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-drawer'?'active':''" @click="activeNav='ui-drawer';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3z"/></svg>Drawer</a>
               <a href="ui-skeleton.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-skeleton'?'active':''" @click="activeNav='ui-skeleton';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>Skeleton</a>
+              <a href="ui-tabs.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-tabs'?'active':''" @click="activeNav='ui-tabs';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2zm4-10a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V2zm0 5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7zm0 5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2z"/></svg>Tabs</a>
+              <a href="ui-badge.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-badge'?'active':''" @click="activeNav='ui-badge';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2z"/></svg>Badge</a>
+              <a href="ui-progress.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-progress'?'active':''" @click="activeNav='ui-progress';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM5.45 2.854l.878.955.7-.638a1.89 1.89 0 0 1 2.644 0l.7.638.877-.955a1.89 1.89 0 0 1 2.07 2.07l-.954.877.638.7a1.89 1.89 0 0 1 0 2.644l-.638.7.955.877a1.89 1.89 0 0 1-2.07 2.07l-.877-.954-.7.638a1.89 1.89 0 0 1-2.644 0l-.7-.638-.878.955a1.89 1.89 0 0 1-2.07-2.07l.954-.877-.638-.7a1.89 1.89 0 0 1 0-2.644l.638-.7-.955-.878a1.89 1.89 0 0 1 2.07-2.07z"/></svg>Progress</a>
             </div>
             <!-- Forms + Tables -->
             <div>
@@ -271,6 +274,9 @@
         <a href="ui-toast.html" class="mobile-item" @click="mobileMenuOpen=false">Toast</a>
         <a href="ui-drawer.html" class="mobile-item" @click="mobileMenuOpen=false">Drawer</a>
         <a href="ui-skeleton.html" class="mobile-item" @click="mobileMenuOpen=false">Skeleton</a>
+        <a href="ui-tabs.html" class="mobile-item" @click="mobileMenuOpen=false">Tabs</a>
+        <a href="ui-badge.html" class="mobile-item" @click="mobileMenuOpen=false">Badge</a>
+        <a href="ui-progress.html" class="mobile-item" @click="mobileMenuOpen=false">Progress</a>
         <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Forms</div>
         <a href="form-general.html" class="mobile-item" @click="mobileMenuOpen=false">General</a>
         <a href="form-advanced.html" class="mobile-item" @click="mobileMenuOpen=false">Advanced</a>

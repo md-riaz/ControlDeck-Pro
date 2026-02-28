@@ -83,7 +83,7 @@
 
       <!-- UI Elements mega dropdown -->
       <div class="relative" x-data="{open:false}">
-        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','ui-accordion','ui-carousel','ui-command','ui-toast','ui-drawer','ui-skeleton','ui-tabs','ui-badge','ui-progress','ui-stepper','ui-pagination','ui-empty-state','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
+        <button class="tn-link" :class="['ui-general','ui-icons','ui-modals','ui-timeline','widgets','ui-accordion','ui-carousel','ui-command','ui-toast','ui-drawer','ui-skeleton','ui-tabs','ui-badge','ui-progress','ui-stepper','ui-pagination','ui-empty-state','ui-list','ui-rating','ui-chip','form-general','form-advanced','form-editors','table-simple','table-datatables','chart-line','chart-bar','chart-pie'].includes(activeNav)?'active':''" @click="open=!open" @keydown.escape="open=false" style="color:var(--cd-text-muted)">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/></svg>
           Components
           <svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16" class="transition-transform duration-200" :class="open?'rotate-180':''"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
@@ -111,6 +111,9 @@
               <a href="ui-stepper.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-stepper'?'active':''" @click="activeNav='ui-stepper';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>Stepper</a>
               <a href="ui-pagination.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-pagination'?'active':''" @click="activeNav='ui-pagination';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M1 1v14h14V1H1zm1 1h12v12H2V2zm3.5 4h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zm0 3h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1z"/></svg>Pagination</a>
               <a href="ui-empty-state.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-empty-state'?'active':''" @click="activeNav='ui-empty-state';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2zm0 1h12v12H2V2zm4.5 5a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3z"/></svg>Empty State</a>
+              <a href="ui-list.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-list'?'active':''" @click="activeNav='ui-list';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>List</a>
+              <a href="ui-rating.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-rating'?'active':''" @click="activeNav='ui-rating';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>Rating</a>
+              <a href="ui-chip.html" class="tn-dropdown-item rounded-lg" :class="activeNav==='ui-chip'?'active':''" @click="activeNav='ui-chip';open=false"><svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16"><path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z"/><path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>Chip / Tag</a>
             </div>
             <!-- Forms + Tables -->
             <div>
@@ -283,6 +286,9 @@
         <a href="ui-stepper.html" class="mobile-item" @click="mobileMenuOpen=false">Stepper</a>
         <a href="ui-pagination.html" class="mobile-item" @click="mobileMenuOpen=false">Pagination</a>
         <a href="ui-empty-state.html" class="mobile-item" @click="mobileMenuOpen=false">Empty State</a>
+        <a href="ui-list.html" class="mobile-item" @click="mobileMenuOpen=false">List</a>
+        <a href="ui-rating.html" class="mobile-item" @click="mobileMenuOpen=false">Rating</a>
+        <a href="ui-chip.html" class="mobile-item" @click="mobileMenuOpen=false">Chip / Tag</a>
         <div class="px-4 py-1.5 text-xs font-semibold uppercase tracking-widest mt-1" style="color:var(--cd-text-subtle)">Forms</div>
         <a href="form-general.html" class="mobile-item" @click="mobileMenuOpen=false">General</a>
         <a href="form-advanced.html" class="mobile-item" @click="mobileMenuOpen=false">Advanced</a>

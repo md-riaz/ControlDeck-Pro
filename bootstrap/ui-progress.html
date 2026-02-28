@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress — ControlDeck Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --cd-bg: #F8FAFC; --cd-surface: #FFFFFF; --cd-surface-2: #F1F5F9; --cd-border: #E2E8F0;
+      --cd-text: #0F172A; --cd-text-muted: #475569; --cd-text-subtle: #94A3B8;
+      --cd-primary: #3B82F6; --cd-primary-hover: #2563EB; --cd-primary-light: #EFF6FF;
+      --cd-success: #16A34A; --cd-success-light: #F0FDF4;
+      --cd-warning: #F59E0B; --cd-warning-light: #FFFBEB;
+      --cd-danger: #DC2626; --cd-danger-light: #FEF2F2;
+      --cd-info: #0EA5E9; --cd-info-light: #F0F9FF;
+      --cd-sidebar-width: 260px; --cd-sidebar-collapsed-width: 64px; --cd-topbar-height: 60px;
+      --cd-radius-sm: 8px; --cd-radius-md: 12px; --cd-radius-lg: 16px;
+      --cd-shadow-sm: 0 1px 2px rgba(2,6,23,.06); --cd-shadow-md: 0 8px 24px rgba(2,6,23,.10);
+      --cd-font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --cd-font-xs: 12px; --cd-font-sm: 13px; --cd-font-base: 14px; --cd-font-md: 16px;
+      --cd-transition: 200ms ease;
+    }
+    [data-theme="dark"] {
+      --cd-bg: #0F172A; --cd-surface: #1E293B; --cd-surface-2: #334155; --cd-border: #334155;
+      --cd-text: #F1F5F9; --cd-text-muted: #94A3B8; --cd-text-subtle: #64748B;
+      --cd-primary-light: #1E3A5F; --cd-success-light: #14532D;
+      --cd-warning-light: #451A03; --cd-danger-light: #450A0A; --cd-info-light: #0C4A6E;
+    }
+    [data-density="compact"] { font-size: calc(14px * 0.88); }
+    [data-density="spacious"] { font-size: calc(14px * 1.12); }
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:var(--cd-font);font-size:var(--cd-font-base);background:var(--cd-bg);color:var(--cd-text);margin:0;min-height:100vh}
+    [data-cd="app"]{display:flex;min-height:100vh}
+    [data-cd="sidebar"]{width:var(--cd-sidebar-width);min-height:100vh;background:var(--cd-surface);border-right:1px solid var(--cd-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:1000;transition:width var(--cd-transition);overflow:hidden;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar"].collapsed{width:var(--cd-sidebar-collapsed-width)}
+    .sidebar-brand{height:var(--cd-topbar-height);display:flex;align-items:center;padding:0 16px;gap:12px;border-bottom:1px solid var(--cd-border);flex-shrink:0;text-decoration:none}
+    .sidebar-brand .brand-icon{width:32px;height:32px;background:var(--cd-primary);border-radius:var(--cd-radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+    .sidebar-brand .brand-name{font-weight:700;font-size:16px;color:var(--cd-text);white-space:nowrap;overflow:hidden}
+    .sidebar-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 0}
+    .sidebar-nav::-webkit-scrollbar{width:4px}
+    .sidebar-nav::-webkit-scrollbar-thumb{background:var(--cd-border);border-radius:2px}
+    .nav-section-label{font-size:11px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.06em;padding:12px 16px 8px;white-space:nowrap;overflow:hidden}
+    .nav-item-link{display:flex;align-items:center;gap:12px;padding:8px 16px;color:var(--cd-text-muted);text-decoration:none;font-size:13px;font-weight:500;transition:background var(--cd-transition),color var(--cd-transition);white-space:nowrap;overflow:hidden;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+    .nav-item-link:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .nav-item-link.active{background:var(--cd-primary-light);color:var(--cd-primary)}
+    .nav-item-link .nav-icon{font-size:16px;flex-shrink:0;width:18px;text-align:center}
+    .nav-item-link .nav-label{flex:1}
+    .nav-item-link .nav-badge{background:var(--cd-danger);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600}
+    .sidebar-footer{padding:12px 16px;border-top:1px solid var(--cd-border);display:flex;align-items:center;gap:12px;overflow:hidden}
+    .sidebar-footer .avatar{width:32px;height:32px;border-radius:50%;background:var(--cd-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+    .sidebar-footer .user-name{font-size:13px;font-weight:600;color:var(--cd-text);white-space:nowrap}
+    .sidebar-footer .user-role{font-size:11px;color:var(--cd-text-subtle);white-space:nowrap}
+    .main-area{margin-left:var(--cd-sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh;transition:margin-left var(--cd-transition)}
+    .main-area.expanded{margin-left:var(--cd-sidebar-collapsed-width)}
+    [data-cd="topbar"]{height:60px;background:var(--cd-surface);border-bottom:1px solid var(--cd-border);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:900;box-shadow:var(--cd-shadow-sm)}
+    [data-cd="sidebar-toggle"]{background:none;border:none;color:var(--cd-text-muted);font-size:18px;padding:8px;border-radius:var(--cd-radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center}
+    [data-cd="sidebar-toggle"]:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-search{flex:1;max-width:360px;position:relative}
+    .topbar-search input{width:100%;padding:8px 16px 8px 36px;background:var(--cd-surface-2);border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;color:var(--cd-text);outline:none;font-family:var(--cd-font)}
+    .topbar-search .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--cd-text-subtle);font-size:14px}
+    .topbar-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .topbar-btn{width:36px;height:36px;background:none;border:none;border-radius:var(--cd-radius-sm);color:var(--cd-text-muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+    .topbar-btn:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .topbar-btn .badge-count{position:absolute;top:4px;right:4px;background:var(--cd-danger);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--cd-surface)}
+    .topbar-user{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:var(--cd-radius-sm);cursor:pointer;border:none;background:none;color:var(--cd-text)}
+    .topbar-user:hover{background:var(--cd-surface-2)}
+    .topbar-user .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+    .topbar-user .user-name{font-size:13px;font-weight:500}
+    .page-content{padding:24px;flex:1}
+    .page-title{font-size:20px;font-weight:700;color:var(--cd-text);margin:0 0 4px}
+    .page-subtitle{font-size:13px;color:var(--cd-text-muted);margin:0}
+    .cd-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--cd-text-muted);margin-bottom:16px;padding:0;list-style:none}
+    .cd-breadcrumb li+li::before{content:"/";margin-right:8px;color:var(--cd-text-subtle)}
+    .cd-breadcrumb a{color:var(--cd-text-muted);text-decoration:none}
+    .cd-breadcrumb a:hover{color:var(--cd-primary)}
+    .cd-breadcrumb .active{color:var(--cd-text);font-weight:500}
+    .cd-card{background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-sm);overflow:hidden}
+    .cd-card-header{padding:16px 20px;border-bottom:1px solid var(--cd-border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .cd-card-title{font-size:15px;font-weight:600;color:var(--cd-text);margin:0}
+    .cd-card-subtitle{font-size:12px;color:var(--cd-text-muted);margin:2px 0 0}
+    .cd-card-body{padding:20px}
+    .cd-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--cd-radius-sm);font-size:13px;font-weight:500;font-family:var(--cd-font);cursor:pointer;border:1px solid transparent;transition:all var(--cd-transition);text-decoration:none}
+    .cd-btn-primary{background:var(--cd-primary);color:#fff;border-color:var(--cd-primary)}
+    .cd-btn-primary:hover{background:var(--cd-primary-hover);border-color:var(--cd-primary-hover);color:#fff}
+    .cd-btn-ghost{background:transparent;color:var(--cd-text-muted);border-color:var(--cd-border)}
+    .cd-btn-ghost:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-dropdown{position:relative}
+    .cd-dropdown-menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--cd-surface);border:1px solid var(--cd-border);border-radius:var(--cd-radius-md);box-shadow:var(--cd-shadow-md);min-width:180px;z-index:2000;display:none;padding:8px 0}
+    .cd-dropdown-menu.show{display:block}
+    .cd-dropdown-item{display:flex;align-items:center;gap:12px;padding:8px 16px;font-size:13px;color:var(--cd-text-muted);cursor:pointer;transition:background var(--cd-transition);text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:var(--cd-font)}
+    .cd-dropdown-item:hover{background:var(--cd-surface-2);color:var(--cd-text)}
+    .cd-dropdown-divider{height:1px;background:var(--cd-border);margin:8px 0}
+    [data-cd="sidebar"].collapsed .nav-label,[data-cd="sidebar"].collapsed .brand-name,[data-cd="sidebar"].collapsed .nav-section-label,[data-cd="sidebar"].collapsed .sidebar-footer .user-name,[data-cd="sidebar"].collapsed .sidebar-footer .user-role,[data-cd="sidebar"].collapsed .nav-badge{display:none}
+    [data-cd="sidebar"].collapsed .nav-item-link{justify-content:center;padding:12px 0}
+    [data-cd="sidebar"].collapsed .sidebar-footer{justify-content:center}
+    .divider{height:1px;background:var(--cd-border);margin:8px 0}
+    @media(max-width:768px){[data-cd="sidebar"]{transform:translateX(-100%);width:var(--cd-sidebar-width)!important}[data-cd="sidebar"].mobile-open{transform:translateX(0)}.main-area{margin-left:0!important}.topbar-search{display:none}}
+    /* Accordion custom */
+    .cd-accordion .accordion-button{background:var(--cd-surface);color:var(--cd-text);font-size:13px;font-weight:500;padding:14px 16px;box-shadow:none;border-radius:0!important}
+    .cd-accordion .accordion-button:not(.collapsed){background:var(--cd-primary-light);color:var(--cd-primary);box-shadow:none}
+    .cd-accordion .accordion-button::after{filter:none}
+    .cd-accordion .accordion-button:not(.collapsed)::after{filter:none}
+    .cd-accordion .accordion-item{background:var(--cd-surface);border-color:var(--cd-border)}
+    .cd-accordion .accordion-body{font-size:13px;color:var(--cd-text-muted);background:var(--cd-surface-2);padding:14px 16px;line-height:1.6}
+    .cd-input{width:100%;padding:9px 12px;border:1px solid var(--cd-border);border-radius:var(--cd-radius-sm);font-size:13px;font-family:var(--cd-font);background:var(--cd-surface);color:var(--cd-text);outline:none}
+    .cd-input:focus{border-color:var(--cd-primary);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+
+    @keyframes indeterminate-bs{0%{left:-35%;right:100%}60%{left:100%;right:-90%}100%{left:100%;right:-90%}}
+    .progress-indeterminate .progress-bar{position:relative;animation:indeterminate-bs 1.5s ease-in-out infinite;width:35%!important}
+    @keyframes spin-bs{to{transform:rotate(360deg)}}
+    @keyframes dot-pulse-bs{0%,80%,100%{transform:scale(0.8);opacity:0.5}40%{transform:scale(1.1);opacity:1}}
+    @keyframes bounce-bs{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+    .spinner-ring{width:40px;height:40px;border:4px solid var(--cd-border);border-top-color:var(--cd-primary);border-radius:50%;animation:spin-bs .8s linear infinite}
+
+    /* Avatar */
+    .cd-avatar{border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:600;color:#fff;flex-shrink:0}
+    .cd-avatar-sm{width:32px;height:32px;font-size:11px}
+    .cd-avatar-md{width:42px;height:42px;font-size:13px}
+    .cd-avatar-lg{width:56px;height:56px;font-size:16px}
+    .cd-avatar-status{position:relative;display:inline-flex}
+    .cd-avatar-status .status-dot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;border-radius:50%;border:2px solid var(--cd-surface)}
+    .cd-avatar-group{display:flex;align-items:center}
+    .cd-avatar-group .cd-avatar{margin-left:-12px;border:2px solid var(--cd-surface)}
+    .cd-avatar-group .cd-avatar:first-child{margin-left:0}
+    .cd-avatar-overflow{width:36px;height:36px;border-radius:50%;background:var(--cd-surface-2);border:2px solid var(--cd-surface);margin-left:-12px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--cd-text-muted)}
+    /* Progress label row */
+    .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .progress-row .progress-wrap{flex:1}
+    .progress-row .progress-pct{font-size:12px;font-weight:600;color:var(--cd-text-muted);min-width:32px;text-align:right}
+    .progress-row .progress-lbl{font-size:12px;color:var(--cd-text-muted);min-width:90px}
+    /* SVG ring */
+    .ring-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+    .ring-wrap .ring-label{font-size:12px;color:var(--cd-text-muted);font-weight:500}
+  </style>
+</head>
+<body>
+<div data-cd="app">
+<aside data-cd="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-layers-fill"></i></div>
+      <span class="brand-name">ControlDeck</span>
+    </a>
+    <nav class="sidebar-nav" data-cd="nav-tree">
+      <div class="nav-section-label">Main</div>
+      <a href="index.html" class="nav-item-link"><i class="bi bi-grid-fill nav-icon"></i><span class="nav-label">Dashboard</span></a>
+      <a href="users.html" class="nav-item-link"><i class="bi bi-people-fill nav-icon"></i><span class="nav-label">Users</span></a>
+      <a href="#" class="nav-item-link"><i class="bi bi-bag-fill nav-icon"></i><span class="nav-label">Orders</span><span class="nav-badge">12</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">UI Elements</div>
+      <a href="ui-general.html" class="nav-item-link"><i class="bi bi-palette nav-icon"></i><span class="nav-label">UI General</span></a>
+      <a href="ui-icons.html" class="nav-item-link"><i class="bi bi-emoji-smile nav-icon"></i><span class="nav-label">Icons</span></a>
+      <a href="ui-modals.html" class="nav-item-link"><i class="bi bi-window nav-icon"></i><span class="nav-label">Modals</span></a>
+      <a href="ui-timeline.html" class="nav-item-link"><i class="bi bi-clock-history nav-icon"></i><span class="nav-label">Timeline</span></a>
+      <a href="ui-accordion.html" class="nav-item-link"><i class="bi bi-layout-accordion-collapsed nav-icon"></i><span class="nav-label">Accordion</span></a>
+      <a href="ui-carousel.html" class="nav-item-link"><i class="bi bi-images nav-icon"></i><span class="nav-label">Carousel</span></a>
+      <a href="ui-command.html" class="nav-item-link"><i class="bi bi-terminal nav-icon"></i><span class="nav-label">Command</span></a>
+      <a href="ui-toast.html" class="nav-item-link"><i class="bi bi-bell nav-icon"></i><span class="nav-label">Toast</span></a>
+      <a href="ui-drawer.html" class="nav-item-link"><i class="bi bi-layout-sidebar-reverse nav-icon"></i><span class="nav-label">Drawer</span></a>
+      <a href="ui-skeleton.html" class="nav-item-link"><i class="bi bi-card-text nav-icon"></i><span class="nav-label">Skeleton</span></a>
+      <a href="ui-tabs.html" class="nav-item-link"><i class="bi bi-folder2 nav-icon"></i><span class="nav-label">Tabs</span></a>
+      <a href="ui-badge.html" class="nav-item-link"><i class="bi bi-tag nav-icon"></i><span class="nav-label">Badge</span></a>
+      <a href="ui-progress.html" class="nav-item-link active"><i class="bi bi-bar-chart-steps nav-icon"></i><span class="nav-label">Progress</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Forms</div>
+      <a href="form-general.html" class="nav-item-link"><i class="bi bi-ui-checks nav-icon"></i><span class="nav-label">General</span></a>
+      <a href="form-advanced.html" class="nav-item-link"><i class="bi bi-sliders nav-icon"></i><span class="nav-label">Advanced</span></a>
+      <a href="form-editors.html" class="nav-item-link"><i class="bi bi-pencil-square nav-icon"></i><span class="nav-label">Editors</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Tables</div>
+      <a href="table-simple.html" class="nav-item-link"><i class="bi bi-table nav-icon"></i><span class="nav-label">Simple Table</span></a>
+      <a href="table-datatables.html" class="nav-item-link"><i class="bi bi-grid-3x3 nav-icon"></i><span class="nav-label">Data Tables</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Charts</div>
+      <a href="chart-line.html" class="nav-item-link"><i class="bi bi-graph-up nav-icon"></i><span class="nav-label">Line Chart</span></a>
+      <a href="chart-bar.html" class="nav-item-link"><i class="bi bi-bar-chart-fill nav-icon"></i><span class="nav-label">Bar Chart</span></a>
+      <a href="chart-pie.html" class="nav-item-link"><i class="bi bi-pie-chart-fill nav-icon"></i><span class="nav-label">Pie Chart</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">Pages</div>
+      <a href="mailbox-inbox.html" class="nav-item-link"><i class="bi bi-envelope-fill nav-icon"></i><span class="nav-label">Mailbox</span><span class="nav-badge">3</span></a>
+      <a href="calendar.html" class="nav-item-link"><i class="bi bi-calendar3 nav-icon"></i><span class="nav-label">Calendar</span></a>
+      <a href="invoice.html" class="nav-item-link"><i class="bi bi-receipt nav-icon"></i><span class="nav-label">Invoice</span></a>
+      <a href="profile.html" class="nav-item-link"><i class="bi bi-person-circle nav-icon"></i><span class="nav-label">Profile</span></a>
+      <a href="widgets.html" class="nav-item-link"><i class="bi bi-columns-gap nav-icon"></i><span class="nav-label">Widgets</span></a>
+      <div class="divider"></div>
+      <div class="nav-section-label">System</div>
+      <a href="#" class="nav-item-link"><i class="bi bi-gear-fill nav-icon"></i><span class="nav-label">Settings</span></a>
+      <a href="login.html" class="nav-item-link"><i class="bi bi-box-arrow-left nav-icon"></i><span class="nav-label">Sign Out</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar">JD</div>
+      <div><div class="user-name">Jane Doe</div><div class="user-role">Administrator</div></div>
+    </div>
+  </aside>
+<div class="main-area" id="mainArea">
+    <header data-cd="topbar">
+      <button data-cd="sidebar-toggle" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="topbar-search"><i class="bi bi-search search-icon"></i><input type="search" placeholder="Search anything..." /></div>
+      <div class="topbar-actions">
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('densityMenu')"><i class="bi bi-layout-sidebar-inset"></i></button>
+          <div class="cd-dropdown-menu" id="densityMenu">
+            <button class="cd-dropdown-item" onclick="setDensity('compact')"><i class="bi bi-arrows-collapse"></i> Compact</button>
+            <button class="cd-dropdown-item" onclick="setDensity('comfortable')"><i class="bi bi-dash-lg"></i> Comfortable</button>
+            <button class="cd-dropdown-item" onclick="setDensity('spacious')"><i class="bi bi-arrows-expand"></i> Spacious</button>
+          </div>
+        </div>
+        <button class="topbar-btn" onclick="toggleTheme()"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+        <div class="cd-dropdown"><button class="topbar-btn" onclick="toggleDropdown('notifMenu')"><i class="bi bi-bell-fill"></i><span class="badge-count">5</span></button>
+          <div class="cd-dropdown-menu" id="notifMenu" style="min-width:260px">
+            <div style="padding:10px 16px;font-weight:600;font-size:13px;border-bottom:1px solid var(--cd-border)">Notifications</div>
+            <button class="cd-dropdown-item"><i class="bi bi-person-plus" style="color:var(--cd-primary)"></i><span>New user registered <span style="font-size:11px;color:var(--cd-text-subtle)">— 2m ago</span></span></button>
+            <div class="cd-dropdown-divider"></div>
+            <button class="cd-dropdown-item" style="justify-content:center;color:var(--cd-primary)">View all</button>
+          </div>
+        </div>
+        <div class="cd-dropdown">
+          <button class="topbar-user" onclick="toggleDropdown('userMenu')">
+            <div class="avatar">JD</div><span class="user-name">Jane Doe</span><i class="bi bi-chevron-down" style="font-size:11px;color:var(--cd-text-subtle)"></i>
+          </button>
+          <div class="cd-dropdown-menu" id="userMenu">
+            <a href="profile.html" class="cd-dropdown-item"><i class="bi bi-person"></i> Profile</a>
+            <button class="cd-dropdown-item"><i class="bi bi-gear"></i> Settings</button>
+            <div class="cd-dropdown-divider"></div>
+            <a href="login.html" class="cd-dropdown-item" style="color:var(--cd-danger)"><i class="bi bi-box-arrow-left"></i> Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <ol class="cd-breadcrumb"><li><a href="index.html">Home</a></li><li><a href="#">UI Elements</a></li><li class="active">Progress</li></ol>
+      <div style="margin-bottom:24px"><h1 class="page-title">Progress, Tooltip &amp; Avatar</h1><p class="page-subtitle">Progress bars, loading indicators, tooltips, and avatar components.</p></div>
+
+      <div class="row g-4">
+
+        <!-- Card 1: Progress Bars -->
+        <div class="col-12">
+          <div class="cd-card">
+            <div class="cd-card-header"><h2 class="cd-card-title">Progress Bars</h2></div>
+            <div class="cd-card-body">
+
+              <!-- 25% danger -->
+              <div class="progress-row">
+                <span class="progress-lbl">Danger</span>
+                <div class="progress-wrap">
+                  <div class="progress" style="height:14px;border-radius:8px;background:var(--cd-surface-2)">
+                    <div class="progress-bar" role="progressbar" style="width:25%;background:var(--cd-danger);border-radius:8px" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <span class="progress-pct">25%</span>
+              </div>
+
+              <!-- 50% warning -->
+              <div class="progress-row">
+                <span class="progress-lbl">Warning</span>
+                <div class="progress-wrap">
+                  <div class="progress" style="height:14px;border-radius:8px;background:var(--cd-surface-2)">
+                    <div class="progress-bar" role="progressbar" style="width:50%;background:var(--cd-warning);border-radius:8px" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <span class="progress-pct">50%</span>
+              </div>
+
+              <!-- 65% primary labeled + striped animated -->
+              <div class="progress-row">
+                <span class="progress-lbl">Primary</span>
+                <div class="progress-wrap">
+                  <div class="progress" style="height:20px;border-radius:8px;background:var(--cd-surface-2)">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:65%;background:var(--cd-primary);border-radius:8px;font-size:11px;font-weight:600" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+                  </div>
+                </div>
+                <span class="progress-pct">65%</span>
+              </div>
+
+              <!-- 80% success -->
+              <div class="progress-row">
+                <span class="progress-lbl">Success</span>
+                <div class="progress-wrap">
+                  <div class="progress" style="height:14px;border-radius:8px;background:var(--cd-surface-2)">
+                    <div class="progress-bar" role="progressbar" style="width:80%;background:var(--cd-success);border-radius:8px" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <span class="progress-pct">80%</span>
+              </div>
+
+              <!-- 100% success -->
+              <div class="progress-row">
+                <span class="progress-lbl">Complete</span>
+                <div class="progress-wrap">
+                  <div class="progress" style="height:14px;border-radius:8px;background:var(--cd-surface-2)">
+                    <div class="progress-bar" role="progressbar" style="width:100%;background:var(--cd-success);border-radius:8px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <span class="progress-pct">100%</span>
+              </div>
+
+              <!-- Indeterminate -->
+              <div class="progress-row" style="margin-bottom:0">
+                <span class="progress-lbl">Indeterminate</span>
+                <div class="progress-wrap">
+                  <div class="progress progress-indeterminate" style="height:14px;border-radius:8px;background:var(--cd-surface-2);overflow:hidden;position:relative">
+                    <div class="progress-bar" role="progressbar" style="background:var(--cd-primary);border-radius:8px" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <span class="progress-pct">—</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Circular Progress -->
+        <div class="col-md-6">
+          <div class="cd-card h-100">
+            <div class="cd-card-header"><h2 class="cd-card-title">Circular Progress</h2></div>
+            <div class="cd-card-body">
+              <div class="d-flex gap-4 flex-wrap justify-content-around">
+
+                <!-- 33% danger -->
+                <div class="ring-wrap">
+                  <svg viewBox="0 0 100 100" width="90" height="90" aria-label="33%">
+                    <circle cx="50" cy="50" r="38" style="stroke-width:8;fill:none;stroke:var(--cd-border)" />
+                    <circle cx="50" cy="50" r="38"
+                      style="stroke-width:8;fill:none;stroke:var(--cd-danger);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%"
+                      stroke-dasharray="239"
+                      stroke-dashoffset="160" />
+                    <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="700" fill="var(--cd-text)" font-family="Inter,sans-serif">33%</text>
+                  </svg>
+                  <span class="ring-label">Danger</span>
+                </div>
+
+                <!-- 67% primary -->
+                <div class="ring-wrap">
+                  <svg viewBox="0 0 100 100" width="90" height="90" aria-label="67%">
+                    <circle cx="50" cy="50" r="38" style="stroke-width:8;fill:none;stroke:var(--cd-border)" />
+                    <circle cx="50" cy="50" r="38"
+                      style="stroke-width:8;fill:none;stroke:var(--cd-primary);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%"
+                      stroke-dasharray="239"
+                      stroke-dashoffset="79" />
+                    <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="700" fill="var(--cd-text)" font-family="Inter,sans-serif">67%</text>
+                  </svg>
+                  <span class="ring-label">Primary</span>
+                </div>
+
+                <!-- 89% success -->
+                <div class="ring-wrap">
+                  <svg viewBox="0 0 100 100" width="90" height="90" aria-label="89%">
+                    <circle cx="50" cy="50" r="38" style="stroke-width:8;fill:none;stroke:var(--cd-border)" />
+                    <circle cx="50" cy="50" r="38"
+                      style="stroke-width:8;fill:none;stroke:var(--cd-success);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%"
+                      stroke-dasharray="239"
+                      stroke-dashoffset="26" />
+                    <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="700" fill="var(--cd-text)" font-family="Inter,sans-serif">89%</text>
+                  </svg>
+                  <span class="ring-label">Success</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Tooltip -->
+        <div class="col-md-6">
+          <div class="cd-card h-100">
+            <div class="cd-card-header"><h2 class="cd-card-title">Tooltip</h2></div>
+            <div class="cd-card-body">
+              <p style="font-size:13px;color:var(--cd-text-muted);margin-bottom:16px">Bootstrap native tooltips using <code>data-bs-toggle="tooltip"</code>.</p>
+              <div class="row g-3 mb-4">
+                <div class="col-6 text-center">
+                  <button class="cd-btn cd-btn-ghost w-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">Top</button>
+                </div>
+                <div class="col-6 text-center">
+                  <button class="cd-btn cd-btn-ghost w-100" data-bs-toggle="tooltip" data-bs-placement="right" title="Tooltip on right">Right</button>
+                </div>
+                <div class="col-6 text-center">
+                  <button class="cd-btn cd-btn-ghost w-100" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom">Bottom</button>
+                </div>
+                <div class="col-6 text-center">
+                  <button class="cd-btn cd-btn-ghost w-100" data-bs-toggle="tooltip" data-bs-placement="left" title="Tooltip on left">Left</button>
+                </div>
+              </div>
+              <div style="background:var(--cd-surface-2);border-radius:var(--cd-radius-sm);padding:12px 14px">
+                <p style="font-size:11px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px">Usage</p>
+                <code style="font-size:12px;color:var(--cd-primary);word-break:break-all">data-bs-toggle="tooltip" data-bs-placement="top" title="Your tip"</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Avatar -->
+        <div class="col-12">
+          <div class="cd-card">
+            <div class="cd-card-header"><h2 class="cd-card-title">Avatar</h2></div>
+            <div class="cd-card-body">
+
+              <!-- Row 1: Sizes -->
+              <p style="font-size:12px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">Sizes</p>
+              <div class="d-flex align-items-center gap-3 mb-4">
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar cd-avatar-sm" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">sm 32px</span>
+                </div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar cd-avatar-md" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">AB</span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">md 42px</span>
+                </div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar cd-avatar-lg" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">TK</span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">lg 56px</span>
+                </div>
+              </div>
+
+              <!-- Row 2: Status dots -->
+              <p style="font-size:12px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">Status</p>
+              <div class="d-flex align-items-center gap-3 mb-4">
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar-status">
+                    <span class="cd-avatar cd-avatar-md" style="background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</span>
+                    <span class="status-dot" style="background:var(--cd-success)"></span>
+                  </span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">Online</span>
+                </div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar-status">
+                    <span class="cd-avatar cd-avatar-md" style="background:linear-gradient(135deg,#64748B,#94A3B8)">MR</span>
+                    <span class="status-dot" style="background:#94A3B8"></span>
+                  </span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">Offline</span>
+                </div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar-status">
+                    <span class="cd-avatar cd-avatar-md" style="background:linear-gradient(135deg,#F59E0B,#F97316)">PL</span>
+                    <span class="status-dot" style="background:var(--cd-warning)"></span>
+                  </span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">Away</span>
+                </div>
+                <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px">
+                  <span class="cd-avatar-status">
+                    <span class="cd-avatar cd-avatar-md" style="background:linear-gradient(135deg,#DC2626,#F43F5E)">SB</span>
+                    <span class="status-dot" style="background:var(--cd-danger)"></span>
+                  </span>
+                  <span style="font-size:11px;color:var(--cd-text-subtle)">Busy</span>
+                </div>
+              </div>
+
+              <!-- Row 3: Avatar group -->
+              <p style="font-size:12px;font-weight:600;color:var(--cd-text-subtle);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">Group</p>
+              <div class="cd-avatar-group">
+                <span class="cd-avatar" style="width:36px;height:36px;font-size:12px;background:linear-gradient(135deg,#3B82F6,#6366F1)">JD</span>
+                <span class="cd-avatar" style="width:36px;height:36px;font-size:12px;background:linear-gradient(135deg,#8B5CF6,#EC4899)">AB</span>
+                <span class="cd-avatar" style="width:36px;height:36px;font-size:12px;background:linear-gradient(135deg,#F59E0B,#F97316)">TK</span>
+                <span class="cd-avatar" style="width:36px;height:36px;font-size:12px;background:linear-gradient(135deg,#16A34A,#0EA5E9)">MR</span>
+                <span class="cd-avatar" style="width:36px;height:36px;font-size:12px;background:linear-gradient(135deg,#DC2626,#F43F5E)">PL</span>
+                <span class="cd-avatar-overflow">+3</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Spinner / Loading -->
+        <div class="col-12">
+          <div class="cd-card">
+            <div class="cd-card-header"><h2 class="cd-card-title">Spinner / Loading</h2></div>
+            <div class="cd-card-body">
+              <div class="row g-4 text-center">
+
+                <!-- Bootstrap spinner-border -->
+                <div class="col-6 col-md-3">
+                  <div class="d-flex flex-column align-items-center gap-3">
+                    <div class="spinner-border" role="status" style="color:var(--cd-primary);width:40px;height:40px;border-width:3px">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span style="font-size:12px;color:var(--cd-text-muted);font-weight:500">Border Spinner</span>
+                  </div>
+                </div>
+
+                <!-- Bootstrap spinner-grow -->
+                <div class="col-6 col-md-3">
+                  <div class="d-flex flex-column align-items-center gap-3">
+                    <div class="spinner-grow" role="status" style="color:var(--cd-success);width:40px;height:40px">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span style="font-size:12px;color:var(--cd-text-muted);font-weight:500">Grow Spinner</span>
+                  </div>
+                </div>
+
+                <!-- Dot pulse -->
+                <div class="col-6 col-md-3">
+                  <div class="d-flex flex-column align-items-center gap-3">
+                    <div style="display:flex;align-items:center;gap:6px;height:40px">
+                      <span style="width:10px;height:10px;border-radius:50%;background:var(--cd-primary);display:inline-block;animation:dot-pulse-bs 1.4s ease-in-out infinite;animation-delay:0s"></span>
+                      <span style="width:10px;height:10px;border-radius:50%;background:var(--cd-primary);display:inline-block;animation:dot-pulse-bs 1.4s ease-in-out infinite;animation-delay:.2s"></span>
+                      <span style="width:10px;height:10px;border-radius:50%;background:var(--cd-primary);display:inline-block;animation:dot-pulse-bs 1.4s ease-in-out infinite;animation-delay:.4s"></span>
+                    </div>
+                    <span style="font-size:12px;color:var(--cd-text-muted);font-weight:500">Dot Pulse</span>
+                  </div>
+                </div>
+
+                <!-- CSS Ring -->
+                <div class="col-6 col-md-3">
+                  <div class="d-flex flex-column align-items-center gap-3">
+                    <div style="height:40px;display:flex;align-items:center;justify-content:center">
+                      <div class="spinner-ring"></div>
+                    </div>
+                    <span style="font-size:12px;color:var(--cd-text-muted);font-weight:500">CSS Ring</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<div id="backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999" onclick="closeSidebarMobile()"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const sidebar=document.getElementById('sidebar'),mainArea=document.getElementById('mainArea'),backdrop=document.getElementById('backdrop');
+const isMobile=()=>window.innerWidth<=768;
+document.getElementById('sidebarToggle').addEventListener('click',()=>{
+  if(isMobile()){sidebar.classList.toggle('mobile-open');backdrop.style.display=sidebar.classList.contains('mobile-open')?'block':'none';}
+  else{sidebar.classList.toggle('collapsed');mainArea.classList.toggle('expanded');}
+});
+function closeSidebarMobile(){sidebar.classList.remove('mobile-open');backdrop.style.display='none';}
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeIcon').className=d?'bi bi-moon-fill':'bi bi-sun-fill';}
+function setDensity(d){document.documentElement.setAttribute('data-density',d);closeAllDropdowns();}
+function toggleDropdown(id){const m=document.getElementById(id),s=m.classList.contains('show');closeAllDropdowns();if(!s)m.classList.add('show');}
+function closeAllDropdowns(){document.querySelectorAll('.cd-dropdown-menu.show').forEach(m=>m.classList.remove('show'));}
+document.addEventListener('click',e=>{if(!e.target.closest('.cd-dropdown'))closeAllDropdowns();});
+
+// Initialize Bootstrap tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(function(el){return new bootstrap.Tooltip(el);});
+</script>
+</body>
+</html>

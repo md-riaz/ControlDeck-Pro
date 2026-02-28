@@ -117,6 +117,8 @@
     .nav-pills .nav-link:hover { background: var(--cd-border); color: var(--cd-text); }
     .nav-pills .nav-link.active { background: var(--cd-primary); color: #fff; }
     .tab-content { color: var(--cd-text-muted); font-size: 13px; }
+    .nav-tabs-vertical .nav-link { border-radius: var(--cd-radius-sm) 0 0 var(--cd-radius-sm); }
+    .nav-tabs-vertical .nav-link.active { border-right-color: var(--cd-surface); }
   </style>
 </head>
 <body>
@@ -334,18 +336,18 @@
             <div class="cd-card-header"><div><h2 class="cd-card-title">Vertical Tabs</h2><p class="cd-card-subtitle">Settings-style vertical navigation with form panels.</p></div></div>
             <div class="cd-card-body">
               <div class="d-flex gap-3">
-                <ul class="nav flex-column nav-tabs" id="verticalTabs" role="tablist" style="min-width:130px;border-right:1px solid var(--cd-border);border-bottom:none;padding-right:0">
+                <ul class="nav flex-column nav-tabs nav-tabs-vertical" id="verticalTabs" role="tablist" style="min-width:130px;border-right:1px solid var(--cd-border);border-bottom:none;padding-right:0">
                   <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="vt-general-link" data-bs-toggle="tab" href="#vt-general" role="tab" style="border-radius:var(--cd-radius-sm) 0 0 var(--cd-radius-sm);border-right-color:var(--cd-surface)">General</a>
+                    <a class="nav-link active" id="vt-general-link" data-bs-toggle="tab" href="#vt-general" role="tab">General</a>
                   </li>
                   <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="vt-security-link" data-bs-toggle="tab" href="#vt-security" role="tab" style="border-radius:var(--cd-radius-sm) 0 0 var(--cd-radius-sm)">Security</a>
+                    <a class="nav-link" id="vt-security-link" data-bs-toggle="tab" href="#vt-security" role="tab">Security</a>
                   </li>
                   <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="vt-notif-link" data-bs-toggle="tab" href="#vt-notif" role="tab" style="border-radius:var(--cd-radius-sm) 0 0 var(--cd-radius-sm)">Notifications</a>
+                    <a class="nav-link" id="vt-notif-link" data-bs-toggle="tab" href="#vt-notif" role="tab">Notifications</a>
                   </li>
                   <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="vt-billing-link" data-bs-toggle="tab" href="#vt-billing" role="tab" style="border-radius:var(--cd-radius-sm) 0 0 var(--cd-radius-sm)">Billing</a>
+                    <a class="nav-link" id="vt-billing-link" data-bs-toggle="tab" href="#vt-billing" role="tab">Billing</a>
                   </li>
                 </ul>
                 <div class="tab-content flex-grow-1" id="verticalTabsContent">
